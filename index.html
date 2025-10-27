@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>دورة تصميم الإشارات واللوغوهات</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -10,14 +10,19 @@
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
         }
         .lesson-card {
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
         .lesson-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
         .lesson-card.completed {
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
@@ -26,44 +31,92 @@
         .lesson-card.active {
             background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
             color: white;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+        }
+        .quiz-option {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: none;
+            text-align: right;
+            padding: 1rem;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+        }
+        .quiz-option:hover:not([disabled]) {
+            background: rgba(255, 255, 255, 0.25);
+        }
+        .quiz-option.correct {
+            background: rgba(16, 185, 129, 0.3);
+            color: white;
+        }
+        .quiz-option.incorrect {
+            background: rgba(239, 68, 68, 0.3);
+            color: white;
+        }
+        .quiz-option.selected {
+            opacity: 0.6;
+        }
+        .btn {
+            font-weight: 600;
+            border-radius: 9999px;
+            padding: 0.75rem 1.5rem;
+            transition: all 0.2s ease;
+        }
+        .btn-primary {
+            background: linear-gradient(to left, #3b82f6, #8b5cf6);
+            color: white;
+        }
+        .btn-primary:hover:not(:disabled) {
+            box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.4);
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+        .btn-secondary:hover:not(:disabled) {
+            background: #4b5563;
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
         }
     </style>
 </head>
-<body class="min-h-full">
+<body class="min-h-screen">
     <!-- Header -->
-    <header class="bg-white/10 backdrop-blur-md">
-        <div class="max-w-6xl mx-auto px-6 py-6">
+    <header class="bg-white/10 backdrop-blur-md border-b border-white/20">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-6">
             <div class="text-center">
-                <h1 class="text-4xl font-bold text-white mb-2">🎨 دورة تصميم الإشارات واللوغوهات</h1>
-                <p class="text-white/80 text-lg">تعلم أساسيات التصميم البصري خطوة بخطوة</p>
+                <h1 class="text-3xl sm:text-4xl font-bold text-white mb-2">🎨 دورة تصميم الإشارات واللوغوهات</h1>
+                <p class="text-white/80 text-base sm:text-lg">تعلم أساسيات التصميم البصري خطوة بخطوة</p>
             </div>
         </div>
     </header>
 
-    <main class="max-w-6xl mx-auto px-6 py-8">
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 py-8">
         <!-- Progress -->
-        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 mb-8">
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="text-2xl font-bold text-white">تقدمك في الدورة</h2>
-                <div class="text-white">
-                    <span id="progress-text" class="text-2xl font-bold">0%</span>
-                </div>
+        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-5 sm:p-6 mb-8 border border-white/20">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+                <h2 class="text-xl sm:text-2xl font-bold text-white">تقدمك في الدورة</h2>
+                <div class="text-white text-xl font-bold" id="progress-text">0%</div>
             </div>
-            <div class="w-full bg-white/20 rounded-full h-4">
-                <div id="progress-bar" class="bg-gradient-to-r from-green-400 to-blue-500 h-4 rounded-full transition-all duration-500" style="width: 0%"></div>
+            <div class="w-full bg-white/20 rounded-full h-3">
+                <div id="progress-bar" class="bg-gradient-to-r from-green-400 to-blue-500 h-3 rounded-full transition-all duration-700 ease-out"></div>
             </div>
-            <div class="flex justify-between mt-4 text-white/80">
+            <div class="flex flex-col sm:flex-row justify-between mt-4 text-white/80 text-sm sm:text-base">
                 <span>الدروس المكتملة: <span id="completed-lessons">0</span>/15</span>
                 <span>النقاط: <span id="total-points">0</span></span>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
             <!-- Lessons List -->
             <div class="lg:col-span-1">
-                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 sticky top-8">
-                    <h3 class="text-xl font-bold text-white mb-4">📚 قائمة الدروس</h3>
-                    <div class="space-y-2" id="lessons-sidebar">
+                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-5 sm:p-6 sticky top-6 border border-white/20">
+                    <h3 class="text-lg sm:text-xl font-bold text-white mb-4">📚 قائمة الدروس</h3>
+                    <div class="space-y-3" id="lessons-sidebar">
                         <!-- Lessons will be populated here -->
                     </div>
                 </div>
@@ -71,13 +124,13 @@
 
             <!-- Main Content -->
             <div class="lg:col-span-2">
-                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8" id="main-content">
+                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 sm:p-8 border border-white/20" id="main-content">
                     <!-- Welcome Screen -->
                     <div class="text-center">
-                        <div class="text-6xl mb-6">🎨</div>
-                        <h2 class="text-3xl font-bold text-white mb-4">مرحباً بك في دورة التصميم!</h2>
-                        <p class="text-white/80 text-lg mb-8">ستتعلم في هذه الدورة أساسيات تصميم الإشارات واللوغوهات من الصفر</p>
-                        <button onclick="startCourse()" class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-8 py-3 rounded-full font-bold text-lg hover:shadow-lg transition-all">
+                        <div class="text-5xl sm:text-6xl mb-6">🎨</div>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">مرحباً بك في دورة التصميم!</h2>
+                        <p class="text-white/80 text-base sm:text-lg mb-8">ستتعلم في هذه الدورة أساسيات تصميم الإشارات واللوغوهات من الصفر</p>
+                        <button onclick="startCourse()" class="btn btn-primary text-lg px-6 py-3">
                             ابدأ التعلم الآن! 🚀
                         </button>
                     </div>
@@ -94,17 +147,15 @@
                 icon: "🎨",
                 content: `
                     <div class="text-center mb-8">
-                        <div class="text-6xl mb-4">🎨</div>
-                        <h2 class="text-3xl font-bold text-white mb-4">مقدمة في التصميم البصري</h2>
+                        <div class="text-5xl sm:text-6xl mb-4">🎨</div>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">مقدمة في التصميم البصري</h2>
                     </div>
-                    
-                    <div class="bg-white/20 rounded-xl p-6 mb-6">
+                    <div class="bg-white/20 rounded-xl p-5 sm:p-6 mb-6">
                         <h3 class="text-xl font-bold text-white mb-4">ما هو التصميم البصري؟</h3>
-                        <p class="text-white/90 text-lg leading-relaxed mb-4">
+                        <p class="text-white/90 text-base sm:text-lg leading-relaxed mb-5">
                             التصميم البصري هو فن التواصل بالصور والألوان والأشكال. إنه طريقة لنقل الأفكار والمشاعر بدون كلمات!
                         </p>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div class="bg-blue-500/30 rounded-lg p-4">
                                 <div class="text-2xl mb-2">👁️</div>
                                 <h4 class="font-bold text-white mb-2">يجذب الانتباه</h4>
@@ -140,34 +191,31 @@
                 icon: "🌈",
                 content: `
                     <div class="text-center mb-8">
-                        <div class="text-6xl mb-4">🌈</div>
-                        <h2 class="text-3xl font-bold text-white mb-4">الألوان الأساسية</h2>
+                        <div class="text-5xl sm:text-6xl mb-4">🌈</div>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">الألوان الأساسية</h2>
                     </div>
-                    
-                    <div class="bg-white/20 rounded-xl p-6 mb-6">
+                    <div class="bg-white/20 rounded-xl p-5 sm:p-6 mb-6">
                         <h3 class="text-xl font-bold text-white mb-4">عجلة الألوان البسيطة</h3>
-                        <p class="text-white/90 text-lg mb-6">
+                        <p class="text-white/90 text-base sm:text-lg mb-6">
                             الألوان لها قوة سحرية! كل لون يحمل معنى ومشاعر مختلفة.
                         </p>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
                             <div class="text-center bg-red-500/30 rounded-lg p-4">
-                                <div class="w-16 h-16 bg-red-500 rounded-full mx-auto mb-3"></div>
+                                <div class="w-14 h-14 sm:w-16 sm:h-16 bg-red-500 rounded-full mx-auto mb-3"></div>
                                 <h4 class="font-bold text-white mb-2">الأحمر</h4>
                                 <p class="text-white/80 text-sm">القوة والحماس والحب</p>
                             </div>
                             <div class="text-center bg-blue-500/30 rounded-lg p-4">
-                                <div class="w-16 h-16 bg-blue-500 rounded-full mx-auto mb-3"></div>
+                                <div class="w-14 h-14 sm:w-16 sm:h-16 bg-blue-500 rounded-full mx-auto mb-3"></div>
                                 <h4 class="font-bold text-white mb-2">الأزرق</h4>
                                 <p class="text-white/80 text-sm">الثقة والهدوء والمهنية</p>
                             </div>
                             <div class="text-center bg-yellow-500/30 rounded-lg p-4">
-                                <div class="w-16 h-16 bg-yellow-500 rounded-full mx-auto mb-3"></div>
+                                <div class="w-14 h-14 sm:w-16 sm:h-16 bg-yellow-500 rounded-full mx-auto mb-3"></div>
                                 <h4 class="font-bold text-white mb-2">الأصفر</h4>
                                 <p class="text-white/80 text-sm">السعادة والطاقة والإبداع</p>
                             </div>
                         </div>
-
                         <div class="bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-lg p-4">
                             <h4 class="font-bold text-white mb-2">💡 نصيحة مهمة</h4>
                             <p class="text-white/90">لا تستخدم أكثر من 3 ألوان في التصميم الواحد. البساطة هي الأناقة!</p>
@@ -186,31 +234,28 @@
                 icon: "📝",
                 content: `
                     <div class="text-center mb-8">
-                        <div class="text-6xl mb-4">📝</div>
-                        <h2 class="text-3xl font-bold text-white mb-4">الخطوط والكتابة</h2>
+                        <div class="text-5xl sm:text-6xl mb-4">📝</div>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">الخطوط والكتابة</h2>
                     </div>
-                    
-                    <div class="bg-white/20 rounded-xl p-6 mb-6">
+                    <div class="bg-white/20 rounded-xl p-5 sm:p-6 mb-6">
                         <h3 class="text-xl font-bold text-white mb-4">أنواع الخطوط البسيطة</h3>
-                        
                         <div class="space-y-4 mb-6">
                             <div class="bg-white/10 rounded-lg p-4">
-                                <h4 class="text-2xl font-serif text-white mb-2">خط كلاسيكي</h4>
+                                <h4 class="text-xl sm:text-2xl font-serif text-white mb-2">خط كلاسيكي</h4>
                                 <p class="text-white/80">مناسب للنصوص الطويلة والكتب</p>
                             </div>
                             <div class="bg-white/10 rounded-lg p-4">
-                                <h4 class="text-2xl font-sans text-white mb-2">خط عصري</h4>
+                                <h4 class="text-xl sm:text-2xl font-sans text-white mb-2">خط عصري</h4>
                                 <p class="text-white/80">مثالي للشاشات والتصاميم الحديثة</p>
                             </div>
                             <div class="bg-white/10 rounded-lg p-4">
-                                <h4 class="text-2xl font-bold text-white mb-2">خط عريض</h4>
+                                <h4 class="text-xl sm:text-2xl font-bold text-white mb-2">خط عريض</h4>
                                 <p class="text-white/80">للعناوين والكلمات المهمة</p>
                             </div>
                         </div>
-
                         <div class="bg-green-500/20 rounded-lg p-4">
                             <h4 class="font-bold text-white mb-2">✅ قواعد بسيطة</h4>
-                            <ul class="text-white/90 space-y-1">
+                            <ul class="text-white/90 space-y-1 text-sm">
                                 <li>• اجعل النص كبيراً بما يكفي للقراءة</li>
                                 <li>• استخدم لوناً يتباين مع الخلفية</li>
                                 <li>• لا تستخدم أكثر من خطين مختلفين</li>
@@ -230,31 +275,28 @@
                 icon: "🔷",
                 content: `
                     <div class="text-center mb-8">
-                        <div class="text-6xl mb-4">🔷</div>
-                        <h2 class="text-3xl font-bold text-white mb-4">الأشكال البسيطة</h2>
+                        <div class="text-5xl sm:text-6xl mb-4">🔷</div>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">الأشكال البسيطة</h2>
                     </div>
-                    
-                    <div class="bg-white/20 rounded-xl p-6 mb-6">
+                    <div class="bg-white/20 rounded-xl p-5 sm:p-6 mb-6">
                         <h3 class="text-xl font-bold text-white mb-4">الأشكال الأساسية ومعانيها</h3>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
                             <div class="text-center bg-blue-500/30 rounded-lg p-4">
-                                <div class="w-16 h-16 bg-blue-500 rounded-full mx-auto mb-3"></div>
+                                <div class="w-14 h-14 sm:w-16 sm:h-16 bg-blue-500 rounded-full mx-auto mb-3"></div>
                                 <h4 class="font-bold text-white mb-2">الدائرة</h4>
                                 <p class="text-white/80 text-sm">الوحدة والكمال والحماية</p>
                             </div>
                             <div class="text-center bg-green-500/30 rounded-lg p-4">
-                                <div class="w-16 h-16 bg-green-500 mx-auto mb-3"></div>
+                                <div class="w-14 h-14 sm:w-16 sm:h-16 bg-green-500 mx-auto mb-3"></div>
                                 <h4 class="font-bold text-white mb-2">المربع</h4>
                                 <p class="text-white/80 text-sm">الاستقرار والثقة والنظام</p>
                             </div>
                             <div class="text-center bg-orange-500/30 rounded-lg p-4">
-                                <div class="w-16 h-16 bg-orange-500 mx-auto mb-3" style="clip-path: polygon(50% 0%, 0% 100%, 100% 100%)"></div>
+                                <div class="w-14 h-14 sm:w-16 sm:h-16 bg-orange-500 mx-auto mb-3" style="clip-path: polygon(50% 0%, 0% 100%, 100% 100%)"></div>
                                 <h4 class="font-bold text-white mb-2">المثلث</h4>
                                 <p class="text-white/80 text-sm">القوة والحركة والتوجه</p>
                             </div>
                         </div>
-
                         <div class="bg-purple-500/20 rounded-lg p-4">
                             <h4 class="font-bold text-white mb-2">🎯 استخدم الأشكال بذكاء</h4>
                             <p class="text-white/90">كل شكل يرسل رسالة مختلفة. اختر الشكل الذي يناسب رسالتك!</p>
@@ -273,44 +315,41 @@
                 icon: "🏷️",
                 content: `
                     <div class="text-center mb-8">
-                        <div class="text-6xl mb-4">🏷️</div>
-                        <h2 class="text-3xl font-bold text-white mb-4">تصميم لوغو بسيط</h2>
+                        <div class="text-5xl sm:text-6xl mb-4">🏷️</div>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">تصميم لوغو بسيط</h2>
                     </div>
-                    
-                    <div class="bg-white/20 rounded-xl p-6 mb-6">
+                    <div class="bg-white/20 rounded-xl p-5 sm:p-6 mb-6">
                         <h3 class="text-xl font-bold text-white mb-4">خطوات تصميم لوغو ناجح</h3>
-                        
                         <div class="space-y-4 mb-6">
-                            <div class="flex items-center bg-white/10 rounded-lg p-4">
-                                <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold ml-4">1</div>
+                            <div class="flex items-start bg-white/10 rounded-lg p-4">
+                                <div class="flex-shrink-0 w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold ml-4 text-sm">1</div>
                                 <div>
                                     <h4 class="font-bold text-white">ابدأ بفكرة بسيطة</h4>
                                     <p class="text-white/80 text-sm">فكر في شيء واحد يمثل الشركة</p>
                                 </div>
                             </div>
-                            <div class="flex items-center bg-white/10 rounded-lg p-4">
-                                <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-bold ml-4">2</div>
+                            <div class="flex items-start bg-white/10 rounded-lg p-4">
+                                <div class="flex-shrink-0 w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-bold ml-4 text-sm">2</div>
                                 <div>
                                     <h4 class="font-bold text-white">اختر شكلاً أساسياً</h4>
                                     <p class="text-white/80 text-sm">دائرة، مربع، أو مثلث</p>
                                 </div>
                             </div>
-                            <div class="flex items-center bg-white/10 rounded-lg p-4">
-                                <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold ml-4">3</div>
+                            <div class="flex items-start bg-white/10 rounded-lg p-4">
+                                <div class="flex-shrink-0 w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold ml-4 text-sm">3</div>
                                 <div>
                                     <h4 class="font-bold text-white">أضف لوناً واحداً</h4>
                                     <p class="text-white/80 text-sm">لون واحد قوي أفضل من ألوان كثيرة</p>
                                 </div>
                             </div>
-                            <div class="flex items-center bg-white/10 rounded-lg p-4">
-                                <div class="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold ml-4">4</div>
+                            <div class="flex items-start bg-white/10 rounded-lg p-4">
+                                <div class="flex-shrink-0 w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold ml-4 text-sm">4</div>
                                 <div>
                                     <h4 class="font-bold text-white">اجعله يُقرأ بوضوح</h4>
                                     <p class="text-white/80 text-sm">يجب أن يظهر جيداً كبيراً وصغيراً</p>
                                 </div>
                             </div>
                         </div>
-
                         <div class="bg-yellow-500/20 rounded-lg p-4">
                             <h4 class="font-bold text-white mb-2">⭐ أمثلة لوغوهات بسيطة وناجحة</h4>
                             <p class="text-white/90">Apple (تفاحة)، Nike (علامة صح)، McDonald's (حرف M)</p>
@@ -329,14 +368,12 @@
                 icon: "🚦",
                 content: `
                     <div class="text-center mb-8">
-                        <div class="text-6xl mb-4">🚦</div>
-                        <h2 class="text-3xl font-bold text-white mb-4">الإشارات التوجيهية</h2>
+                        <div class="text-5xl sm:text-6xl mb-4">🚦</div>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">الإشارات التوجيهية</h2>
                     </div>
-                    
-                    <div class="bg-white/20 rounded-xl p-6 mb-6">
+                    <div class="bg-white/20 rounded-xl p-5 sm:p-6 mb-6">
                         <h3 class="text-xl font-bold text-white mb-4">كيف تصمم إشارة واضحة؟</h3>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
                             <div class="bg-green-500/30 rounded-lg p-4">
                                 <div class="text-3xl mb-2">✅</div>
                                 <h4 class="font-bold text-white mb-2">افعل</h4>
@@ -358,7 +395,6 @@
                                 </ul>
                             </div>
                         </div>
-
                         <div class="bg-blue-500/20 rounded-lg p-4">
                             <h4 class="font-bold text-white mb-2">🎯 الهدف الأساسي</h4>
                             <p class="text-white/90">الإشارة الجيدة يفهمها أي شخص في ثانية واحدة!</p>
@@ -377,48 +413,45 @@
                 icon: "🔣",
                 content: `
                     <div class="text-center mb-8">
-                        <div class="text-6xl mb-4">🔣</div>
-                        <h2 class="text-3xl font-bold text-white mb-4">استخدام الرموز</h2>
+                        <div class="text-5xl sm:text-6xl mb-4">🔣</div>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">استخدام الرموز</h2>
                     </div>
-                    
-                    <div class="bg-white/20 rounded-xl p-6 mb-6">
+                    <div class="bg-white/20 rounded-xl p-5 sm:p-6 mb-6">
                         <h3 class="text-xl font-bold text-white mb-4">الرموز العالمية المفهومة</h3>
-                        
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6">
                             <div class="text-center bg-white/10 rounded-lg p-3">
-                                <div class="text-3xl mb-2">🏠</div>
-                                <p class="text-white text-sm">المنزل</p>
+                                <div class="text-2xl sm:text-3xl mb-2">🏠</div>
+                                <p class="text-white text-xs sm:text-sm">المنزل</p>
                             </div>
                             <div class="text-center bg-white/10 rounded-lg p-3">
-                                <div class="text-3xl mb-2">📧</div>
-                                <p class="text-white text-sm">البريد</p>
+                                <div class="text-2xl sm:text-3xl mb-2">📧</div>
+                                <p class="text-white text-xs sm:text-sm">البريد</p>
                             </div>
                             <div class="text-center bg-white/10 rounded-lg p-3">
-                                <div class="text-3xl mb-2">📱</div>
-                                <p class="text-white text-sm">الهاتف</p>
+                                <div class="text-2xl sm:text-3xl mb-2">📱</div>
+                                <p class="text-white text-xs sm:text-sm">الهاتف</p>
                             </div>
                             <div class="text-center bg-white/10 rounded-lg p-3">
-                                <div class="text-3xl mb-2">🔍</div>
-                                <p class="text-white text-sm">البحث</p>
+                                <div class="text-2xl sm:text-3xl mb-2">🔍</div>
+                                <p class="text-white text-xs sm:text-sm">البحث</p>
                             </div>
                             <div class="text-center bg-white/10 rounded-lg p-3">
-                                <div class="text-3xl mb-2">⚙️</div>
-                                <p class="text-white text-sm">الإعدادات</p>
+                                <div class="text-2xl sm:text-3xl mb-2">⚙️</div>
+                                <p class="text-white text-xs sm:text-sm">الإعدادات</p>
                             </div>
                             <div class="text-center bg-white/10 rounded-lg p-3">
-                                <div class="text-3xl mb-2">❤️</div>
-                                <p class="text-white text-sm">المفضلة</p>
+                                <div class="text-2xl sm:text-3xl mb-2">❤️</div>
+                                <p class="text-white text-xs sm:text-sm">المفضلة</p>
                             </div>
                             <div class="text-center bg-white/10 rounded-lg p-3">
-                                <div class="text-3xl mb-2">🛒</div>
-                                <p class="text-white text-sm">التسوق</p>
+                                <div class="text-2xl sm:text-3xl mb-2">🛒</div>
+                                <p class="text-white text-xs sm:text-sm">التسوق</p>
                             </div>
                             <div class="text-center bg-white/10 rounded-lg p-3">
-                                <div class="text-3xl mb-2">📍</div>
-                                <p class="text-white text-sm">الموقع</p>
+                                <div class="text-2xl sm:text-3xl mb-2">📍</div>
+                                <p class="text-white text-xs sm:text-sm">الموقع</p>
                             </div>
                         </div>
-
                         <div class="bg-orange-500/20 rounded-lg p-4">
                             <h4 class="font-bold text-white mb-2">💡 نصيحة ذهبية</h4>
                             <p class="text-white/90">استخدم الرموز التي يعرفها الجميع. لا تخترع رموزاً جديدة!</p>
@@ -437,13 +470,11 @@
                 icon: "⚖️",
                 content: `
                     <div class="text-center mb-8">
-                        <div class="text-6xl mb-4">⚖️</div>
-                        <h2 class="text-3xl font-bold text-white mb-4">التوازن في التصميم</h2>
+                        <div class="text-5xl sm:text-6xl mb-4">⚖️</div>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">التوازن في التصميم</h2>
                     </div>
-                    
-                    <div class="bg-white/20 rounded-xl p-6 mb-6">
+                    <div class="bg-white/20 rounded-xl p-5 sm:p-6 mb-6">
                         <h3 class="text-xl font-bold text-white mb-4">كيف تجعل تصميمك متوازناً؟</h3>
-                        
                         <div class="space-y-4 mb-6">
                             <div class="bg-white/10 rounded-lg p-4">
                                 <h4 class="font-bold text-white mb-2">🎯 وزع العناصر بالتساوي</h4>
@@ -458,8 +489,7 @@
                                 <p class="text-white/80">لا تجعل كل شيء فاتحاً أو غامقاً</p>
                             </div>
                         </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div class="bg-green-500/30 rounded-lg p-4 text-center">
                                 <h4 class="font-bold text-white mb-2">✅ متوازن</h4>
                                 <div class="flex justify-center items-center space-x-reverse space-x-2">
@@ -491,52 +521,49 @@
                 icon: "🎨",
                 content: `
                     <div class="text-center mb-8">
-                        <div class="text-6xl mb-4">🎨</div>
-                        <h2 class="text-3xl font-bold text-white mb-4">اختيار الألوان المناسبة</h2>
+                        <div class="text-5xl sm:text-6xl mb-4">🎨</div>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">اختيار الألوان المناسبة</h2>
                     </div>
-                    
-                    <div class="bg-white/20 rounded-xl p-6 mb-6">
+                    <div class="bg-white/20 rounded-xl p-5 sm:p-6 mb-6">
                         <h3 class="text-xl font-bold text-white mb-4">ألوان لأنواع مختلفة من الأعمال</h3>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
                             <div class="bg-blue-500/30 rounded-lg p-4">
                                 <h4 class="font-bold text-white mb-2">🏢 الأعمال والشركات</h4>
                                 <div class="flex space-x-reverse space-x-2 mb-2">
-                                    <div class="w-6 h-6 bg-blue-600 rounded"></div>
-                                    <div class="w-6 h-6 bg-gray-700 rounded"></div>
-                                    <div class="w-6 h-6 bg-green-700 rounded"></div>
+                                    <div class="w-5 h-5 sm:w-6 sm:h-6 bg-blue-600 rounded"></div>
+                                    <div class="w-5 h-5 sm:w-6 sm:h-6 bg-gray-700 rounded"></div>
+                                    <div class="w-5 h-5 sm:w-6 sm:h-6 bg-green-700 rounded"></div>
                                 </div>
-                                <p class="text-white/80 text-sm">أزرق، رمادي، أخضر غامق</p>
+                                <p class="text-white/80 text-xs sm:text-sm">أزرق، رمادي، أخضر غامق</p>
                             </div>
                             <div class="bg-pink-500/30 rounded-lg p-4">
                                 <h4 class="font-bold text-white mb-2">👶 الأطفال والألعاب</h4>
                                 <div class="flex space-x-reverse space-x-2 mb-2">
-                                    <div class="w-6 h-6 bg-pink-400 rounded"></div>
-                                    <div class="w-6 h-6 bg-yellow-400 rounded"></div>
-                                    <div class="w-6 h-6 bg-green-400 rounded"></div>
+                                    <div class="w-5 h-5 sm:w-6 sm:h-6 bg-pink-400 rounded"></div>
+                                    <div class="w-5 h-5 sm:w-6 sm:h-6 bg-yellow-400 rounded"></div>
+                                    <div class="w-5 h-5 sm:w-6 sm:h-6 bg-green-400 rounded"></div>
                                 </div>
-                                <p class="text-white/80 text-sm">وردي، أصفر، أخضر فاتح</p>
+                                <p class="text-white/80 text-xs sm:text-sm">وردي، أصفر، أخضر فاتح</p>
                             </div>
                             <div class="bg-green-500/30 rounded-lg p-4">
                                 <h4 class="font-bold text-white mb-2">🌱 الطبيعة والصحة</h4>
                                 <div class="flex space-x-reverse space-x-2 mb-2">
-                                    <div class="w-6 h-6 bg-green-500 rounded"></div>
-                                    <div class="w-6 h-6 bg-green-700 rounded"></div>
-                                    <div class="w-6 h-6 bg-yellow-600 rounded"></div>
+                                    <div class="w-5 h-5 sm:w-6 sm:h-6 bg-green-500 rounded"></div>
+                                    <div class="w-5 h-5 sm:w-6 sm:h-6 bg-green-700 rounded"></div>
+                                    <div class="w-5 h-5 sm:w-6 sm:h-6 bg-yellow-600 rounded"></div>
                                 </div>
-                                <p class="text-white/80 text-sm">أخضر بدرجاته، بني طبيعي</p>
+                                <p class="text-white/80 text-xs sm:text-sm">أخضر بدرجاته، بني طبيعي</p>
                             </div>
                             <div class="bg-red-500/30 rounded-lg p-4">
                                 <h4 class="font-bold text-white mb-2">🍕 الطعام والمطاعم</h4>
                                 <div class="flex space-x-reverse space-x-2 mb-2">
-                                    <div class="w-6 h-6 bg-red-500 rounded"></div>
-                                    <div class="w-6 h-6 bg-orange-500 rounded"></div>
-                                    <div class="w-6 h-6 bg-yellow-500 rounded"></div>
+                                    <div class="w-5 h-5 sm:w-6 sm:h-6 bg-red-500 rounded"></div>
+                                    <div class="w-5 h-5 sm:w-6 sm:h-6 bg-orange-500 rounded"></div>
+                                    <div class="w-5 h-5 sm:w-6 sm:h-6 bg-yellow-500 rounded"></div>
                                 </div>
-                                <p class="text-white/80 text-sm">أحمر، برتقالي، أصفر</p>
+                                <p class="text-white/80 text-xs sm:text-sm">أحمر، برتقالي، أصفر</p>
                             </div>
                         </div>
-
                         <div class="bg-purple-500/20 rounded-lg p-4">
                             <h4 class="font-bold text-white mb-2">🎯 قاعدة مهمة</h4>
                             <p class="text-white/90">فكر في شعور العميل عند رؤية اللون. هل يناسب نوع العمل؟</p>
@@ -555,13 +582,11 @@
                 icon: "💻",
                 content: `
                     <div class="text-center mb-8">
-                        <div class="text-6xl mb-4">💻</div>
-                        <h2 class="text-3xl font-bold text-white mb-4">البرامج البسيطة للتصميم</h2>
+                        <div class="text-5xl sm:text-6xl mb-4">💻</div>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">البرامج البسيطة للتصميم</h2>
                     </div>
-                    
-                    <div class="bg-white/20 rounded-xl p-6 mb-6">
+                    <div class="bg-white/20 rounded-xl p-5 sm:p-6 mb-6">
                         <h3 class="text-xl font-bold text-white mb-4">ابدأ بهذه البرامج السهلة</h3>
-                        
                         <div class="space-y-4 mb-6">
                             <div class="bg-green-500/30 rounded-lg p-4">
                                 <h4 class="font-bold text-white mb-2">🎨 Canva - الأسهل للمبتدئين</h4>
@@ -576,7 +601,6 @@
                                 <p class="text-white/80 text-sm">Canva Mobile, Adobe Express</p>
                             </div>
                         </div>
-
                         <div class="bg-yellow-500/20 rounded-lg p-4">
                             <h4 class="font-bold text-white mb-2">💡 نصيحة للبداية</h4>
                             <p class="text-white/90">ابدأ بـ Canva لتتعلم الأساسيات، ثم انتقل لبرامج أكثر تقدماً</p>
@@ -595,13 +619,11 @@
                 icon: "🖨️",
                 content: `
                     <div class="text-center mb-8">
-                        <div class="text-6xl mb-4">🖨️</div>
-                        <h2 class="text-3xl font-bold text-white mb-4">التصميم للطباعة</h2>
+                        <div class="text-5xl sm:text-6xl mb-4">🖨️</div>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">التصميم للطباعة</h2>
                     </div>
-                    
-                    <div class="bg-white/20 rounded-xl p-6 mb-6">
+                    <div class="bg-white/20 rounded-xl p-5 sm:p-6 mb-6">
                         <h3 class="text-xl font-bold text-white mb-4">قواعد بسيطة للطباعة الجيدة</h3>
-                        
                         <div class="space-y-4 mb-6">
                             <div class="bg-white/10 rounded-lg p-4">
                                 <h4 class="font-bold text-white mb-2">📏 الحجم والجودة</h4>
@@ -616,8 +638,7 @@
                                 <p class="text-white/80">لا تضع نصاً مهماً قريباً من الحواف</p>
                             </div>
                         </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div class="bg-green-500/30 rounded-lg p-4">
                                 <h4 class="font-bold text-white mb-2">✅ للطباعة</h4>
                                 <ul class="text-white/80 text-sm space-y-1">
@@ -649,13 +670,11 @@
                 icon: "♿",
                 content: `
                     <div class="text-center mb-8">
-                        <div class="text-6xl mb-4">♿</div>
-                        <h2 class="text-3xl font-bold text-white mb-4">التصميم للجميع</h2>
+                        <div class="text-5xl sm:text-6xl mb-4">♿</div>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">التصميم للجميع</h2>
                     </div>
-                    
-                    <div class="bg-white/20 rounded-xl p-6 mb-6">
+                    <div class="bg-white/20 rounded-xl p-5 sm:p-6 mb-6">
                         <h3 class="text-xl font-bold text-white mb-4">كيف تجعل تصميمك مناسباً للجميع؟</h3>
-                        
                         <div class="space-y-4 mb-6">
                             <div class="bg-blue-500/30 rounded-lg p-4">
                                 <h4 class="font-bold text-white mb-2">👁️ للذين يواجهون صعوبة في الرؤية</h4>
@@ -674,7 +693,6 @@
                                 </ul>
                             </div>
                         </div>
-
                         <div class="bg-purple-500/20 rounded-lg p-4">
                             <h4 class="font-bold text-white mb-2">❤️ لماذا هذا مهم؟</h4>
                             <p class="text-white/90">عندما نصمم للجميع، نوصل رسالتنا لأكبر عدد من الناس!</p>
@@ -693,13 +711,11 @@
                 icon: "⚠️",
                 content: `
                     <div class="text-center mb-8">
-                        <div class="text-6xl mb-4">⚠️</div>
-                        <h2 class="text-3xl font-bold text-white mb-4">أخطاء شائعة يجب تجنبها</h2>
+                        <div class="text-5xl sm:text-6xl mb-4">⚠️</div>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">أخطاء شائعة يجب تجنبها</h2>
                     </div>
-                    
-                    <div class="bg-white/20 rounded-xl p-6 mb-6">
+                    <div class="bg-white/20 rounded-xl p-5 sm:p-6 mb-6">
                         <h3 class="text-xl font-bold text-white mb-4">تجنب هذه الأخطاء الشائعة</h3>
-                        
                         <div class="space-y-4 mb-6">
                             <div class="bg-red-500/30 rounded-lg p-4">
                                 <h4 class="font-bold text-white mb-2">❌ استخدام ألوان كثيرة</h4>
@@ -718,7 +734,6 @@
                                 <p class="text-white/80">كن مبدعاً ولكن لا تنسخ</p>
                             </div>
                         </div>
-
                         <div class="bg-green-500/20 rounded-lg p-4">
                             <h4 class="font-bold text-white mb-2">✅ الحل البسيط</h4>
                             <p class="text-white/90">ابدأ بسيط، ثم أضف التفاصيل تدريجياً</p>
@@ -737,13 +752,11 @@
                 icon: "💡",
                 content: `
                     <div class="text-center mb-8">
-                        <div class="text-6xl mb-4">💡</div>
-                        <h2 class="text-3xl font-bold text-white mb-4">نصائح ذهبية للمبتدئين</h2>
+                        <div class="text-5xl sm:text-6xl mb-4">💡</div>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">نصائح ذهبية للمبتدئين</h2>
                     </div>
-                    
-                    <div class="bg-white/20 rounded-xl p-6 mb-6">
+                    <div class="bg-white/20 rounded-xl p-5 sm:p-6 mb-6">
                         <h3 class="text-xl font-bold text-white mb-4">كيف تصبح مصمماً أفضل؟</h3>
-                        
                         <div class="space-y-4 mb-6">
                             <div class="bg-blue-500/30 rounded-lg p-4">
                                 <h4 class="font-bold text-white mb-2">👀 انظر حولك</h4>
@@ -762,7 +775,6 @@
                                 <p class="text-white/80">بطاقة عمل، لوغو بسيط، إشارة</p>
                             </div>
                         </div>
-
                         <div class="bg-yellow-500/20 rounded-lg p-4">
                             <h4 class="font-bold text-white mb-2">🌟 تذكر دائماً</h4>
                             <p class="text-white/90">كل مصمم عظيم بدأ من الصفر. المهم أن تبدأ!</p>
@@ -781,22 +793,19 @@
                 icon: "🎯",
                 content: `
                     <div class="text-center mb-8">
-                        <div class="text-6xl mb-4">🎯</div>
-                        <h2 class="text-3xl font-bold text-white mb-4">مشروعك الأول</h2>
+                        <div class="text-5xl sm:text-6xl mb-4">🎯</div>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">مشروعك الأول</h2>
                     </div>
-                    
-                    <div class="bg-white/20 rounded-xl p-6 mb-6">
+                    <div class="bg-white/20 rounded-xl p-5 sm:p-6 mb-6">
                         <h3 class="text-xl font-bold text-white mb-4">الآن حان وقت التطبيق!</h3>
-                        
-                        <div class="bg-gradient-to-r from-green-500/30 to-blue-500/30 rounded-lg p-6 mb-6">
-                            <h4 class="font-bold text-white mb-4 text-xl">🎨 مشروعك: صمم لوغو لمقهى</h4>
-                            <div class="space-y-3">
+                        <div class="bg-gradient-to-r from-green-500/30 to-blue-500/30 rounded-lg p-5 sm:p-6 mb-6">
+                            <h4 class="font-bold text-white mb-4 text-lg sm:text-xl">🎨 مشروعك: صمم لوغو لمقهى</h4>
+                            <div class="space-y-2 sm:space-y-3">
                                 <p class="text-white/90">اسم المقهى: "قهوة الصباح"</p>
                                 <p class="text-white/90">الجمهور: الشباب والموظفون</p>
                                 <p class="text-white/90">الطابع: دافئ وودود</p>
                             </div>
                         </div>
-
                         <div class="space-y-4 mb-6">
                             <div class="bg-white/10 rounded-lg p-4">
                                 <h4 class="font-bold text-white mb-2">1️⃣ اختر شكلاً أساسياً</h4>
@@ -815,7 +824,6 @@
                                 <p class="text-white/80">فنجان قهوة أو حبة قهوة</p>
                             </div>
                         </div>
-
                         <div class="bg-yellow-500/20 rounded-lg p-4">
                             <h4 class="font-bold text-white mb-2">🎉 تهانينا!</h4>
                             <p class="text-white/90">أنت الآن تعرف أساسيات التصميم. استمر في التعلم والممارسة!</p>
@@ -842,13 +850,13 @@
         function renderLessonsSidebar() {
             const sidebar = document.getElementById('lessons-sidebar');
             sidebar.innerHTML = lessons.map((lesson, index) => `
-                <div class="lesson-card rounded-lg p-3 cursor-pointer ${completedLessons.has(lesson.id) ? 'completed' : ''} ${currentLesson === index ? 'active' : ''}" 
+                <div class="lesson-card ${completedLessons.has(lesson.id) ? 'completed' : ''} ${currentLesson === index ? 'active' : ''}" 
                      onclick="selectLesson(${index})">
                     <div class="flex items-center">
-                        <span class="text-2xl ml-3">${lesson.icon}</span>
-                        <div class="flex-1">
-                            <div class="font-medium text-sm">${lesson.title}</div>
-                            ${completedLessons.has(lesson.id) ? '<div class="text-xs opacity-75">✅ مكتمل</div>' : ''}
+                        <span class="text-xl sm:text-2xl ml-2 sm:ml-3">${lesson.icon}</span>
+                        <div class="flex-1 min-w-0">
+                            <div class="font-medium text-sm sm:text-base truncate">${lesson.title}</div>
+                            ${completedLessons.has(lesson.id) ? '<div class="text-xs opacity-80 mt-0.5">✅ مكتمل</div>' : ''}
                         </div>
                     </div>
                 </div>
@@ -870,13 +878,13 @@
             content.innerHTML = `
                 ${lesson.content}
                 <div class="mt-8">
-                    <div class="bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-xl p-6">
+                    <div class="bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-xl p-5 sm:p-6 border border-purple-400/30">
                         <h3 class="text-xl font-bold text-white mb-4">🧠 اختبر معلوماتك</h3>
                         <div class="mb-4">
                             <p class="text-white/90 text-lg mb-4">${lesson.quiz.question}</p>
-                            <div class="space-y-2" id="quiz-options">
+                            <div class="space-y-3" id="quiz-options">
                                 ${lesson.quiz.options.map((option, index) => `
-                                    <button class="quiz-option w-full text-right p-3 rounded-lg transition-all" 
+                                    <button class="quiz-option w-full text-right" 
                                             onclick="selectAnswer(${index}, ${lesson.quiz.correct}, ${lesson.id})">
                                         ${option}
                                     </button>
@@ -885,15 +893,14 @@
                         </div>
                         <div id="quiz-result" class="hidden mt-4"></div>
                     </div>
-                    
-                    <div class="flex justify-between mt-6">
+                    <div class="flex flex-col sm:flex-row justify-between gap-3 mt-6">
                         <button onclick="previousLesson()" 
-                                class="bg-gray-500 text-white px-6 py-2 rounded-lg ${currentLesson === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-600'}"
+                                class="btn btn-secondary flex-1 sm:flex-none"
                                 ${currentLesson === 0 ? 'disabled' : ''}>
                             ← السابق
                         </button>
                         <button onclick="nextLesson()" 
-                                class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-2 rounded-lg hover:shadow-lg transition-all">
+                                class="btn btn-primary flex-1 sm:flex-none">
                             ${currentLesson === lessons.length - 1 ? 'إنهاء الدورة 🎉' : 'التالي →'}
                         </button>
                     </div>
@@ -906,10 +913,10 @@
             const resultDiv = document.getElementById('quiz-result');
             
             options.forEach((option, index) => {
-                option.onclick = null;
+                option.disabled = true;
                 if (index === correctIndex) {
                     option.classList.add('correct');
-                } else if (index === selectedIndex && index !== correctIndex) {
+                } else if (index === selectedIndex) {
                     option.classList.add('incorrect');
                 } else {
                     option.classList.add('selected');
@@ -925,7 +932,7 @@
             }
 
             resultDiv.innerHTML = `
-                <div class="p-4 rounded-lg ${isCorrect ? 'bg-green-500/30' : 'bg-red-500/30'}">
+                <div class="p-4 rounded-lg ${isCorrect ? 'bg-green-500/30 border border-green-400/40' : 'bg-red-500/30 border border-red-400/40'}">
                     <p class="text-white font-bold">
                         ${isCorrect ? '🎉 إجابة صحيحة! +10 نقاط' : '❌ إجابة خاطئة. حاول مرة أخرى!'}
                     </p>
@@ -952,40 +959,37 @@
             const content = document.getElementById('main-content');
             content.innerHTML = `
                 <div class="text-center">
-                    <div class="text-6xl mb-6">🎉</div>
-                    <h2 class="text-4xl font-bold text-white mb-4">تهانينا!</h2>
-                    <p class="text-white/80 text-xl mb-6">لقد أكملت دورة تصميم الإشارات واللوغوهات بنجاح!</p>
-                    
-                    <div class="bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-xl p-8 mb-8">
-                        <h3 class="text-2xl font-bold text-white mb-4">إنجازاتك</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div class="text-center">
-                                <div class="text-3xl font-bold text-green-400">${completedLessons.size}</div>
-                                <div class="text-white/70">دروس مكتملة</div>
+                    <div class="text-5xl sm:text-6xl mb-6">🎉</div>
+                    <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">تهانينا!</h2>
+                    <p class="text-white/80 text-lg mb-8">لقد أكملت دورة تصميم الإشارات واللوغوهات بنجاح!</p>
+                    <div class="bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-xl p-6 sm:p-8 mb-8 border border-white/20">
+                        <h3 class="text-xl sm:text-2xl font-bold text-white mb-6">إنجازاتك</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div class="text-center p-4 bg-white/10 rounded-xl">
+                                <div class="text-2xl sm:text-3xl font-bold text-green-400">${completedLessons.size}</div>
+                                <div class="text-white/70 mt-2">دروس مكتملة</div>
                             </div>
-                            <div class="text-center">
-                                <div class="text-3xl font-bold text-blue-400">${totalScore}</div>
-                                <div class="text-white/70">النقاط المكتسبة</div>
+                            <div class="text-center p-4 bg-white/10 rounded-xl">
+                                <div class="text-2xl sm:text-3xl font-bold text-blue-400">${totalScore}</div>
+                                <div class="text-white/70 mt-2">النقاط المكتسبة</div>
                             </div>
-                            <div class="text-center">
-                                <div class="text-3xl font-bold text-purple-400">${Math.round((completedLessons.size / lessons.length) * 100)}%</div>
-                                <div class="text-white/70">نسبة الإكمال</div>
+                            <div class="text-center p-4 bg-white/10 rounded-xl">
+                                <div class="text-2xl sm:text-3xl font-bold text-purple-400">${Math.round((completedLessons.size / lessons.length) * 100)}%</div>
+                                <div class="text-white/70 mt-2">نسبة الإكمال</div>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="bg-yellow-500/20 rounded-xl p-6 mb-6">
-                        <h4 class="font-bold text-white mb-2">🚀 الخطوات التالية</h4>
-                        <ul class="text-white/90 space-y-2">
+                    <div class="bg-yellow-500/20 rounded-xl p-5 sm:p-6 mb-8 border border-yellow-400/30">
+                        <h4 class="font-bold text-white mb-3">🚀 الخطوات التالية</h4>
+                        <ul class="text-white/90 space-y-2 text-right">
                             <li>• ابدأ بتصميم مشاريع حقيقية</li>
                             <li>• انضم لمجتمعات المصممين</li>
                             <li>• تابع تعلم برامج التصميم المتقدمة</li>
                             <li>• اطلب آراء الآخرين في تصاميمك</li>
                         </ul>
                     </div>
-                    
                     <button onclick="restartCourse()" 
-                            class="bg-gradient-to-r from-purple-500 to-pink-600 text-white px-8 py-3 rounded-full font-bold text-lg hover:shadow-lg transition-all">
+                            class="btn btn-primary text-lg px-6 py-3">
                         ابدأ الدورة من جديد 🔄
                     </button>
                 </div>
@@ -998,19 +1002,20 @@
             totalScore = 0;
             updateProgress();
             renderLessonsSidebar();
-            selectLesson(0);
+            startCourse();
         }
 
         function updateProgress() {
             const progress = (completedLessons.size / lessons.length) * 100;
-            document.getElementById('progress-bar').style.width = progress + '%';
-            document.getElementById('progress-text').textContent = Math.round(progress) + '%';
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+            document.getElementById('progress-text').textContent = `${Math.round(progress)}%`;
             document.getElementById('completed-lessons').textContent = completedLessons.size;
             document.getElementById('total-points').textContent = totalScore;
         }
 
-        // Initialize the course
+        // Initialize
         initializeCourse();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9954796ed0b12833',t:'MTc2MTU5MjAyNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
+
