@@ -1,137 +1,225 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>دورة تصميم الإشارات واللوغوهات</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دورة التصميم الجرافيكي الشاملة</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
         }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+        
         .lesson-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 12px;
-            padding: 1rem;
-            cursor: pointer;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
+        
         .lesson-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transform: translateY(-3px);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(147, 51, 234, 0.2) 100%);
+            border-color: rgba(59, 130, 246, 0.4);
+            box-shadow: 0 15px 50px rgba(59, 130, 246, 0.2);
         }
+        
         .lesson-card.completed {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.25) 0%, rgba(22, 163, 74, 0.25) 100%);
+            border-color: rgba(34, 197, 94, 0.4);
         }
+        
         .lesson-card.active {
-            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-            color: white;
-            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.3) 0%, rgba(147, 51, 234, 0.3) 100%);
+            border-color: rgba(59, 130, 246, 0.6);
+            box-shadow: 0 0 40px rgba(59, 130, 246, 0.4);
         }
+        
         .quiz-option {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.15);
             color: white;
-            border: none;
-            text-align: right;
-            padding: 1rem;
-            border-radius: 12px;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
         }
-        .quiz-option:hover:not([disabled]) {
-            background: rgba(255, 255, 255, 0.25);
+        
+        .quiz-option:hover {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: rgba(59, 130, 246, 0.5);
+            transform: translateX(-8px);
         }
+        
         .quiz-option.correct {
-            background: rgba(16, 185, 129, 0.3);
-            color: white;
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.3) 0%, rgba(22, 163, 74, 0.3) 100%);
+            border-color: rgba(34, 197, 94, 0.6);
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
         }
+        
         .quiz-option.incorrect {
-            background: rgba(239, 68, 68, 0.3);
-            color: white;
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.3) 0%, rgba(220, 38, 38, 0.3) 100%);
+            border-color: rgba(239, 68, 68, 0.6);
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
         }
-        .quiz-option.selected {
-            opacity: 0.6;
+        
+        .content-frame {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
         }
-        .btn {
-            font-weight: 600;
-            border-radius: 9999px;
-            padding: 0.75rem 1.5rem;
-            transition: all 0.2s ease;
+        
+        .content-frame::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #f59e0b);
         }
-        .btn-primary {
-            background: linear-gradient(to left, #3b82f6, #8b5cf6);
-            color: white;
+        
+        .progress-circle {
+            transform: rotate(-90deg);
         }
-        .btn-primary:hover:not(:disabled) {
-            box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.4);
-            transform: translateY(-2px);
+        
+        .evaluation-badge {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            box-shadow: 0 10px 30px rgba(251, 191, 36, 0.3);
         }
-        .btn-secondary {
-            background: #6b7280;
-            color: white;
-        }
-        .btn-secondary:hover:not(:disabled) {
-            background: #4b5563;
-        }
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
+        
+        @media (max-width: 768px) {
+            .lesson-card {
+                margin-bottom: 0.75rem;
+            }
+            
+            .content-frame {
+                margin-bottom: 1rem;
+                padding: 1rem;
+            }
         }
     </style>
 </head>
-<body class="min-h-screen">
+<body class="min-h-full">
     <!-- Header -->
-    <header class="bg-white/10 backdrop-blur-md border-b border-white/20">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-6">
-            <div class="text-center">
-                <h1 class="text-3xl sm:text-4xl font-bold text-white mb-2">🎨 دورة تصميم الإشارات واللوغوهات</h1>
-                <p class="text-white/80 text-base sm:text-lg">تعلم أساسيات التصميم البصري خطوة بخطوة</p>
+    <header class="glass-card border-b border-white/20 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="flex items-center space-x-reverse space-x-4">
+                    <div class="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center text-xl sm:text-2xl">
+                        🎨
+                    </div>
+                    <div class="text-center sm:text-right">
+                        <h1 class="text-xl sm:text-3xl font-bold text-white">أكاديمية التصميم الجرافيكي</h1>
+                        <p class="text-white/70 text-sm sm:text-lg">15 درساً شاملاً مع اختبارات تفاعلية</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-reverse space-x-4 sm:space-x-6">
+                    <div class="text-center">
+                        <div class="text-lg sm:text-2xl font-bold text-white" id="progress-percentage">0%</div>
+                        <div class="text-white/60 text-xs sm:text-sm">التقدم</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-lg sm:text-2xl font-bold text-yellow-400" id="total-score">0</div>
+                        <div class="text-white/60 text-xs sm:text-sm">النقاط</div>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
 
-    <main class="max-w-6xl mx-auto px-4 sm:px-6 py-8">
-        <!-- Progress -->
-        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-5 sm:p-6 mb-8 border border-white/20">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-                <h2 class="text-xl sm:text-2xl font-bold text-white">تقدمك في الدورة</h2>
-                <div class="text-white text-xl font-bold" id="progress-text">0%</div>
-            </div>
-            <div class="w-full bg-white/20 rounded-full h-3">
-                <div id="progress-bar" class="bg-gradient-to-r from-green-400 to-blue-500 h-3 rounded-full transition-all duration-700 ease-out"></div>
-            </div>
-            <div class="flex flex-col sm:flex-row justify-between mt-4 text-white/80 text-sm sm:text-base">
-                <span>الدروس المكتملة: <span id="completed-lessons">0</span>/15</span>
-                <span>النقاط: <span id="total-points">0</span></span>
-            </div>
-        </div>
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-8">
+            <!-- Sidebar -->
+            <div class="lg:col-span-1 order-2 lg:order-1">
+                <div class="glass-card rounded-3xl p-4 sm:p-6 sticky top-24">
+                    <!-- Progress Circle -->
+                    <div class="text-center mb-6 sm:mb-8">
+                        <div class="relative w-24 h-24 sm:w-32 sm:h-32 mx-auto">
+                            <svg class="w-24 h-24 sm:w-32 sm:h-32 progress-circle">
+                                <circle cx="48" cy="48" r="40" stroke="rgba(255,255,255,0.1)" stroke-width="6" fill="none" class="sm:hidden"/>
+                                <circle cx="64" cy="64" r="56" stroke="rgba(255,255,255,0.1)" stroke-width="8" fill="none" class="hidden sm:block"/>
+                                <circle id="progress-circle" cx="48" cy="48" r="40" stroke="url(#gradient)" stroke-width="6" fill="none" 
+                                        stroke-dasharray="251.33" stroke-dashoffset="251.33" stroke-linecap="round" class="sm:hidden"/>
+                                <circle id="progress-circle-lg" cx="64" cy="64" r="56" stroke="url(#gradient)" stroke-width="8" fill="none" 
+                                        stroke-dasharray="351.86" stroke-dashoffset="351.86" stroke-linecap="round" class="hidden sm:block"/>
+                                <defs>
+                                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#3b82f6"/>
+                                        <stop offset="50%" style="stop-color:#8b5cf6"/>
+                                        <stop offset="100%" style="stop-color:#ec4899"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="text-lg sm:text-2xl font-bold text-white" id="circle-progress">0%</div>
+                                    <div class="text-white/60 text-xs">مكتمل</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
-            <!-- Lessons List -->
-            <div class="lg:col-span-1">
-                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-5 sm:p-6 sticky top-6 border border-white/20">
-                    <h3 class="text-lg sm:text-xl font-bold text-white mb-4">📚 قائمة الدروس</h3>
-                    <div class="space-y-3" id="lessons-sidebar">
+                    <!-- Stats -->
+                    <div class="grid grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
+                        <div class="glass-card rounded-xl p-3 sm:p-4 text-center">
+                            <div class="text-lg sm:text-xl font-bold text-green-400" id="completed-count">0</div>
+                            <div class="text-white/60 text-xs">مكتمل</div>
+                        </div>
+                        <div class="glass-card rounded-xl p-3 sm:p-4 text-center">
+                            <div class="text-lg sm:text-xl font-bold text-blue-400">15</div>
+                            <div class="text-white/60 text-xs">إجمالي</div>
+                        </div>
+                    </div>
+
+                    <!-- Lessons List -->
+                    <div class="space-y-2 sm:space-y-3 max-h-96 overflow-y-auto" id="lessons-sidebar">
                         <!-- Lessons will be populated here -->
                     </div>
                 </div>
             </div>
 
             <!-- Main Content -->
-            <div class="lg:col-span-2">
-                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 sm:p-8 border border-white/20" id="main-content">
+            <div class="lg:col-span-3 order-1 lg:order-2">
+                <div class="glass-card rounded-3xl p-6 sm:p-8 min-h-[500px]" id="main-content">
                     <!-- Welcome Screen -->
-                    <div class="text-center">
-                        <div class="text-5xl sm:text-6xl mb-6">🎨</div>
-                        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">مرحباً بك في دورة التصميم!</h2>
-                        <p class="text-white/80 text-base sm:text-lg mb-8">ستتعلم في هذه الدورة أساسيات تصميم الإشارات واللوغوهات من الصفر</p>
-                        <button onclick="startCourse()" class="btn btn-primary text-lg px-6 py-3">
-                            ابدأ التعلم الآن! 🚀
+                    <div class="text-center py-8 sm:py-16">
+                        <div class="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-3xl flex items-center justify-center text-3xl sm:text-4xl mx-auto mb-6 sm:mb-8">
+                            🎨
+                        </div>
+                        <h2 class="text-2xl sm:text-4xl font-bold text-white mb-4 sm:mb-6">مرحباً بك في أكاديمية التصميم</h2>
+                        <p class="text-white/80 text-lg sm:text-xl mb-6 sm:mb-8 max-w-2xl mx-auto leading-relaxed">
+                            دورة شاملة في التصميم الجرافيكي من الأساسيات إلى الاحتراف مع 15 درساً تفاعلياً و15 اختباراً
+                        </p>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12 max-w-4xl mx-auto">
+                            <div class="content-frame p-4 sm:p-6 text-center">
+                                <div class="text-2xl sm:text-3xl mb-3 sm:mb-4">📚</div>
+                                <h3 class="font-bold text-white mb-2 text-sm sm:text-base">15 درساً متدرجاً</h3>
+                                <p class="text-white/70 text-xs sm:text-sm">من المبادئ الأساسية للتطبيق العملي</p>
+                            </div>
+                            <div class="content-frame p-4 sm:p-6 text-center">
+                                <div class="text-2xl sm:text-3xl mb-3 sm:mb-4">🧠</div>
+                                <h3 class="font-bold text-white mb-2 text-sm sm:text-base">اختبارات تفاعلية</h3>
+                                <p class="text-white/70 text-xs sm:text-sm">تقييم فوري لمستوى فهمك</p>
+                            </div>
+                            <div class="content-frame p-4 sm:p-6 text-center">
+                                <div class="text-2xl sm:text-3xl mb-3 sm:mb-4">🏆</div>
+                                <h3 class="font-bold text-white mb-2 text-sm sm:text-base">تقييم شامل</h3>
+                                <p class="text-white/70 text-xs sm:text-sm">شهادة إنجاز مع التقييم النهائي</p>
+                            </div>
+                        </div>
+                        
+                        <button onclick="startCourse()" 
+                                class="bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 text-white px-8 sm:px-12 py-3 sm:py-4 rounded-2xl font-bold text-lg sm:text-xl hover:shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 transform hover:scale-105">
+                            ابدأ رحلة التعلم 🚀
                         </button>
                     </div>
                 </div>
@@ -143,697 +231,1100 @@
         const lessons = [
             {
                 id: 1,
-                title: "مقدمة في التصميم",
+                title: "مقدمة في التصميم الجرافيكي",
                 icon: "🎨",
+                duration: "12 دقيقة",
                 content: `
-                    <div class="text-center mb-8">
-                        <div class="text-5xl sm:text-6xl mb-4">🎨</div>
-                        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">مقدمة في التصميم البصري</h2>
+                    <div class="text-center mb-8 sm:mb-12">
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-pink-500 to-orange-500 rounded-3xl flex items-center justify-center text-2xl sm:text-3xl mx-auto mb-4 sm:mb-6">🎨</div>
+                        <h2 class="text-2xl sm:text-4xl font-bold text-white mb-3 sm:mb-4">مقدمة في التصميم الجرافيكي</h2>
+                        <p class="text-white/70 text-base sm:text-lg">الأساس الذي يبنى عليه كل تصميم ناجح</p>
                     </div>
-                    <div class="bg-white/20 rounded-xl p-5 sm:p-6 mb-6">
-                        <h3 class="text-xl font-bold text-white mb-4">ما هو التصميم البصري؟</h3>
-                        <p class="text-white/90 text-base sm:text-lg leading-relaxed mb-5">
-                            التصميم البصري هو فن التواصل بالصور والألوان والأشكال. إنه طريقة لنقل الأفكار والمشاعر بدون كلمات!
+                    
+                    <div class="content-frame p-4 sm:p-6 mb-4 sm:mb-6">
+                        <h3 class="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">ما هو التصميم الجرافيكي؟</h3>
+                        <p class="text-white/90 text-base sm:text-lg leading-relaxed mb-6 sm:mb-8">
+                            التصميم الجرافيكي هو فن التواصل البصري الذي يجمع بين النص والصورة والألوان لنقل رسالة معينة. 
+                            إنه لغة عالمية تتحدث بالعيون قبل العقل، وتؤثر على المشاعر قبل الأفكار.
                         </p>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div class="bg-blue-500/30 rounded-lg p-4">
-                                <div class="text-2xl mb-2">👁️</div>
-                                <h4 class="font-bold text-white mb-2">يجذب الانتباه</h4>
-                                <p class="text-white/80 text-sm">التصميم الجيد يلفت النظر فوراً</p>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                            <div class="content-frame p-4 sm:p-6">
+                                <div class="flex items-center mb-3 sm:mb-4">
+                                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-500/20 rounded-xl flex items-center justify-center text-lg sm:text-xl ml-3 sm:ml-4">👁️</div>
+                                    <h4 class="font-bold text-white text-base sm:text-lg">يجذب الانتباه</h4>
+                                </div>
+                                <p class="text-white/80 text-sm sm:text-base">التصميم الجيد يلفت النظر في ثوانٍ معدودة ويترك انطباعاً لا يُنسى في ذهن المشاهد</p>
                             </div>
-                            <div class="bg-green-500/30 rounded-lg p-4">
-                                <div class="text-2xl mb-2">💬</div>
-                                <h4 class="font-bold text-white mb-2">ينقل الرسالة</h4>
-                                <p class="text-white/80 text-sm">يوصل الفكرة بوضوح وسرعة</p>
+                            
+                            <div class="content-frame p-4 sm:p-6">
+                                <div class="flex items-center mb-3 sm:mb-4">
+                                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-green-500/20 rounded-xl flex items-center justify-center text-lg sm:text-xl ml-3 sm:ml-4">💬</div>
+                                    <h4 class="font-bold text-white text-base sm:text-lg">ينقل الرسالة</h4>
+                                </div>
+                                <p class="text-white/80 text-sm sm:text-base">يوصل الفكرة المطلوبة بوضوح وسرعة دون الحاجة لشرح طويل أو معقد</p>
                             </div>
-                            <div class="bg-purple-500/30 rounded-lg p-4">
-                                <div class="text-2xl mb-2">❤️</div>
-                                <h4 class="font-bold text-white mb-2">يثير المشاعر</h4>
-                                <p class="text-white/80 text-sm">يخلق ردود فعل عاطفية</p>
+                            
+                            <div class="content-frame p-4 sm:p-6">
+                                <div class="flex items-center mb-3 sm:mb-4">
+                                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-purple-500/20 rounded-xl flex items-center justify-center text-lg sm:text-xl ml-3 sm:ml-4">❤️</div>
+                                    <h4 class="font-bold text-white text-base sm:text-lg">يثير المشاعر</h4>
+                                </div>
+                                <p class="text-white/80 text-sm sm:text-base">يخلق ردود فعل عاطفية ويربط الجمهور بالعلامة التجارية على مستوى شخصي</p>
                             </div>
-                            <div class="bg-orange-500/30 rounded-lg p-4">
-                                <div class="text-2xl mb-2">🎯</div>
-                                <h4 class="font-bold text-white mb-2">يحفز على العمل</h4>
-                                <p class="text-white/80 text-sm">يدفع المشاهد لاتخاذ قرار</p>
+                            
+                            <div class="content-frame p-4 sm:p-6">
+                                <div class="flex items-center mb-3 sm:mb-4">
+                                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-orange-500/20 rounded-xl flex items-center justify-center text-lg sm:text-xl ml-3 sm:ml-4">🎯</div>
+                                    <h4 class="font-bold text-white text-base sm:text-lg">يحفز على العمل</h4>
+                                </div>
+                                <p class="text-white/80 text-sm sm:text-base">يدفع المشاهد لاتخاذ قرار أو القيام بإجراء معين مثل الشراء أو التسجيل</p>
                             </div>
                         </div>
                     </div>
+
+                    <div class="content-frame p-4 sm:p-8 bg-gradient-to-r from-blue-500/10 to-purple-500/10">
+                        <div class="flex items-center mb-3 sm:mb-4">
+                            <div class="text-2xl sm:text-3xl ml-3 sm:ml-4">💡</div>
+                            <h4 class="font-bold text-white text-lg sm:text-xl">نصيحة احترافية</h4>
+                        </div>
+                        <p class="text-white/90 text-base sm:text-lg">
+                            التصميم الناجح ليس مجرد شيء جميل، بل هو حل لمشكلة معينة. اسأل نفسك دائماً: 
+                            "ما المشكلة التي يحلها هذا التصميم؟ وما الهدف منه؟"
+                        </p>
+                    </div>
                 `,
                 quiz: {
-                    question: "ما هو الهدف الأساسي من التصميم البصري؟",
-                    options: ["جعل الأشياء جميلة فقط", "التواصل ونقل الأفكار", "استخدام ألوان كثيرة", "تعقيد الرسالة"],
-                    correct: 1
+                    question: "ما هو الهدف الأساسي من التصميم الجرافيكي؟",
+                    options: [
+                        "جعل الأشياء جميلة فقط",
+                        "التواصل البصري ونقل الرسائل",
+                        "استخدام ألوان كثيرة ومتنوعة",
+                        "تعقيد الرسالة وإخفاؤها"
+                    ],
+                    correct: 1,
+                    explanation: "التصميم الجرافيكي هو في الأساس وسيلة تواصل بصري تهدف لنقل رسالة أو فكرة معينة بطريقة واضحة وجذابة."
                 }
             },
             {
                 id: 2,
-                title: "الألوان الأساسية",
+                title: "نظرية الألوان",
                 icon: "🌈",
+                duration: "15 دقيقة",
                 content: `
-                    <div class="text-center mb-8">
-                        <div class="text-5xl sm:text-6xl mb-4">🌈</div>
-                        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">الألوان الأساسية</h2>
+                    <div class="text-center mb-8 sm:mb-12">
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-red-500 via-yellow-500 to-blue-500 rounded-3xl flex items-center justify-center text-2xl sm:text-3xl mx-auto mb-4 sm:mb-6">🌈</div>
+                        <h2 class="text-2xl sm:text-4xl font-bold text-white mb-3 sm:mb-4">نظرية الألوان وسيكولوجيتها</h2>
+                        <p class="text-white/70 text-base sm:text-lg">كيف تؤثر الألوان على المشاعر والقرارات</p>
                     </div>
-                    <div class="bg-white/20 rounded-xl p-5 sm:p-6 mb-6">
-                        <h3 class="text-xl font-bold text-white mb-4">عجلة الألوان البسيطة</h3>
-                        <p class="text-white/90 text-base sm:text-lg mb-6">
-                            الألوان لها قوة سحرية! كل لون يحمل معنى ومشاعر مختلفة.
+                    
+                    <div class="content-frame p-4 sm:p-6 mb-4 sm:mb-6">
+                        <h3 class="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">عجلة الألوان الأساسية</h3>
+                        <p class="text-white/90 text-base sm:text-lg leading-relaxed mb-6 sm:mb-8">
+                            كل لون له شخصية وتأثير نفسي مختلف. فهم هذا التأثير يساعدك في اختيار الألوان المناسبة لكل مشروع ولكل جمهور مستهدف.
                         </p>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-                            <div class="text-center bg-red-500/30 rounded-lg p-4">
-                                <div class="w-14 h-14 sm:w-16 sm:h-16 bg-red-500 rounded-full mx-auto mb-3"></div>
-                                <h4 class="font-bold text-white mb-2">الأحمر</h4>
-                                <p class="text-white/80 text-sm">القوة والحماس والحب</p>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
+                            <div class="content-frame p-4 sm:p-6 text-center">
+                                <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-red-500 to-red-600 rounded-full mx-auto mb-3 sm:mb-4 shadow-lg shadow-red-500/30"></div>
+                                <h4 class="font-bold text-white text-base sm:text-lg mb-2">الأحمر</h4>
+                                <p class="text-white/80 mb-2 sm:mb-3 text-sm sm:text-base">القوة • الحماس • الطاقة</p>
+                                <div class="text-xs sm:text-sm text-white/60">مثالي للمطاعم والرياضة والعروض</div>
                             </div>
-                            <div class="text-center bg-blue-500/30 rounded-lg p-4">
-                                <div class="w-14 h-14 sm:w-16 sm:h-16 bg-blue-500 rounded-full mx-auto mb-3"></div>
-                                <h4 class="font-bold text-white mb-2">الأزرق</h4>
-                                <p class="text-white/80 text-sm">الثقة والهدوء والمهنية</p>
+                            
+                            <div class="content-frame p-4 sm:p-6 text-center">
+                                <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full mx-auto mb-3 sm:mb-4 shadow-lg shadow-blue-500/30"></div>
+                                <h4 class="font-bold text-white text-base sm:text-lg mb-2">الأزرق</h4>
+                                <p class="text-white/80 mb-2 sm:mb-3 text-sm sm:text-base">الثقة • الهدوء • المهنية</p>
+                                <div class="text-xs sm:text-sm text-white/60">مناسب للشركات والتقنية والطب</div>
                             </div>
-                            <div class="text-center bg-yellow-500/30 rounded-lg p-4">
-                                <div class="w-14 h-14 sm:w-16 sm:h-16 bg-yellow-500 rounded-full mx-auto mb-3"></div>
-                                <h4 class="font-bold text-white mb-2">الأصفر</h4>
-                                <p class="text-white/80 text-sm">السعادة والطاقة والإبداع</p>
+                            
+                            <div class="content-frame p-4 sm:p-6 text-center">
+                                <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-green-500 to-green-600 rounded-full mx-auto mb-3 sm:mb-4 shadow-lg shadow-green-500/30"></div>
+                                <h4 class="font-bold text-white text-base sm:text-lg mb-2">الأخضر</h4>
+                                <p class="text-white/80 mb-2 sm:mb-3 text-sm sm:text-base">الطبيعة • النمو • الصحة</p>
+                                <div class="text-xs sm:text-sm text-white/60">رائع للبيئة والصحة والمال</div>
                             </div>
                         </div>
-                        <div class="bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-lg p-4">
-                            <h4 class="font-bold text-white mb-2">💡 نصيحة مهمة</h4>
-                            <p class="text-white/90">لا تستخدم أكثر من 3 ألوان في التصميم الواحد. البساطة هي الأناقة!</p>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                            <div class="content-frame p-4 sm:p-6">
+                                <h4 class="font-bold text-white text-base sm:text-lg mb-3 sm:mb-4">✅ قواعد الألوان الذهبية</h4>
+                                <ul class="text-white/80 space-y-2 text-sm sm:text-base">
+                                    <li class="flex items-center"><span class="text-green-400 ml-2">•</span> استخدم 2-3 ألوان كحد أقصى</li>
+                                    <li class="flex items-center"><span class="text-green-400 ml-2">•</span> اختر لوناً أساسياً ولوناً مساعداً</li>
+                                    <li class="flex items-center"><span class="text-green-400 ml-2">•</span> تأكد من التباين الجيد للقراءة</li>
+                                    <li class="flex items-center"><span class="text-green-400 ml-2">•</span> اختبر الألوان على خلفيات مختلفة</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="content-frame p-4 sm:p-6">
+                                <h4 class="font-bold text-white text-base sm:text-lg mb-3 sm:mb-4">❌ أخطاء شائعة</h4>
+                                <ul class="text-white/80 space-y-2 text-sm sm:text-base">
+                                    <li class="flex items-center"><span class="text-red-400 ml-2">•</span> استخدام ألوان كثيرة جداً</li>
+                                    <li class="flex items-center"><span class="text-red-400 ml-2">•</span> ألوان متشابهة بلا تباين</li>
+                                    <li class="flex items-center"><span class="text-red-400 ml-2">•</span> تجاهل المعنى الثقافي للألوان</li>
+                                    <li class="flex items-center"><span class="text-red-400 ml-2">•</span> عدم اختبار الألوان للطباعة</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 `,
                 quiz: {
                     question: "كم عدد الألوان المُوصى باستخدامها في التصميم الواحد؟",
-                    options: ["لا يوجد حد", "3 ألوان كحد أقصى", "5 ألوان", "10 ألوان"],
-                    correct: 1
+                    options: [
+                        "لا يوجد حد محدد",
+                        "2-3 ألوان كحد أقصى",
+                        "5-7 ألوان",
+                        "أكثر من 10 ألوان"
+                    ],
+                    correct: 1,
+                    explanation: "استخدام 2-3 ألوان يضمن التوازن والوضوح في التصميم، بينما الألوان الكثيرة تشتت الانتباه."
                 }
             },
             {
                 id: 3,
-                title: "الخطوط والكتابة",
+                title: "التايبوجرافي والخطوط",
                 icon: "📝",
+                duration: "18 دقيقة",
                 content: `
-                    <div class="text-center mb-8">
-                        <div class="text-5xl sm:text-6xl mb-4">📝</div>
-                        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">الخطوط والكتابة</h2>
+                    <div class="text-center mb-8 sm:mb-12">
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-purple-500 to-pink-500 rounded-3xl flex items-center justify-center text-2xl sm:text-3xl mx-auto mb-4 sm:mb-6">📝</div>
+                        <h2 class="text-2xl sm:text-4xl font-bold text-white mb-3 sm:mb-4">التايبوجرافي وفن الخطوط</h2>
+                        <p class="text-white/70 text-base sm:text-lg">كيف تختار وتنسق الخطوط بطريقة احترافية</p>
                     </div>
-                    <div class="bg-white/20 rounded-xl p-5 sm:p-6 mb-6">
-                        <h3 class="text-xl font-bold text-white mb-4">أنواع الخطوط البسيطة</h3>
-                        <div class="space-y-4 mb-6">
-                            <div class="bg-white/10 rounded-lg p-4">
-                                <h4 class="text-xl sm:text-2xl font-serif text-white mb-2">خط كلاسيكي</h4>
-                                <p class="text-white/80">مناسب للنصوص الطويلة والكتب</p>
+                    
+                    <div class="content-frame p-4 sm:p-6 mb-4 sm:mb-6">
+                        <h3 class="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">أنواع الخطوط الأساسية</h3>
+                        
+                        <div class="space-y-4 sm:space-y-6 mb-6 sm:mb-8">
+                            <div class="content-frame p-4 sm:p-6">
+                                <h4 class="text-xl sm:text-2xl font-serif text-white mb-2 sm:mb-3">خط كلاسيكي (Serif)</h4>
+                                <p class="text-white/80 text-sm sm:text-base">مناسب للنصوص الطويلة والكتب والمواد الأكاديمية. يعطي شعوراً بالجدية والتقليد.</p>
                             </div>
-                            <div class="bg-white/10 rounded-lg p-4">
-                                <h4 class="text-xl sm:text-2xl font-sans text-white mb-2">خط عصري</h4>
-                                <p class="text-white/80">مثالي للشاشات والتصاميم الحديثة</p>
+                            
+                            <div class="content-frame p-4 sm:p-6">
+                                <h4 class="text-xl sm:text-2xl font-sans text-white mb-2 sm:mb-3">خط عصري (Sans-serif)</h4>
+                                <p class="text-white/80 text-sm sm:text-base">مثالي للشاشات والتصاميم الحديثة. نظيف وواضح ومناسب للعناوين والواجهات.</p>
                             </div>
-                            <div class="bg-white/10 rounded-lg p-4">
-                                <h4 class="text-xl sm:text-2xl font-bold text-white mb-2">خط عريض</h4>
-                                <p class="text-white/80">للعناوين والكلمات المهمة</p>
+                            
+                            <div class="content-frame p-4 sm:p-6">
+                                <h4 class="text-xl sm:text-2xl font-bold text-white mb-2 sm:mb-3">خط عريض (Bold)</h4>
+                                <p class="text-white/80 text-sm sm:text-base">للعناوين والكلمات المهمة التي تحتاج لجذب الانتباه والتأكيد على الرسالة.</p>
                             </div>
                         </div>
-                        <div class="bg-green-500/20 rounded-lg p-4">
-                            <h4 class="font-bold text-white mb-2">✅ قواعد بسيطة</h4>
-                            <ul class="text-white/90 space-y-1 text-sm">
-                                <li>• اجعل النص كبيراً بما يكفي للقراءة</li>
-                                <li>• استخدم لوناً يتباين مع الخلفية</li>
-                                <li>• لا تستخدم أكثر من خطين مختلفين</li>
+
+                        <div class="content-frame p-4 sm:p-6 bg-green-500/10">
+                            <h4 class="font-bold text-white text-base sm:text-lg mb-3 sm:mb-4">✅ قواعد التايبوجرافي الاحترافية</h4>
+                            <ul class="text-white/90 space-y-2 text-sm sm:text-base">
+                                <li>• اجعل النص كبيراً بما يكفي للقراءة المريحة (16px كحد أدنى)</li>
+                                <li>• استخدم لوناً يتباين بوضوح مع الخلفية</li>
+                                <li>• لا تستخدم أكثر من خطين مختلفين في التصميم الواحد</li>
+                                <li>• اترك مساحة كافية بين الأسطر (Line Height)</li>
+                                <li>• استخدم التدرج في أحجام الخطوط لإنشاء هرمية بصرية</li>
                             </ul>
                         </div>
                     </div>
                 `,
                 quiz: {
-                    question: "ما هو أفضل نوع خط للعناوين؟",
-                    options: ["خط رفيع جداً", "خط عريض وواضح", "خط مزخرف معقد", "خط صغير"],
-                    correct: 1
+                    question: "ما هو أفضل نوع خط للعناوين الرئيسية؟",
+                    options: [
+                        "خط رفيع جداً وصغير",
+                        "خط عريض وواضح",
+                        "خط مزخرف ومعقد",
+                        "خط صغير ومتداخل"
+                    ],
+                    correct: 1,
+                    explanation: "الخط العريض والواضح يجذب الانتباه ويسهل القراءة، مما يجعله مثالياً للعناوين."
                 }
             },
             {
                 id: 4,
-                title: "الأشكال البسيطة",
+                title: "الأشكال والرموز",
                 icon: "🔷",
+                duration: "14 دقيقة",
                 content: `
-                    <div class="text-center mb-8">
-                        <div class="text-5xl sm:text-6xl mb-4">🔷</div>
-                        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">الأشكال البسيطة</h2>
+                    <div class="text-center mb-8 sm:mb-12">
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-3xl flex items-center justify-center text-2xl sm:text-3xl mx-auto mb-4 sm:mb-6">🔷</div>
+                        <h2 class="text-2xl sm:text-4xl font-bold text-white mb-3 sm:mb-4">الأشكال والرموز البصرية</h2>
+                        <p class="text-white/70 text-base sm:text-lg">لغة الأشكال ومعانيها في التصميم</p>
                     </div>
-                    <div class="bg-white/20 rounded-xl p-5 sm:p-6 mb-6">
-                        <h3 class="text-xl font-bold text-white mb-4">الأشكال الأساسية ومعانيها</h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-                            <div class="text-center bg-blue-500/30 rounded-lg p-4">
-                                <div class="w-14 h-14 sm:w-16 sm:h-16 bg-blue-500 rounded-full mx-auto mb-3"></div>
-                                <h4 class="font-bold text-white mb-2">الدائرة</h4>
-                                <p class="text-white/80 text-sm">الوحدة والكمال والحماية</p>
+                    
+                    <div class="content-frame p-4 sm:p-6 mb-4 sm:mb-6">
+                        <h3 class="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">الأشكال الأساسية ومعانيها</h3>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
+                            <div class="content-frame p-4 sm:p-6 text-center">
+                                <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full mx-auto mb-3 sm:mb-4 shadow-lg shadow-blue-500/30"></div>
+                                <h4 class="font-bold text-white text-base sm:text-lg mb-2">الدائرة</h4>
+                                <p class="text-white/80 text-sm sm:text-base mb-2">الوحدة • الكمال • الحماية</p>
+                                <div class="text-xs sm:text-sm text-white/60">ترمز للاستمرارية واللانهاية</div>
                             </div>
-                            <div class="text-center bg-green-500/30 rounded-lg p-4">
-                                <div class="w-14 h-14 sm:w-16 sm:h-16 bg-green-500 mx-auto mb-3"></div>
-                                <h4 class="font-bold text-white mb-2">المربع</h4>
-                                <p class="text-white/80 text-sm">الاستقرار والثقة والنظام</p>
+                            
+                            <div class="content-frame p-4 sm:p-6 text-center">
+                                <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-green-500 to-green-600 mx-auto mb-3 sm:mb-4 shadow-lg shadow-green-500/30"></div>
+                                <h4 class="font-bold text-white text-base sm:text-lg mb-2">المربع</h4>
+                                <p class="text-white/80 text-sm sm:text-base mb-2">الاستقرار • الثقة • النظام</p>
+                                <div class="text-xs sm:text-sm text-white/60">يعطي شعوراً بالأمان والموثوقية</div>
                             </div>
-                            <div class="text-center bg-orange-500/30 rounded-lg p-4">
-                                <div class="w-14 h-14 sm:w-16 sm:h-16 bg-orange-500 mx-auto mb-3" style="clip-path: polygon(50% 0%, 0% 100%, 100% 100%)"></div>
-                                <h4 class="font-bold text-white mb-2">المثلث</h4>
-                                <p class="text-white/80 text-sm">القوة والحركة والتوجه</p>
+                            
+                            <div class="content-frame p-4 sm:p-6 text-center">
+                                <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-orange-500 to-orange-600 mx-auto mb-3 sm:mb-4 shadow-lg shadow-orange-500/30" style="clip-path: polygon(50% 0%, 0% 100%, 100% 100%)"></div>
+                                <h4 class="font-bold text-white text-base sm:text-lg mb-2">المثلث</h4>
+                                <p class="text-white/80 text-sm sm:text-base mb-2">القوة • الحركة • التوجه</p>
+                                <div class="text-xs sm:text-sm text-white/60">يشير للتقدم والطموح</div>
                             </div>
                         </div>
-                        <div class="bg-purple-500/20 rounded-lg p-4">
-                            <h4 class="font-bold text-white mb-2">🎯 استخدم الأشكال بذكاء</h4>
-                            <p class="text-white/90">كل شكل يرسل رسالة مختلفة. اختر الشكل الذي يناسب رسالتك!</p>
+
+                        <div class="content-frame p-4 sm:p-6 bg-purple-500/10">
+                            <h4 class="font-bold text-white text-base sm:text-lg mb-3 sm:mb-4">🎯 استخدم الأشكال بذكاء</h4>
+                            <p class="text-white/90 text-sm sm:text-base mb-4">كل شكل يرسل رسالة مختلفة. اختر الشكل الذي يناسب رسالتك وجمهورك المستهدف.</p>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <h5 class="font-semibold text-white mb-2 text-sm sm:text-base">للشركات المحافظة:</h5>
+                                    <p class="text-white/80 text-xs sm:text-sm">استخدم المربعات والمستطيلات</p>
+                                </div>
+                                <div>
+                                    <h5 class="font-semibold text-white mb-2 text-sm sm:text-base">للشركات الإبداعية:</h5>
+                                    <p class="text-white/80 text-xs sm:text-sm">استخدم الدوائر والأشكال المنحنية</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 `,
                 quiz: {
-                    question: "أي شكل يرمز للاستقرار والثقة؟",
-                    options: ["الدائرة", "المثلث", "المربع", "النجمة"],
-                    correct: 2
+                    question: "أي شكل يرمز للاستقرار والثقة في التصميم؟",
+                    options: [
+                        "الدائرة",
+                        "المثلث",
+                        "المربع",
+                        "النجمة"
+                    ],
+                    correct: 2,
+                    explanation: "المربع يرمز للاستقرار والثقة والنظام، لذلك تستخدمه البنوك والشركات المحافظة كثيراً."
                 }
             },
             {
                 id: 5,
-                title: "تصميم لوغو بسيط",
+                title: "تصميم الشعارات",
                 icon: "🏷️",
+                duration: "20 دقيقة",
                 content: `
-                    <div class="text-center mb-8">
-                        <div class="text-5xl sm:text-6xl mb-4">🏷️</div>
-                        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">تصميم لوغو بسيط</h2>
+                    <div class="text-center mb-8 sm:mb-12">
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-yellow-500 to-red-500 rounded-3xl flex items-center justify-center text-2xl sm:text-3xl mx-auto mb-4 sm:mb-6">🏷️</div>
+                        <h2 class="text-2xl sm:text-4xl font-bold text-white mb-3 sm:mb-4">تصميم الشعارات الاحترافية</h2>
+                        <p class="text-white/70 text-base sm:text-lg">خطوات إنشاء شعار قوي ومؤثر</p>
                     </div>
-                    <div class="bg-white/20 rounded-xl p-5 sm:p-6 mb-6">
-                        <h3 class="text-xl font-bold text-white mb-4">خطوات تصميم لوغو ناجح</h3>
-                        <div class="space-y-4 mb-6">
-                            <div class="flex items-start bg-white/10 rounded-lg p-4">
-                                <div class="flex-shrink-0 w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold ml-4 text-sm">1</div>
+                    
+                    <div class="content-frame p-4 sm:p-6 mb-4 sm:mb-6">
+                        <h3 class="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">خطوات تصميم شعار ناجح</h3>
+                        
+                        <div class="space-y-4 sm:space-y-6 mb-6 sm:mb-8">
+                            <div class="flex items-start content-frame p-4 sm:p-6">
+                                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold ml-4 text-sm sm:text-base flex-shrink-0">1</div>
                                 <div>
-                                    <h4 class="font-bold text-white">ابدأ بفكرة بسيطة</h4>
-                                    <p class="text-white/80 text-sm">فكر في شيء واحد يمثل الشركة</p>
+                                    <h4 class="font-bold text-white text-base sm:text-lg mb-2">ابحث وادرس السوق</h4>
+                                    <p class="text-white/80 text-sm sm:text-base">ادرس المنافسين والجمهور المستهدف لتفهم ما يميز علامتك التجارية</p>
                                 </div>
                             </div>
-                            <div class="flex items-start bg-white/10 rounded-lg p-4">
-                                <div class="flex-shrink-0 w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-bold ml-4 text-sm">2</div>
+                            
+                            <div class="flex items-start content-frame p-4 sm:p-6">
+                                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-green-500 rounded-full flex items-center justify-center text-white font-bold ml-4 text-sm sm:text-base flex-shrink-0">2</div>
                                 <div>
-                                    <h4 class="font-bold text-white">اختر شكلاً أساسياً</h4>
-                                    <p class="text-white/80 text-sm">دائرة، مربع، أو مثلث</p>
+                                    <h4 class="font-bold text-white text-base sm:text-lg mb-2">ابدأ بفكرة بسيطة</h4>
+                                    <p class="text-white/80 text-sm sm:text-base">فكر في شيء واحد يمثل جوهر الشركة أو المنتج بوضوح</p>
                                 </div>
                             </div>
-                            <div class="flex items-start bg-white/10 rounded-lg p-4">
-                                <div class="flex-shrink-0 w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold ml-4 text-sm">3</div>
+                            
+                            <div class="flex items-start content-frame p-4 sm:p-6">
+                                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold ml-4 text-sm sm:text-base flex-shrink-0">3</div>
                                 <div>
-                                    <h4 class="font-bold text-white">أضف لوناً واحداً</h4>
-                                    <p class="text-white/80 text-sm">لون واحد قوي أفضل من ألوان كثيرة</p>
+                                    <h4 class="font-bold text-white text-base sm:text-lg mb-2">اختر شكلاً أساسياً</h4>
+                                    <p class="text-white/80 text-sm sm:text-base">ابدأ بدائرة، مربع، أو مثلث كأساس للتصميم</p>
                                 </div>
                             </div>
-                            <div class="flex items-start bg-white/10 rounded-lg p-4">
-                                <div class="flex-shrink-0 w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold ml-4 text-sm">4</div>
+                            
+                            <div class="flex items-start content-frame p-4 sm:p-6">
+                                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold ml-4 text-sm sm:text-base flex-shrink-0">4</div>
                                 <div>
-                                    <h4 class="font-bold text-white">اجعله يُقرأ بوضوح</h4>
-                                    <p class="text-white/80 text-sm">يجب أن يظهر جيداً كبيراً وصغيراً</p>
+                                    <h4 class="font-bold text-white text-base sm:text-lg mb-2">اختبر في أحجام مختلفة</h4>
+                                    <p class="text-white/80 text-sm sm:text-base">تأكد أن الشعار يظهر بوضوح كبيراً وصغيراً</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="bg-yellow-500/20 rounded-lg p-4">
-                            <h4 class="font-bold text-white mb-2">⭐ أمثلة لوغوهات بسيطة وناجحة</h4>
-                            <p class="text-white/90">Apple (تفاحة)، Nike (علامة صح)، McDonald's (حرف M)</p>
+
+                        <div class="content-frame p-4 sm:p-6 bg-yellow-500/10">
+                            <h4 class="font-bold text-white text-base sm:text-lg mb-3 sm:mb-4">⭐ أمثلة شعارات بسيطة وناجحة</h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                <div class="text-center">
+                                    <div class="text-2xl sm:text-3xl mb-2">🍎</div>
+                                    <p class="text-white/90 text-sm sm:text-base font-semibold">Apple</p>
+                                    <p class="text-white/70 text-xs sm:text-sm">بساطة مطلقة</p>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-2xl sm:text-3xl mb-2">✓</div>
+                                    <p class="text-white/90 text-sm sm:text-base font-semibold">Nike</p>
+                                    <p class="text-white/70 text-xs sm:text-sm">حركة وطاقة</p>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-2xl sm:text-3xl mb-2">M</div>
+                                    <p class="text-white/90 text-sm sm:text-base font-semibold">McDonald's</p>
+                                    <p class="text-white/70 text-xs sm:text-sm">سهولة التذكر</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 `,
                 quiz: {
-                    question: "ما هو أهم شيء في تصميم اللوغو؟",
-                    options: ["استخدام ألوان كثيرة", "البساطة والوضوح", "التعقيد والتفاصيل", "الحجم الكبير فقط"],
-                    correct: 1
+                    question: "ما هو أهم مبدأ في تصميم الشعارات؟",
+                    options: [
+                        "استخدام ألوان كثيرة ومتنوعة",
+                        "البساطة والوضوح",
+                        "التعقيد والتفاصيل الكثيرة",
+                        "الحجم الكبير فقط"
+                    ],
+                    correct: 1,
+                    explanation: "البساطة والوضوح هما أساس الشعار الناجح، فالشعار البسيط يُتذكر بسهولة ويُقرأ في جميع الأحجام."
                 }
             },
             {
                 id: 6,
-                title: "الإشارات التوجيهية",
-                icon: "🚦",
+                title: "التخطيط والتكوين",
+                icon: "📐",
+                duration: "16 دقيقة",
                 content: `
-                    <div class="text-center mb-8">
-                        <div class="text-5xl sm:text-6xl mb-4">🚦</div>
-                        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">الإشارات التوجيهية</h2>
+                    <div class="text-center mb-8 sm:mb-12">
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-3xl flex items-center justify-center text-2xl sm:text-3xl mx-auto mb-4 sm:mb-6">📐</div>
+                        <h2 class="text-2xl sm:text-4xl font-bold text-white mb-3 sm:mb-4">التخطيط والتكوين</h2>
+                        <p class="text-white/70 text-base sm:text-lg">كيف تنظم العناصر في التصميم</p>
                     </div>
-                    <div class="bg-white/20 rounded-xl p-5 sm:p-6 mb-6">
-                        <h3 class="text-xl font-bold text-white mb-4">كيف تصمم إشارة واضحة؟</h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                            <div class="bg-green-500/30 rounded-lg p-4">
-                                <div class="text-3xl mb-2">✅</div>
-                                <h4 class="font-bold text-white mb-2">افعل</h4>
-                                <ul class="text-white/80 text-sm space-y-1">
-                                    <li>• استخدم كلمات قليلة وواضحة</li>
-                                    <li>• اجعل الخط كبيراً</li>
-                                    <li>• استخدم ألواناً متباينة</li>
-                                    <li>• أضف رموزاً مفهومة</li>
-                                </ul>
+                    
+                    <div class="content-frame p-4 sm:p-6 mb-4 sm:mb-6">
+                        <h3 class="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">قواعد التخطيط الأساسية</h3>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
+                            <div class="content-frame p-4 sm:p-6">
+                                <h4 class="font-bold text-white text-base sm:text-lg mb-3 sm:mb-4">📏 قاعدة الأثلاث</h4>
+                                <p class="text-white/80 text-sm sm:text-base mb-3">قسم التصميم إلى 9 مربعات متساوية وضع العناصر المهمة على نقاط التقاطع</p>
+                                <div class="w-full h-20 sm:h-24 bg-white/10 rounded-lg relative">
+                                    <div class="absolute inset-0 grid grid-cols-3 grid-rows-3 gap-1 p-2">
+                                        <div class="bg-white/20 rounded"></div>
+                                        <div class="bg-white/20 rounded"></div>
+                                        <div class="bg-white/20 rounded"></div>
+                                        <div class="bg-white/20 rounded"></div>
+                                        <div class="bg-blue-500/50 rounded"></div>
+                                        <div class="bg-white/20 rounded"></div>
+                                        <div class="bg-white/20 rounded"></div>
+                                        <div class="bg-white/20 rounded"></div>
+                                        <div class="bg-white/20 rounded"></div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="bg-red-500/30 rounded-lg p-4">
-                                <div class="text-3xl mb-2">❌</div>
-                                <h4 class="font-bold text-white mb-2">لا تفعل</h4>
-                                <ul class="text-white/80 text-sm space-y-1">
-                                    <li>• لا تكتب نصاً طويلاً</li>
-                                    <li>• لا تستخدم خطاً صغيراً</li>
-                                    <li>• لا تستخدم ألواناً متشابهة</li>
-                                    <li>• لا تعقد الرسالة</li>
-                                </ul>
+                            
+                            <div class="content-frame p-4 sm:p-6">
+                                <h4 class="font-bold text-white text-base sm:text-lg mb-3 sm:mb-4">⚖️ التوازن البصري</h4>
+                                <p class="text-white/80 text-sm sm:text-base mb-3">وزع العناصر بحيث لا يبدو جانب أثقل من الآخر</p>
+                                <div class="flex justify-center items-center space-x-reverse space-x-4 h-20 sm:h-24">
+                                    <div class="w-8 h-8 sm:w-12 sm:h-12 bg-blue-500 rounded"></div>
+                                    <div class="w-4 h-4 sm:w-6 sm:h-6 bg-white/50 rounded"></div>
+                                    <div class="w-8 h-8 sm:w-12 sm:h-12 bg-purple-500 rounded"></div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="bg-blue-500/20 rounded-lg p-4">
-                            <h4 class="font-bold text-white mb-2">🎯 الهدف الأساسي</h4>
-                            <p class="text-white/90">الإشارة الجيدة يفهمها أي شخص في ثانية واحدة!</p>
+                            
+                            <div class="content-frame p-4 sm:p-6">
+                                <h4 class="font-bold text-white text-base sm:text-lg mb-3 sm:mb-4">🎯 النقطة المحورية</h4>
+                                <p class="text-white/80 text-sm sm:text-base">اجعل هناك عنصر واحد يجذب الانتباه أولاً</p>
+                            </div>
+                            
+                            <div class="content-frame p-4 sm:p-6">
+                                <h4 class="font-bold text-white text-base sm:text-lg mb-3 sm:mb-4">📱 المساحة البيضاء</h4>
+                                <p class="text-white/80 text-sm sm:text-base">اترك مساحات فارغة لتنفس التصميم</p>
+                            </div>
                         </div>
                     </div>
                 `,
                 quiz: {
-                    question: "ما هو أهم شيء في تصميم الإشارات التوجيهية؟",
-                    options: ["الألوان الجميلة", "الوضوح والبساطة", "الخط المزخرف", "النص الطويل"],
-                    correct: 1
+                    question: "ما هي قاعدة الأثلاث في التصميم؟",
+                    options: [
+                        "استخدام ثلاثة ألوان فقط",
+                        "تقسيم التصميم إلى 9 أجزاء متساوية",
+                        "استخدام ثلاثة خطوط مختلفة",
+                        "جعل التصميم بثلاث طبقات"
+                    ],
+                    correct: 1,
+                    explanation: "قاعدة الأثلاث تقسم التصميم إلى 9 مربعات متساوية، ووضع العناصر المهمة على نقاط التقاطع يخلق تكويناً أكثر جاذبية."
                 }
             },
             {
                 id: 7,
-                title: "استخدام الرموز",
-                icon: "🔣",
+                title: "الصور والرسوم",
+                icon: "🖼️",
+                duration: "17 دقيقة",
                 content: `
-                    <div class="text-center mb-8">
-                        <div class="text-5xl sm:text-6xl mb-4">🔣</div>
-                        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">استخدام الرموز</h2>
+                    <div class="text-center mb-8 sm:mb-12">
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-3xl flex items-center justify-center text-2xl sm:text-3xl mx-auto mb-4 sm:mb-6">🖼️</div>
+                        <h2 class="text-2xl sm:text-4xl font-bold text-white mb-3 sm:mb-4">استخدام الصور والرسوم</h2>
+                        <p class="text-white/70 text-base sm:text-lg">كيف تختار وتعدل الصور بطريقة احترافية</p>
                     </div>
-                    <div class="bg-white/20 rounded-xl p-5 sm:p-6 mb-6">
-                        <h3 class="text-xl font-bold text-white mb-4">الرموز العالمية المفهومة</h3>
-                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6">
-                            <div class="text-center bg-white/10 rounded-lg p-3">
-                                <div class="text-2xl sm:text-3xl mb-2">🏠</div>
-                                <p class="text-white text-xs sm:text-sm">المنزل</p>
+                    
+                    <div class="content-frame p-4 sm:p-6 mb-4 sm:mb-6">
+                        <h3 class="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">معايير اختيار الصور</h3>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
+                            <div class="content-frame p-4 sm:p-6">
+                                <h4 class="font-bold text-white text-base sm:text-lg mb-3 sm:mb-4">✅ صور عالية الجودة</h4>
+                                <ul class="text-white/80 space-y-2 text-sm sm:text-base">
+                                    <li>• دقة عالية (300 DPI للطباعة)</li>
+                                    <li>• إضاءة جيدة وواضحة</li>
+                                    <li>• تركيز حاد على الموضوع</li>
+                                    <li>• ألوان طبيعية ومتوازنة</li>
+                                </ul>
                             </div>
-                            <div class="text-center bg-white/10 rounded-lg p-3">
-                                <div class="text-2xl sm:text-3xl mb-2">📧</div>
-                                <p class="text-white text-xs sm:text-sm">البريد</p>
-                            </div>
-                            <div class="text-center bg-white/10 rounded-lg p-3">
-                                <div class="text-2xl sm:text-3xl mb-2">📱</div>
-                                <p class="text-white text-xs sm:text-sm">الهاتف</p>
-                            </div>
-                            <div class="text-center bg-white/10 rounded-lg p-3">
-                                <div class="text-2xl sm:text-3xl mb-2">🔍</div>
-                                <p class="text-white text-xs sm:text-sm">البحث</p>
-                            </div>
-                            <div class="text-center bg-white/10 rounded-lg p-3">
-                                <div class="text-2xl sm:text-3xl mb-2">⚙️</div>
-                                <p class="text-white text-xs sm:text-sm">الإعدادات</p>
-                            </div>
-                            <div class="text-center bg-white/10 rounded-lg p-3">
-                                <div class="text-2xl sm:text-3xl mb-2">❤️</div>
-                                <p class="text-white text-xs sm:text-sm">المفضلة</p>
-                            </div>
-                            <div class="text-center bg-white/10 rounded-lg p-3">
-                                <div class="text-2xl sm:text-3xl mb-2">🛒</div>
-                                <p class="text-white text-xs sm:text-sm">التسوق</p>
-                            </div>
-                            <div class="text-center bg-white/10 rounded-lg p-3">
-                                <div class="text-2xl sm:text-3xl mb-2">📍</div>
-                                <p class="text-white text-xs sm:text-sm">الموقع</p>
+                            
+                            <div class="content-frame p-4 sm:p-6">
+                                <h4 class="font-bold text-white text-base sm:text-lg mb-3 sm:mb-4">❌ تجنب هذه الأخطاء</h4>
+                                <ul class="text-white/80 space-y-2 text-sm sm:text-base">
+                                    <li>• صور مشوشة أو منخفضة الجودة</li>
+                                    <li>• إضاءة سيئة أو ظلال قاسية</li>
+                                    <li>• ألوان مشبعة بشكل مفرط</li>
+                                    <li>• صور مكررة أو مبتذلة</li>
+                                </ul>
                             </div>
                         </div>
-                        <div class="bg-orange-500/20 rounded-lg p-4">
-                            <h4 class="font-bold text-white mb-2">💡 نصيحة ذهبية</h4>
-                            <p class="text-white/90">استخدم الرموز التي يعرفها الجميع. لا تخترع رموزاً جديدة!</p>
+
+                        <div class="content-frame p-4 sm:p-6 bg-blue-500/10">
+                            <h4 class="font-bold text-white text-base sm:text-lg mb-3 sm:mb-4">🎨 نصائح للتعديل على الصور</h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <h5 class="font-semibold text-white mb-2 text-sm sm:text-base">التعديلات الأساسية:</h5>
+                                    <ul class="text-white/80 text-xs sm:text-sm space-y-1">
+                                        <li>• تعديل السطوع والتباين</li>
+                                        <li>• تصحيح الألوان</li>
+                                        <li>• قص وتغيير الحجم</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h5 class="font-semibold text-white mb-2 text-sm sm:text-base">التأثيرات المتقدمة:</h5>
+                                    <ul class="text-white/80 text-xs sm:text-sm space-y-1">
+                                        <li>• إزالة الخلفية</li>
+                                        <li>• إضافة فلاتر</li>
+                                        <li>• دمج الصور</li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 `,
                 quiz: {
-                    question: "لماذا نستخدم الرموز في التصميم؟",
-                    options: ["لتعقيد التصميم", "للتواصل السريع والواضح", "لملء المساحات", "لإظهار المهارة"],
-                    correct: 1
+                    question: "ما هي الدقة المناسبة للصور المخصصة للطباعة؟",
+                    options: [
+                        "72 DPI",
+                        "150 DPI",
+                        "300 DPI",
+                        "500 DPI"
+                    ],
+                    correct: 2,
+                    explanation: "300 DPI هي الدقة المعيارية للطباعة عالية الجودة، بينما 72 DPI تكفي للشاشات فقط."
                 }
             },
             {
                 id: 8,
-                title: "التوازن في التصميم",
-                icon: "⚖️",
+                title: "التصميم للطباعة",
+                icon: "🖨️",
+                duration: "19 دقيقة",
                 content: `
-                    <div class="text-center mb-8">
-                        <div class="text-5xl sm:text-6xl mb-4">⚖️</div>
-                        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">التوازن في التصميم</h2>
+                    <div class="text-center mb-8 sm:mb-12">
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-rose-500 to-pink-500 rounded-3xl flex items-center justify-center text-2xl sm:text-3xl mx-auto mb-4 sm:mb-6">🖨️</div>
+                        <h2 class="text-2xl sm:text-4xl font-bold text-white mb-3 sm:mb-4">التصميم للطباعة</h2>
+                        <p class="text-white/70 text-base sm:text-lg">الفرق بين التصميم للشاشة والطباعة</p>
                     </div>
-                    <div class="bg-white/20 rounded-xl p-5 sm:p-6 mb-6">
-                        <h3 class="text-xl font-bold text-white mb-4">كيف تجعل تصميمك متوازناً؟</h3>
-                        <div class="space-y-4 mb-6">
-                            <div class="bg-white/10 rounded-lg p-4">
-                                <h4 class="font-bold text-white mb-2">🎯 وزع العناصر بالتساوي</h4>
-                                <p class="text-white/80">لا تضع كل شيء في جانب واحد</p>
+                    
+                    <div class="content-frame p-4 sm:p-6 mb-4 sm:mb-6">
+                        <h3 class="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">متطلبات الطباعة الاحترافية</h3>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
+                            <div class="content-frame p-4 sm:p-6">
+                                <h4 class="font-bold text-white text-base sm:text-lg mb-3 sm:mb-4">🖨️ للطباعة</h4>
+                                <ul class="text-white/80 space-y-2 text-sm sm:text-base">
+                                    <li class="flex items-center"><span class="text-green-400 ml-2">•</span> دقة عالية (300 DPI)</li>
+                                    <li class="flex items-center"><span class="text-green-400 ml-2">•</span> ألوان CMYK</li>
+                                    <li class="flex items-center"><span class="text-green-400 ml-2">•</span> مساحة أمان 3-5 مم</li>
+                                    <li class="flex items-center"><span class="text-green-400 ml-2">•</span> خطوط محولة لمسارات</li>
+                                </ul>
                             </div>
-                            <div class="bg-white/10 rounded-lg p-4">
-                                <h4 class="font-bold text-white mb-2">📏 استخدم المساحات الفارغة</h4>
-                                <p class="text-white/80">الفراغ مهم مثل العناصر نفسها</p>
-                            </div>
-                            <div class="bg-white/10 rounded-lg p-4">
-                                <h4 class="font-bold text-white mb-2">🎨 وازن الألوان الفاتحة والغامقة</h4>
-                                <p class="text-white/80">لا تجعل كل شيء فاتحاً أو غامقاً</p>
+                            
+                            <div class="content-frame p-4 sm:p-6">
+                                <h4 class="font-bold text-white text-base sm:text-lg mb-3 sm:mb-4">💻 للشاشات</h4>
+                                <ul class="text-white/80 space-y-2 text-sm sm:text-base">
+                                    <li class="flex items-center"><span class="text-blue-400 ml-2">•</span> دقة منخفضة (72-96 DPI)</li>
+                                    <li class="flex items-center"><span class="text-blue-400 ml-2">•</span> ألوان RGB</li>
+                                    <li class="flex items-center"><span class="text-blue-400 ml-2">•</span> حجم ملف صغير</li>
+                                    <li class="flex items-center"><span class="text-blue-400 ml-2">•</span> تحسين للسرعة</li>
+                                </ul>
                             </div>
                         </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div class="bg-green-500/30 rounded-lg p-4 text-center">
-                                <h4 class="font-bold text-white mb-2">✅ متوازن</h4>
-                                <div class="flex justify-center items-center space-x-reverse space-x-2">
-                                    <div class="w-8 h-8 bg-blue-500 rounded"></div>
-                                    <div class="w-4 h-4 bg-white rounded"></div>
-                                    <div class="w-8 h-8 bg-red-500 rounded"></div>
+
+                        <div class="content-frame p-4 sm:p-6 bg-orange-500/10">
+                            <h4 class="font-bold text-white text-base sm:text-lg mb-3 sm:mb-4">⚠️ أخطاء شائعة في الطباعة</h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <h5 class="font-semibold text-white mb-2 text-sm sm:text-base">مشاكل الألوان:</h5>
+                                    <ul class="text-white/80 text-xs sm:text-sm space-y-1">
+                                        <li>• استخدام RGB بدلاً من CMYK</li>
+                                        <li>• عدم معايرة الشاشة</li>
+                                        <li>• ألوان خارج نطاق الطباعة</li>
+                                    </ul>
                                 </div>
-                            </div>
-                            <div class="bg-red-500/30 rounded-lg p-4 text-center">
-                                <h4 class="font-bold text-white mb-2">❌ غير متوازن</h4>
-                                <div class="flex justify-start items-center space-x-reverse space-x-2">
-                                    <div class="w-8 h-8 bg-blue-500 rounded"></div>
-                                    <div class="w-8 h-8 bg-red-500 rounded"></div>
-                                    <div class="w-8 h-8 bg-green-500 rounded"></div>
+                                <div>
+                                    <h5 class="font-semibold text-white mb-2 text-sm sm:text-base">مشاكل التخطيط:</h5>
+                                    <ul class="text-white/80 text-xs sm:text-sm space-y-1">
+                                        <li>• عدم ترك مساحة أمان</li>
+                                        <li>• نص صغير جداً</li>
+                                        <li>• عدم محاذاة العناصر</li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
                 `,
                 quiz: {
-                    question: "ما هو التوازن في التصميم؟",
-                    options: ["استخدام نفس اللون في كل مكان", "توزيع العناصر بطريقة متناسقة", "جعل كل شيء في المنتصف", "استخدام أشكال متطابقة فقط"],
-                    correct: 1
+                    question: "ما هو نظام الألوان المناسب للطباعة؟",
+                    options: [
+                        "RGB",
+                        "CMYK",
+                        "HSB",
+                        "LAB"
+                    ],
+                    correct: 1,
+                    explanation: "CMYK هو نظام الألوان المعياري للطباعة، بينما RGB مخصص للشاشات الرقمية."
                 }
             },
             {
                 id: 9,
-                title: "اختيار الألوان المناسبة",
-                icon: "🎨",
+                title: "التصميم التفاعلي",
+                icon: "📱",
+                duration: "21 دقيقة",
                 content: `
-                    <div class="text-center mb-8">
-                        <div class="text-5xl sm:text-6xl mb-4">🎨</div>
-                        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">اختيار الألوان المناسبة</h2>
+                    <div class="text-center mb-8 sm:mb-12">
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-violet-500 to-purple-500 rounded-3xl flex items-center justify-center text-2xl sm:text-3xl mx-auto mb-4 sm:mb-6">📱</div>
+                        <h2 class="text-2xl sm:text-4xl font-bold text-white mb-3 sm:mb-4">التصميم التفاعلي والرقمي</h2>
+                        <p class="text-white/70 text-base sm:text-lg">تصميم للشاشات والتطبيقات</p>
                     </div>
-                    <div class="bg-white/20 rounded-xl p-5 sm:p-6 mb-6">
-                        <h3 class="text-xl font-bold text-white mb-4">ألوان لأنواع مختلفة من الأعمال</h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                            <div class="bg-blue-500/30 rounded-lg p-4">
-                                <h4 class="font-bold text-white mb-2">🏢 الأعمال والشركات</h4>
-                                <div class="flex space-x-reverse space-x-2 mb-2">
-                                    <div class="w-5 h-5 sm:w-6 sm:h-6 bg-blue-600 rounded"></div>
-                                    <div class="w-5 h-5 sm:w-6 sm:h-6 bg-gray-700 rounded"></div>
-                                    <div class="w-5 h-5 sm:w-6 sm:h-6 bg-green-700 rounded"></div>
-                                </div>
-                                <p class="text-white/80 text-xs sm:text-sm">أزرق، رمادي، أخضر غامق</p>
+                    
+                    <div class="content-frame p-4 sm:p-6 mb-4 sm:mb-6">
+                        <h3 class="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">مبادئ التصميم التفاعلي</h3>
+                        
+                        <div class="space-y-4 sm:space-y-6 mb-6 sm:mb-8">
+                            <div class="content-frame p-4 sm:p-6">
+                                <h4 class="font-bold text-white text-base sm:text-lg mb-3">📱 التصميم المتجاوب</h4>
+                                <p class="text-white/80 text-sm sm:text-base">يجب أن يعمل التصميم على جميع أحجام الشاشات من الهاتف إلى الحاسوب</p>
                             </div>
-                            <div class="bg-pink-500/30 rounded-lg p-4">
-                                <h4 class="font-bold text-white mb-2">👶 الأطفال والألعاب</h4>
-                                <div class="flex space-x-reverse space-x-2 mb-2">
-                                    <div class="w-5 h-5 sm:w-6 sm:h-6 bg-pink-400 rounded"></div>
-                                    <div class="w-5 h-5 sm:w-6 sm:h-6 bg-yellow-400 rounded"></div>
-                                    <div class="w-5 h-5 sm:w-6 sm:h-6 bg-green-400 rounded"></div>
-                                </div>
-                                <p class="text-white/80 text-xs sm:text-sm">وردي، أصفر، أخضر فاتح</p>
+                            
+                            <div class="content-frame p-4 sm:p-6">
+                                <h4 class="font-bold text-white text-base sm:text-lg mb-3">👆 سهولة الاستخدام</h4>
+                                <p class="text-white/80 text-sm sm:text-base">الأزرار والروابط يجب أن تكون واضحة وسهلة الضغط</p>
                             </div>
-                            <div class="bg-green-500/30 rounded-lg p-4">
-                                <h4 class="font-bold text-white mb-2">🌱 الطبيعة والصحة</h4>
-                                <div class="flex space-x-reverse space-x-2 mb-2">
-                                    <div class="w-5 h-5 sm:w-6 sm:h-6 bg-green-500 rounded"></div>
-                                    <div class="w-5 h-5 sm:w-6 sm:h-6 bg-green-700 rounded"></div>
-                                    <div class="w-5 h-5 sm:w-6 sm:h-6 bg-yellow-600 rounded"></div>
-                                </div>
-                                <p class="text-white/80 text-xs sm:text-sm">أخضر بدرجاته، بني طبيعي</p>
-                            </div>
-                            <div class="bg-red-500/30 rounded-lg p-4">
-                                <h4 class="font-bold text-white mb-2">🍕 الطعام والمطاعم</h4>
-                                <div class="flex space-x-reverse space-x-2 mb-2">
-                                    <div class="w-5 h-5 sm:w-6 sm:h-6 bg-red-500 rounded"></div>
-                                    <div class="w-5 h-5 sm:w-6 sm:h-6 bg-orange-500 rounded"></div>
-                                    <div class="w-5 h-5 sm:w-6 sm:h-6 bg-yellow-500 rounded"></div>
-                                </div>
-                                <p class="text-white/80 text-xs sm:text-sm">أحمر، برتقالي، أصفر</p>
+                            
+                            <div class="content-frame p-4 sm:p-6">
+                                <h4 class="font-bold text-white text-base sm:text-lg mb-3">⚡ السرعة والأداء</h4>
+                                <p class="text-white/80 text-sm sm:text-base">تحسين الصور والملفات لتحميل سريع</p>
                             </div>
                         </div>
-                        <div class="bg-purple-500/20 rounded-lg p-4">
-                            <h4 class="font-bold text-white mb-2">🎯 قاعدة مهمة</h4>
-                            <p class="text-white/90">فكر في شعور العميل عند رؤية اللون. هل يناسب نوع العمل؟</p>
+
+                        <div class="content-frame p-4 sm:p-6 bg-purple-500/10">
+                            <h4 class="font-bold text-white text-base sm:text-lg mb-3 sm:mb-4">🎯 نصائح للتصميم الرقمي</h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <h5 class="font-semibold text-white mb-2 text-sm sm:text-base">للهواتف الذكية:</h5>
+                                    <ul class="text-white/80 text-xs sm:text-sm space-y-1">
+                                        <li>• أزرار كبيرة (44px كحد أدنى)</li>
+                                        <li>• نص واضح وكبير</li>
+                                        <li>• تنقل بسيط</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h5 class="font-semibold text-white mb-2 text-sm sm:text-base">للحاسوب:</h5>
+                                    <ul class="text-white/80 text-xs sm:text-sm space-y-1">
+                                        <li>• استغلال المساحة الكبيرة</li>
+                                        <li>• تفاعل بالماوس</li>
+                                        <li>• قوائم متقدمة</li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 `,
                 quiz: {
-                    question: "أي لون الأنسب لشركة تقنية؟",
-                    options: ["وردي فاتح", "أزرق أو رمادي", "أحمر فاقع", "أصفر زاهي"],
-                    correct: 1
+                    question: "ما هو الحد الأدنى لحجم الأزرار في تصميم الهواتف؟",
+                    options: [
+                        "24px",
+                        "32px",
+                        "44px",
+                        "56px"
+                    ],
+                    correct: 2,
+                    explanation: "44px هو الحد الأدنى الموصى به لحجم الأزرار في الهواتف لضمان سهولة الضغط عليها."
                 }
             },
             {
                 id: 10,
-                title: "البرامج البسيطة",
-                icon: "💻",
+                title: "علم النفس في التصميم",
+                icon: "🧠",
+                duration: "18 دقيقة",
                 content: `
-                    <div class="text-center mb-8">
-                        <div class="text-5xl sm:text-6xl mb-4">💻</div>
-                        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">البرامج البسيطة للتصميم</h2>
+                    <div class="text-center mb-8 sm:mb-12">
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-amber-500 to-orange-500 rounded-3xl flex items-center justify-center text-2xl sm:text-3xl mx-auto mb-4 sm:mb-6">🧠</div>
+                        <h2 class="text-2xl sm:text-4xl font-bold text-white mb-3 sm:mb-4">علم النفس في التصميم</h2>
+                        <p class="text-white/70 text-base sm:text-lg">كيف يؤثر التصميم على سلوك المستخدم</p>
                     </div>
-                    <div class="bg-white/20 rounded-xl p-5 sm:p-6 mb-6">
-                        <h3 class="text-xl font-bold text-white mb-4">ابدأ بهذه البرامج السهلة</h3>
-                        <div class="space-y-4 mb-6">
-                            <div class="bg-green-500/30 rounded-lg p-4">
-                                <h4 class="font-bold text-white mb-2">🎨 Canva - الأسهل للمبتدئين</h4>
-                                <p class="text-white/80 text-sm">مجاني، سهل الاستخدام، قوالب جاهزة</p>
+                    
+                    <div class="content-frame p-4 sm:p-6 mb-4 sm:mb-6">
+                        <h3 class="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">التأثيرات النفسية للتصميم</h3>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
+                            <div class="content-frame p-4 sm:p-6">
+                                <h4 class="font-bold text-white text-base sm:text-lg mb-3 sm:mb-4">🎨 تأثير الألوان النفسي</h4>
+                                <ul class="text-white/80 space-y-2 text-sm sm:text-base">
+                                    <li>• الأحمر: يزيد الشعور بالعجلة</li>
+                                    <li>• الأزرق: يبعث على الثقة والهدوء</li>
+                                    <li>• الأخضر: يشعر بالأمان والطبيعة</li>
+                                    <li>• الأصفر: ينشط ويجذب الانتباه</li>
+                                </ul>
                             </div>
-                            <div class="bg-blue-500/30 rounded-lg p-4">
-                                <h4 class="font-bold text-white mb-2">🖼️ GIMP - مجاني وقوي</h4>
-                                <p class="text-white/80 text-sm">بديل مجاني لفوتوشوب</p>
-                            </div>
-                            <div class="bg-purple-500/30 rounded-lg p-4">
-                                <h4 class="font-bold text-white mb-2">📱 تطبيقات الهاتف</h4>
-                                <p class="text-white/80 text-sm">Canva Mobile, Adobe Express</p>
+                            
+                            <div class="content-frame p-4 sm:p-6">
+                                <h4 class="font-bold text-white text-base sm:text-lg mb-3 sm:mb-4">📐 تأثير الأشكال</h4>
+                                <ul class="text-white/80 space-y-2 text-sm sm:text-base">
+                                    <li>• الدوائر: تشعر بالأمان والوحدة</li>
+                                    <li>• المربعات: تعطي شعور بالاستقرار</li>
+                                    <li>• المثلثات: تحفز على العمل</li>
+                                    <li>• الخطوط المنحنية: تبدو ودودة</li>
+                                </ul>
                             </div>
                         </div>
-                        <div class="bg-yellow-500/20 rounded-lg p-4">
-                            <h4 class="font-bold text-white mb-2">💡 نصيحة للبداية</h4>
-                            <p class="text-white/90">ابدأ بـ Canva لتتعلم الأساسيات، ثم انتقل لبرامج أكثر تقدماً</p>
+
+                        <div class="content-frame p-4 sm:p-6 bg-indigo-500/10">
+                            <h4 class="font-bold text-white text-base sm:text-lg mb-3 sm:mb-4">🎯 استراتيجيات التأثير</h4>
+                            <div class="space-y-3">
+                                <div>
+                                    <h5 class="font-semibold text-white mb-2 text-sm sm:text-base">لزيادة المبيعات:</h5>
+                                    <p class="text-white/80 text-xs sm:text-sm">استخدم الأحمر والبرتقالي مع عبارات تحفيزية</p>
+                                </div>
+                                <div>
+                                    <h5 class="font-semibold text-white mb-2 text-sm sm:text-base">لبناء الثقة:</h5>
+                                    <p class="text-white/80 text-xs sm:text-sm">استخدم الأزرق والأشكال المستقرة</p>
+                                </div>
+                                <div>
+                                    <h5 class="font-semibold text-white mb-2 text-sm sm:text-base">للراحة والاسترخاء:</h5>
+                                    <p class="text-white/80 text-xs sm:text-sm">استخدم الأخضر والأشكال المنحنية</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 `,
                 quiz: {
-                    question: "أي برنامج الأفضل للمبتدئين؟",
-                    options: ["Adobe Photoshop", "Canva", "AutoCAD", "3D Max"],
-                    correct: 1
+                    question: "أي لون يُستخدم عادة لزيادة الشعور بالعجلة في التسوق؟",
+                    options: [
+                        "الأزرق",
+                        "الأخضر",
+                        "الأحمر",
+                        "البنفسجي"
+                    ],
+                    correct: 2,
+                    explanation: "الأحمر يزيد الشعور بالعجلة والإثارة، لذلك يُستخدم كثيراً في عروض التخفيضات والمبيعات."
                 }
             },
             {
                 id: 11,
-                title: "التصميم للطباعة",
-                icon: "🖨️",
+                title: "الهوية البصرية",
+                icon: "🎭",
+                duration: "22 دقيقة",
                 content: `
-                    <div class="text-center mb-8">
-                        <div class="text-5xl sm:text-6xl mb-4">🖨️</div>
-                        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">التصميم للطباعة</h2>
+                    <div class="text-center mb-8 sm:mb-12">
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-3xl flex items-center justify-center text-2xl sm:text-3xl mx-auto mb-4 sm:mb-6">🎭</div>
+                        <h2 class="text-2xl sm:text-4xl font-bold text-white mb-3 sm:mb-4">تصميم الهوية البصرية</h2>
+                        <p class="text-white/70 text-base sm:text-lg">بناء هوية متكاملة للعلامة التجارية</p>
                     </div>
-                    <div class="bg-white/20 rounded-xl p-5 sm:p-6 mb-6">
-                        <h3 class="text-xl font-bold text-white mb-4">قواعد بسيطة للطباعة الجيدة</h3>
-                        <div class="space-y-4 mb-6">
-                            <div class="bg-white/10 rounded-lg p-4">
-                                <h4 class="font-bold text-white mb-2">📏 الحجم والجودة</h4>
-                                <p class="text-white/80">استخدم دقة عالية (300 DPI) للطباعة الواضحة</p>
+                    
+                    <div class="content-frame p-4 sm:p-6 mb-4 sm:mb-6">
+                        <h3 class="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">عناصر الهوية البصرية</h3>
+                        
+                        <div class="space-y-4 sm:space-y-6 mb-6 sm:mb-8">
+                            <div class="content-frame p-4 sm:p-6">
+                                <h4 class="font-bold text-white text-base sm:text-lg mb-3">🏷️ الشعار (Logo)</h4>
+                                <p class="text-white/80 text-sm sm:text-base">الرمز الأساسي الذي يمثل العلامة التجارية ويميزها عن المنافسين</p>
                             </div>
-                            <div class="bg-white/10 rounded-lg p-4">
-                                <h4 class="font-bold text-white mb-2">🎨 الألوان للطباعة</h4>
-                                <p class="text-white/80">الألوان على الشاشة تختلف عن الطباعة</p>
+                            
+                            <div class="content-frame p-4 sm:p-6">
+                                <h4 class="font-bold text-white text-base sm:text-lg mb-3">🎨 لوحة الألوان</h4>
+                                <p class="text-white/80 text-sm sm:text-base">مجموعة الألوان الثابتة التي تستخدم في جميع المواد التسويقية</p>
                             </div>
-                            <div class="bg-white/10 rounded-lg p-4">
-                                <h4 class="font-bold text-white mb-2">📄 اترك مساحة للقص</h4>
-                                <p class="text-white/80">لا تضع نصاً مهماً قريباً من الحواف</p>
+                            
+                            <div class="content-frame p-4 sm:p-6">
+                                <h4 class="font-bold text-white text-base sm:text-lg mb-3">📝 الخطوط المؤسسية</h4>
+                                <p class="text-white/80 text-sm sm:text-base">الخطوط المحددة للعناوين والنصوص في جميع المواد</p>
+                            </div>
+                            
+                            <div class="content-frame p-4 sm:p-6">
+                                <h4 class="font-bold text-white text-base sm:text-lg mb-3">📐 الأسلوب البصري</h4>
+                                <p class="text-white/80 text-sm sm:text-base">طريقة استخدام الصور والرسوم والأشكال بشكل متسق</p>
                             </div>
                         </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div class="bg-green-500/30 rounded-lg p-4">
-                                <h4 class="font-bold text-white mb-2">✅ للطباعة</h4>
-                                <ul class="text-white/80 text-sm space-y-1">
-                                    <li>• دقة عالية (300 DPI)</li>
-                                    <li>• ألوان CMYK</li>
-                                    <li>• مساحة أمان من الحواف</li>
-                                </ul>
-                            </div>
-                            <div class="bg-blue-500/30 rounded-lg p-4">
-                                <h4 class="font-bold text-white mb-2">💻 للشاشات</h4>
-                                <ul class="text-white/80 text-sm space-y-1">
-                                    <li>• دقة منخفضة (72 DPI)</li>
-                                    <li>• ألوان RGB</li>
-                                    <li>• حجم ملف صغير</li>
-                                </ul>
+
+                        <div class="content-frame p-4 sm:p-6 bg-teal-500/10">
+                            <h4 class="font-bold text-white text-base sm:text-lg mb-3 sm:mb-4">📋 دليل الهوية البصرية</h4>
+                            <p class="text-white/90 text-sm sm:text-base mb-4">
+                                يجب إنشاء دليل شامل يوضح كيفية استخدام عناصر الهوية بطريقة صحيحة ومتسقة.
+                            </p>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <h5 class="font-semibold text-white mb-2 text-sm sm:text-base">يجب أن يتضمن:</h5>
+                                    <ul class="text-white/80 text-xs sm:text-sm space-y-1">
+                                        <li>• أحجام الشعار المختلفة</li>
+                                        <li>• المساحات الآمنة حول الشعار</li>
+                                        <li>• الاستخدامات الصحيحة والخاطئة</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h5 class="font-semibold text-white mb-2 text-sm sm:text-base">أمثلة التطبيق:</h5>
+                                    <ul class="text-white/80 text-xs sm:text-sm space-y-1">
+                                        <li>• بطاقات العمل</li>
+                                        <li>• الموقع الإلكتروني</li>
+                                        <li>• المواد التسويقية</li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
                 `,
                 quiz: {
-                    question: "ما هي الدقة المناسبة للطباعة؟",
-                    options: ["72 DPI", "150 DPI", "300 DPI", "500 DPI"],
-                    correct: 2
+                    question: "ما هو أهم عنصر في الهوية البصرية؟",
+                    options: [
+                        "الألوان فقط",
+                        "الشعار والتطبيق المتسق لجميع العناصر",
+                        "الخطوط فقط",
+                        "الصور فقط"
+                    ],
+                    correct: 1,
+                    explanation: "الهوية البصرية الناجحة تتطلب تكامل جميع العناصر (الشعار، الألوان، الخطوط) وتطبيقها بشكل متسق."
                 }
             },
             {
                 id: 12,
-                title: "التصميم للجميع",
-                icon: "♿",
+                title: "التصميم المستدام",
+                icon: "🌱",
+                duration: "16 دقيقة",
                 content: `
-                    <div class="text-center mb-8">
-                        <div class="text-5xl sm:text-6xl mb-4">♿</div>
-                        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">التصميم للجميع</h2>
+                    <div class="text-center mb-8 sm:mb-12">
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-green-500 to-emerald-500 rounded-3xl flex items-center justify-center text-2xl sm:text-3xl mx-auto mb-4 sm:mb-6">🌱</div>
+                        <h2 class="text-2xl sm:text-4xl font-bold text-white mb-3 sm:mb-4">التصميم المستدام والبيئي</h2>
+                        <p class="text-white/70 text-base sm:text-lg">تصميم مسؤول بيئياً واجتماعياً</p>
                     </div>
-                    <div class="bg-white/20 rounded-xl p-5 sm:p-6 mb-6">
-                        <h3 class="text-xl font-bold text-white mb-4">كيف تجعل تصميمك مناسباً للجميع؟</h3>
-                        <div class="space-y-4 mb-6">
-                            <div class="bg-blue-500/30 rounded-lg p-4">
-                                <h4 class="font-bold text-white mb-2">👁️ للذين يواجهون صعوبة في الرؤية</h4>
-                                <ul class="text-white/80 text-sm space-y-1">
-                                    <li>• استخدم خطاً كبيراً وواضحاً</li>
-                                    <li>• اجعل التباين عالياً بين النص والخلفية</li>
-                                    <li>• لا تعتمد على اللون فقط لنقل المعلومة</li>
+                    
+                    <div class="content-frame p-4 sm:p-6 mb-4 sm:mb-6">
+                        <h3 class="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">مبادئ التصميم المستدام</h3>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
+                            <div class="content-frame p-4 sm:p-6">
+                                <h4 class="font-bold text-white text-base sm:text-lg mb-3 sm:mb-4">🌍 التأثير البيئي</h4>
+                                <ul class="text-white/80 space-y-2 text-sm sm:text-base">
+                                    <li>• تقليل استهلاك الحبر في الطباعة</li>
+                                    <li>• استخدام ورق معاد التدوير</li>
+                                    <li>• تصميمات تدوم طويلاً</li>
+                                    <li>• تقليل النفايات</li>
                                 </ul>
                             </div>
-                            <div class="bg-green-500/30 rounded-lg p-4">
-                                <h4 class="font-bold text-white mb-2">🤲 للذين يواجهون صعوبة في الحركة</h4>
-                                <ul class="text-white/80 text-sm space-y-1">
-                                    <li>• اجعل الأزرار كبيرة وسهلة الضغط</li>
-                                    <li>• اترك مساحة كافية بين العناصر</li>
-                                    <li>• لا تجعل التفاعل معقداً</li>
+                            
+                            <div class="content-frame p-4 sm:p-6">
+                                <h4 class="font-bold text-white text-base sm:text-lg mb-3 sm:mb-4">♿ إمكانية الوصول</h4>
+                                <ul class="text-white/80 space-y-2 text-sm sm:text-base">
+                                    <li>• تباين عالي للألوان</li>
+                                    <li>• خطوط واضحة وكبيرة</li>
+                                    <li>• تصميم للجميع</li>
+                                    <li>• سهولة الاستخدام</li>
                                 </ul>
                             </div>
                         </div>
-                        <div class="bg-purple-500/20 rounded-lg p-4">
-                            <h4 class="font-bold text-white mb-2">❤️ لماذا هذا مهم؟</h4>
-                            <p class="text-white/90">عندما نصمم للجميع، نوصل رسالتنا لأكبر عدد من الناس!</p>
+
+                        <div class="content-frame p-4 sm:p-6 bg-green-500/10">
+                            <h4 class="font-bold text-white text-base sm:text-lg mb-3 sm:mb-4">💡 نصائح للتصميم المستدام</h4>
+                            <div class="space-y-3">
+                                <div>
+                                    <h5 class="font-semibold text-white mb-2 text-sm sm:text-base">في الطباعة:</h5>
+                                    <p class="text-white/80 text-xs sm:text-sm">استخدم خطوط رفيعة وتجنب المساحات السوداء الكبيرة</p>
+                                </div>
+                                <div>
+                                    <h5 class="font-semibold text-white mb-2 text-sm sm:text-base">في التصميم الرقمي:</h5>
+                                    <p class="text-white/80 text-xs sm:text-sm">قلل من استهلاك البطارية بألوان داكنة</p>
+                                </div>
+                                <div>
+                                    <h5 class="font-semibold text-white mb-2 text-sm sm:text-base">في المحتوى:</h5>
+                                    <p class="text-white/80 text-xs sm:text-sm">صمم محتوى يدوم ولا يحتاج تحديث مستمر</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 `,
                 quiz: {
-                    question: "لماذا نهتم بالتصميم الشامل؟",
-                    options: ["لتعقيد التصميم", "لوصول الرسالة للجميع", "لاستخدام ألوان أكثر", "لإظهار المهارة"],
-                    correct: 1
+                    question: "كيف يمكن تقليل التأثير البيئي في تصميم المطبوعات؟",
+                    options: [
+                        "استخدام ألوان كثيرة ومشرقة",
+                        "تقليل استهلاك الحبر والورق",
+                        "طباعة نسخ كثيرة",
+                        "استخدام ورق جديد فقط"
+                    ],
+                    correct: 1,
+                    explanation: "تقليل استهلاك الحبر والورق من خلال التصميم الذكي يقلل التأثير البيئي بشكل كبير."
                 }
             },
             {
                 id: 13,
-                title: "أخطاء شائعة",
-                icon: "⚠️",
+                title: "أدوات التصميم",
+                icon: "🛠️",
+                duration: "20 دقيقة",
                 content: `
-                    <div class="text-center mb-8">
-                        <div class="text-5xl sm:text-6xl mb-4">⚠️</div>
-                        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">أخطاء شائعة يجب تجنبها</h2>
+                    <div class="text-center mb-8 sm:mb-12">
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-slate-500 to-gray-500 rounded-3xl flex items-center justify-center text-2xl sm:text-3xl mx-auto mb-4 sm:mb-6">🛠️</div>
+                        <h2 class="text-2xl sm:text-4xl font-bold text-white mb-3 sm:mb-4">أدوات التصميم الاحترافية</h2>
+                        <p class="text-white/70 text-base sm:text-lg">البرامج والأدوات الأساسية للمصمم</p>
                     </div>
-                    <div class="bg-white/20 rounded-xl p-5 sm:p-6 mb-6">
-                        <h3 class="text-xl font-bold text-white mb-4">تجنب هذه الأخطاء الشائعة</h3>
-                        <div class="space-y-4 mb-6">
-                            <div class="bg-red-500/30 rounded-lg p-4">
-                                <h4 class="font-bold text-white mb-2">❌ استخدام ألوان كثيرة</h4>
-                                <p class="text-white/80">أكثر من 3 ألوان يجعل التصميم مشتتاً</p>
+                    
+                    <div class="content-frame p-4 sm:p-6 mb-4 sm:mb-6">
+                        <h3 class="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">البرامج الأساسية</h3>
+                        
+                        <div class="space-y-4 sm:space-y-6 mb-6 sm:mb-8">
+                            <div class="content-frame p-4 sm:p-6">
+                                <h4 class="font-bold text-white text-base sm:text-lg mb-3">🎨 Adobe Creative Suite</h4>
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                    <div>
+                                        <h5 class="font-semibold text-white mb-2 text-sm">Photoshop</h5>
+                                        <p class="text-white/80 text-xs">تعديل الصور والتصميم الرقمي</p>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-semibold text-white mb-2 text-sm">Illustrator</h5>
+                                        <p class="text-white/80 text-xs">الشعارات والرسوم المتجهة</p>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-semibold text-white mb-2 text-sm">InDesign</h5>
+                                        <p class="text-white/80 text-xs">تخطيط المطبوعات والكتب</p>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="bg-red-500/30 rounded-lg p-4">
-                                <h4 class="font-bold text-white mb-2">❌ خط صغير جداً</h4>
-                                <p class="text-white/80">النص يجب أن يُقرأ بسهولة</p>
-                            </div>
-                            <div class="bg-red-500/30 rounded-lg p-4">
-                                <h4 class="font-bold text-white mb-2">❌ عدم ترك مساحات فارغة</h4>
-                                <p class="text-white/80">الازدحام يجعل التصميم صعب القراءة</p>
-                            </div>
-                            <div class="bg-red-500/30 rounded-lg p-4">
-                                <h4 class="font-bold text-white mb-2">❌ تقليد الآخرين تماماً</h4>
-                                <p class="text-white/80">كن مبدعاً ولكن لا تنسخ</p>
+                            
+                            <div class="content-frame p-4 sm:p-6">
+                                <h4 class="font-bold text-white text-base sm:text-lg mb-3">🆓 البدائل المجانية</h4>
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                    <div>
+                                        <h5 class="font-semibold text-white mb-2 text-sm">GIMP</h5>
+                                        <p class="text-white/80 text-xs">بديل مجاني لفوتوشوب</p>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-semibold text-white mb-2 text-sm">Inkscape</h5>
+                                        <p class="text-white/80 text-xs">بديل مجاني لإليستريتور</p>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-semibold text-white mb-2 text-sm">Canva</h5>
+                                        <p class="text-white/80 text-xs">تصميم سريع وسهل</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="bg-green-500/20 rounded-lg p-4">
-                            <h4 class="font-bold text-white mb-2">✅ الحل البسيط</h4>
-                            <p class="text-white/90">ابدأ بسيط، ثم أضف التفاصيل تدريجياً</p>
+
+                        <div class="content-frame p-4 sm:p-6 bg-blue-500/10">
+                            <h4 class="font-bold text-white text-base sm:text-lg mb-3 sm:mb-4">🎯 نصائح لاختيار الأدوات</h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <h5 class="font-semibold text-white mb-2 text-sm sm:text-base">للمبتدئين:</h5>
+                                    <ul class="text-white/80 text-xs sm:text-sm space-y-1">
+                                        <li>• ابدأ بـ Canva أو GIMP</li>
+                                        <li>• تعلم الأساسيات أولاً</li>
+                                        <li>• لا تعقد على نفسك</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h5 class="font-semibold text-white mb-2 text-sm sm:text-base">للمحترفين:</h5>
+                                    <ul class="text-white/80 text-xs sm:text-sm space-y-1">
+                                        <li>• استثمر في Adobe Creative Suite</li>
+                                        <li>• تعلم اختصارات لوحة المفاتيح</li>
+                                        <li>• استخدم أدوات متخصصة</li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 `,
                 quiz: {
-                    question: "ما هو أكبر خطأ في التصميم؟",
-                    options: ["استخدام لون واحد فقط", "استخدام ألوان كثيرة جداً", "استخدام خط واضح", "ترك مساحات فارغة"],
-                    correct: 1
+                    question: "أي برنامج الأنسب لتصميم الشعارات؟",
+                    options: [
+                        "Adobe Photoshop",
+                        "Adobe Illustrator",
+                        "Microsoft Word",
+                        "PowerPoint"
+                    ],
+                    correct: 1,
+                    explanation: "Adobe Illustrator مخصص للرسوم المتجهة، مما يجعله الأنسب لتصميم الشعارات التي تحتاج للتكبير بدون فقدان الجودة."
                 }
             },
             {
                 id: 14,
-                title: "نصائح للمبتدئين",
-                icon: "💡",
+                title: "اتجاهات التصميم الحديثة",
+                icon: "🚀",
+                duration: "17 دقيقة",
                 content: `
-                    <div class="text-center mb-8">
-                        <div class="text-5xl sm:text-6xl mb-4">💡</div>
-                        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">نصائح ذهبية للمبتدئين</h2>
+                    <div class="text-center mb-8 sm:mb-12">
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-pink-500 to-rose-500 rounded-3xl flex items-center justify-center text-2xl sm:text-3xl mx-auto mb-4 sm:mb-6">🚀</div>
+                        <h2 class="text-2xl sm:text-4xl font-bold text-white mb-3 sm:mb-4">اتجاهات التصميم الحديثة</h2>
+                        <p class="text-white/70 text-base sm:text-lg">ما هو جديد في عالم التصميم</p>
                     </div>
-                    <div class="bg-white/20 rounded-xl p-5 sm:p-6 mb-6">
-                        <h3 class="text-xl font-bold text-white mb-4">كيف تصبح مصمماً أفضل؟</h3>
-                        <div class="space-y-4 mb-6">
-                            <div class="bg-blue-500/30 rounded-lg p-4">
-                                <h4 class="font-bold text-white mb-2">👀 انظر حولك</h4>
-                                <p class="text-white/80">لاحظ التصاميم الجيدة في الشارع والإنترنت</p>
+                    
+                    <div class="content-frame p-4 sm:p-6 mb-4 sm:mb-6">
+                        <h3 class="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">الاتجاهات الرائجة</h3>
+                        
+                        <div class="space-y-4 sm:space-y-6 mb-6 sm:mb-8">
+                            <div class="content-frame p-4 sm:p-6">
+                                <h4 class="font-bold text-white text-base sm:text-lg mb-3">🌟 التصميم المسطح (Flat Design)</h4>
+                                <p class="text-white/80 text-sm sm:text-base">تصميم بسيط بدون ظلال أو تأثيرات ثلاثية الأبعاد، يركز على الوضوح والبساطة</p>
                             </div>
-                            <div class="bg-green-500/30 rounded-lg p-4">
-                                <h4 class="font-bold text-white mb-2">✏️ مارس كل يوم</h4>
-                                <p class="text-white/80">حتى لو 15 دقيقة يومياً</p>
+                            
+                            <div class="content-frame p-4 sm:p-6">
+                                <h4 class="font-bold text-white text-base sm:text-lg mb-3">🎨 الألوان الجريئة</h4>
+                                <p class="text-white/80 text-sm sm:text-base">استخدام ألوان مشبعة وجريئة لجذب الانتباه وإنشاء تأثير بصري قوي</p>
                             </div>
-                            <div class="bg-purple-500/30 rounded-lg p-4">
-                                <h4 class="font-bold text-white mb-2">📚 تعلم من الآخرين</h4>
-                                <p class="text-white/80">شاهد دروساً على اليوتيوب واقرأ عن التصميم</p>
+                            
+                            <div class="content-frame p-4 sm:p-6">
+                                <h4 class="font-bold text-white text-base sm:text-lg mb-3">📱 التصميم المتجاوب أولاً</h4>
+                                <p class="text-white/80 text-sm sm:text-base">البدء بتصميم النسخة المحمولة أولاً ثم التوسع للشاشات الأكبر</p>
                             </div>
-                            <div class="bg-orange-500/30 rounded-lg p-4">
-                                <h4 class="font-bold text-white mb-2">🎯 ابدأ بمشاريع صغيرة</h4>
-                                <p class="text-white/80">بطاقة عمل، لوغو بسيط، إشارة</p>
+                            
+                            <div class="content-frame p-4 sm:p-6">
+                                <h4 class="font-bold text-white text-base sm:text-lg mb-3">🌈 التدرجات العصرية</h4>
+                                <p class="text-white/80 text-sm sm:text-base">عودة التدرجات بأسلوب عصري وألوان جديدة</p>
                             </div>
                         </div>
-                        <div class="bg-yellow-500/20 rounded-lg p-4">
-                            <h4 class="font-bold text-white mb-2">🌟 تذكر دائماً</h4>
-                            <p class="text-white/90">كل مصمم عظيم بدأ من الصفر. المهم أن تبدأ!</p>
+
+                        <div class="content-frame p-4 sm:p-6 bg-pink-500/10">
+                            <h4 class="font-bold text-white text-base sm:text-lg mb-3 sm:mb-4">⚡ نصائح لمواكبة الاتجاهات</h4>
+                            <div class="space-y-3">
+                                <div>
+                                    <h5 class="font-semibold text-white mb-2 text-sm sm:text-base">كن انتقائياً:</h5>
+                                    <p class="text-white/80 text-xs sm:text-sm">لا تتبع كل اتجاه، اختر ما يناسب مشروعك</p>
+                                </div>
+                                <div>
+                                    <h5 class="font-semibold text-white mb-2 text-sm sm:text-base">فكر في المستقبل:</h5>
+                                    <p class="text-white/80 text-xs sm:text-sm">بعض الاتجاهات مؤقتة، اختر ما يدوم</p>
+                                </div>
+                                <div>
+                                    <h5 class="font-semibold text-white mb-2 text-sm sm:text-base">ابق على اطلاع:</h5>
+                                    <p class="text-white/80 text-xs sm:text-sm">تابع مواقع التصميم والمصممين المشهورين</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 `,
                 quiz: {
-                    question: "ما هي أفضل طريقة لتحسين مهارات التصميم؟",
-                    options: ["القراءة فقط", "الممارسة اليومية", "مشاهدة الفيديوهات فقط", "انتظار الإلهام"],
-                    correct: 1
+                    question: "ما هو مبدأ 'التصميم المتجاوب أولاً'؟",
+                    options: [
+                        "تصميم للحاسوب أولاً",
+                        "تصميم للهاتف أولاً ثم التوسع",
+                        "تصميم للطباعة أولاً",
+                        "تصميم للتلفزيون أولاً"
+                    ],
+                    correct: 1,
+                    explanation: "التصميم المتجاوب أولاً يعني البدء بالشاشات الصغيرة (الهواتف) ثم التوسع للشاشات الأكبر."
                 }
             },
             {
                 id: 15,
-                title: "مشروعك الأول",
+                title: "مشروع التخرج",
                 icon: "🎯",
+                duration: "30 دقيقة",
                 content: `
-                    <div class="text-center mb-8">
-                        <div class="text-5xl sm:text-6xl mb-4">🎯</div>
-                        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">مشروعك الأول</h2>
+                    <div class="text-center mb-8 sm:mb-12">
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-yellow-500 to-amber-500 rounded-3xl flex items-center justify-center text-2xl sm:text-3xl mx-auto mb-4 sm:mb-6">🎯</div>
+                        <h2 class="text-2xl sm:text-4xl font-bold text-white mb-3 sm:mb-4">مشروع التخرج العملي</h2>
+                        <p class="text-white/70 text-base sm:text-lg">طبق كل ما تعلمته في مشروع حقيقي</p>
                     </div>
-                    <div class="bg-white/20 rounded-xl p-5 sm:p-6 mb-6">
-                        <h3 class="text-xl font-bold text-white mb-4">الآن حان وقت التطبيق!</h3>
-                        <div class="bg-gradient-to-r from-green-500/30 to-blue-500/30 rounded-lg p-5 sm:p-6 mb-6">
-                            <h4 class="font-bold text-white mb-4 text-lg sm:text-xl">🎨 مشروعك: صمم لوغو لمقهى</h4>
-                            <div class="space-y-2 sm:space-y-3">
-                                <p class="text-white/90">اسم المقهى: "قهوة الصباح"</p>
-                                <p class="text-white/90">الجمهور: الشباب والموظفون</p>
-                                <p class="text-white/90">الطابع: دافئ وودود</p>
+                    
+                    <div class="content-frame p-4 sm:p-6 mb-4 sm:mb-6">
+                        <div class="content-frame p-6 sm:p-8 bg-gradient-to-r from-green-500/20 to-blue-500/20 mb-6 sm:mb-8">
+                            <h3 class="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">🎨 المشروع: تصميم هوية بصرية لمقهى</h3>
+                            <div class="space-y-3 sm:space-y-4">
+                                <p class="text-white/90 text-sm sm:text-base"><strong>اسم المقهى:</strong> "قهوة الصباح"</p>
+                                <p class="text-white/90 text-sm sm:text-base"><strong>الجمهور المستهدف:</strong> الشباب والموظفون والطلاب</p>
+                                <p class="text-white/90 text-sm sm:text-base"><strong>الطابع المطلوب:</strong> دافئ، ودود، عصري، مريح</p>
+                                <p class="text-white/90 text-sm sm:text-base"><strong>الخدمات:</strong> قهوة مختصة، حلويات، مساحة عمل</p>
                             </div>
                         </div>
-                        <div class="space-y-4 mb-6">
-                            <div class="bg-white/10 rounded-lg p-4">
-                                <h4 class="font-bold text-white mb-2">1️⃣ اختر شكلاً أساسياً</h4>
-                                <p class="text-white/80">دائرة للدفء، أو مربع للاستقرار</p>
+
+                        <h3 class="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">خطوات المشروع</h3>
+                        
+                        <div class="space-y-4 sm:space-y-6 mb-6 sm:mb-8">
+                            <div class="flex items-start content-frame p-4 sm:p-6">
+                                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold ml-4 text-sm sm:text-base flex-shrink-0">1</div>
+                                <div>
+                                    <h4 class="font-bold text-white text-base sm:text-lg mb-2">تصميم الشعار</h4>
+                                    <p class="text-white/80 text-sm sm:text-base">صمم شعاراً بسيطاً يعكس طبيعة المقهى الدافئة والودودة</p>
+                                </div>
                             </div>
-                            <div class="bg-white/10 rounded-lg p-4">
-                                <h4 class="font-bold text-white mb-2">2️⃣ اختر لوناً مناسباً</h4>
-                                <p class="text-white/80">بني للقهوة، أو أخضر للطبيعة</p>
+                            
+                            <div class="flex items-start content-frame p-4 sm:p-6">
+                                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-green-500 rounded-full flex items-center justify-center text-white font-bold ml-4 text-sm sm:text-base flex-shrink-0">2</div>
+                                <div>
+                                    <h4 class="font-bold text-white text-base sm:text-lg mb-2">اختيار لوحة الألوان</h4>
+                                    <p class="text-white/80 text-sm sm:text-base">اختر 2-3 ألوان تناسب طبيعة المقهى (بني، كريمي، أخضر)</p>
+                                </div>
                             </div>
-                            <div class="bg-white/10 rounded-lg p-4">
-                                <h4 class="font-bold text-white mb-2">3️⃣ أضف النص</h4>
-                                <p class="text-white/80">خط واضح وودود</p>
+                            
+                            <div class="flex items-start content-frame p-4 sm:p-6">
+                                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold ml-4 text-sm sm:text-base flex-shrink-0">3</div>
+                                <div>
+                                    <h4 class="font-bold text-white text-base sm:text-lg mb-2">تصميم بطاقة العمل</h4>
+                                    <p class="text-white/80 text-sm sm:text-base">طبق الهوية على بطاقة عمل احترافية</p>
+                                </div>
                             </div>
-                            <div class="bg-white/10 rounded-lg p-4">
-                                <h4 class="font-bold text-white mb-2">4️⃣ أضف رمزاً بسيطاً</h4>
-                                <p class="text-white/80">فنجان قهوة أو حبة قهوة</p>
+                            
+                            <div class="flex items-start content-frame p-4 sm:p-6">
+                                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold ml-4 text-sm sm:text-base flex-shrink-0">4</div>
+                                <div>
+                                    <h4 class="font-bold text-white text-base sm:text-lg mb-2">تصميم قائمة الطعام</h4>
+                                    <p class="text-white/80 text-sm sm:text-base">صمم قائمة طعام بسيطة وواضحة</p>
+                                </div>
                             </div>
                         </div>
-                        <div class="bg-yellow-500/20 rounded-lg p-4">
-                            <h4 class="font-bold text-white mb-2">🎉 تهانينا!</h4>
-                            <p class="text-white/90">أنت الآن تعرف أساسيات التصميم. استمر في التعلم والممارسة!</p>
+
+                        <div class="content-frame p-4 sm:p-6 bg-yellow-500/10">
+                            <h4 class="font-bold text-white text-base sm:text-lg mb-3 sm:mb-4">🏆 معايير التقييم</h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <h5 class="font-semibold text-white mb-2 text-sm sm:text-base">الإبداع والأصالة (25%)</h5>
+                                    <p class="text-white/80 text-xs sm:text-sm">فكرة مبتكرة وغير مقلدة</p>
+                                </div>
+                                <div>
+                                    <h5 class="font-semibold text-white mb-2 text-sm sm:text-base">التطبيق التقني (25%)</h5>
+                                    <p class="text-white/80 text-xs sm:text-sm">استخدام صحيح للمبادئ</p>
+                                </div>
+                                <div>
+                                    <h5 class="font-semibold text-white mb-2 text-sm sm:text-base">التناسق والتكامل (25%)</h5>
+                                    <p class="text-white/80 text-xs sm:text-sm">وحدة في جميع العناصر</p>
+                                </div>
+                                <div>
+                                    <h5 class="font-semibold text-white mb-2 text-sm sm:text-base">الوضوح والقراءة (25%)</h5>
+                                    <p class="text-white/80 text-xs sm:text-sm">سهولة فهم الرسالة</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 `,
                 quiz: {
                     question: "ما هو أهم شيء تعلمته في هذه الدورة؟",
-                    options: ["استخدام برامج معقدة", "البساطة والوضوح", "استخدام ألوان كثيرة", "تقليد الآخرين"],
-                    correct: 1
+                    options: [
+                        "استخدام برامج معقدة فقط",
+                        "تطبيق مبادئ التصميم بطريقة متكاملة",
+                        "استخدام ألوان كثيرة",
+                        "تقليد تصاميم الآخرين"
+                    ],
+                    correct: 1,
+                    explanation: "الهدف من الدورة هو تعلم تطبيق مبادئ التصميم (الألوان، الخطوط، التخطيط) بطريقة متكاملة لإنشاء تصاميم فعالة."
                 }
             }
         ];
@@ -841,6 +1332,7 @@
         let currentLesson = 0;
         let completedLessons = new Set();
         let totalScore = 0;
+        let quizScores = {};
 
         function initializeCourse() {
             renderLessonsSidebar();
@@ -850,14 +1342,18 @@
         function renderLessonsSidebar() {
             const sidebar = document.getElementById('lessons-sidebar');
             sidebar.innerHTML = lessons.map((lesson, index) => `
-                <div class="lesson-card ${completedLessons.has(lesson.id) ? 'completed' : ''} ${currentLesson === index ? 'active' : ''}" 
+                <div class="lesson-card rounded-2xl p-3 sm:p-4 cursor-pointer ${completedLessons.has(lesson.id) ? 'completed' : ''} ${currentLesson === index ? 'active' : ''}" 
                      onclick="selectLesson(${index})">
                     <div class="flex items-center">
-                        <span class="text-xl sm:text-2xl ml-2 sm:ml-3">${lesson.icon}</span>
-                        <div class="flex-1 min-w-0">
-                            <div class="font-medium text-sm sm:text-base truncate">${lesson.title}</div>
-                            ${completedLessons.has(lesson.id) ? '<div class="text-xs opacity-80 mt-0.5">✅ مكتمل</div>' : ''}
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-xl flex items-center justify-center text-lg sm:text-xl ml-3 flex-shrink-0">
+                            ${lesson.icon}
                         </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="font-semibold text-white text-xs sm:text-sm mb-1 truncate">${lesson.title}</div>
+                            <div class="text-white/60 text-xs">${lesson.duration}</div>
+                            ${completedLessons.has(lesson.id) ? '<div class="text-green-400 text-xs mt-1">✅ مكتمل</div>' : ''}
+                        </div>
+                        ${currentLesson === index ? '<div class="w-1 sm:w-2 h-6 sm:h-8 bg-gradient-to-b from-blue-500 to-purple-600 rounded-full flex-shrink-0"></div>' : ''}
                     </div>
                 </div>
             `).join('');
@@ -877,33 +1373,55 @@
             const content = document.getElementById('main-content');
             content.innerHTML = `
                 ${lesson.content}
-                <div class="mt-8">
-                    <div class="bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-xl p-5 sm:p-6 border border-purple-400/30">
-                        <h3 class="text-xl font-bold text-white mb-4">🧠 اختبر معلوماتك</h3>
-                        <div class="mb-4">
-                            <p class="text-white/90 text-lg mb-4">${lesson.quiz.question}</p>
-                            <div class="space-y-3" id="quiz-options">
-                                ${lesson.quiz.options.map((option, index) => `
-                                    <button class="quiz-option w-full text-right" 
-                                            onclick="selectAnswer(${index}, ${lesson.quiz.correct}, ${lesson.id})">
-                                        ${option}
-                                    </button>
-                                `).join('')}
-                            </div>
+                
+                <div class="flex flex-col sm:flex-row justify-between gap-4 mt-6 sm:mt-8">
+                    <button onclick="previousLesson()" 
+                            class="bg-gradient-to-r from-gray-600 to-gray-700 text-white px-6 sm:px-8 py-3 rounded-xl font-semibold text-sm sm:text-base ${currentLesson === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-lg hover:shadow-gray-500/25'} transition-all order-2 sm:order-1"
+                            ${currentLesson === 0 ? 'disabled' : ''}>
+                        ← الدرس السابق
+                    </button>
+                    <button onclick="showQuiz()" 
+                            class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 sm:px-8 py-3 rounded-xl font-semibold text-sm sm:text-base hover:shadow-lg hover:shadow-purple-500/25 transition-all order-1 sm:order-2">
+                        ابدأ الاختبار 🧠
+                    </button>
+                </div>
+            `;
+        }
+
+        function showQuiz() {
+            const lesson = lessons[currentLesson];
+            const content = document.getElementById('main-content');
+            content.innerHTML = `
+                <div class="text-center mb-8 sm:mb-12">
+                    <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-purple-500 to-pink-500 rounded-3xl flex items-center justify-center text-2xl sm:text-3xl mx-auto mb-4 sm:mb-6">🧠</div>
+                    <h2 class="text-2xl sm:text-4xl font-bold text-white mb-3 sm:mb-4">اختبار الدرس</h2>
+                    <p class="text-white/70 text-base sm:text-lg">تأكد من استيعاب المفاهيم الأساسية</p>
+                </div>
+                
+                <div class="content-frame p-6 sm:p-8">
+                    <div class="mb-4 sm:mb-6">
+                        <p class="text-white/90 text-base sm:text-lg mb-4 sm:mb-6 font-medium leading-relaxed">${lesson.quiz.question}</p>
+                        <div class="space-y-3" id="quiz-options">
+                            ${lesson.quiz.options.map((option, index) => `
+                                <button class="quiz-option w-full text-right p-3 sm:p-4 rounded-xl font-medium text-sm sm:text-base" 
+                                        onclick="selectAnswer(${index}, ${lesson.quiz.correct}, ${lesson.id})">
+                                    ${option}
+                                </button>
+                            `).join('')}
                         </div>
-                        <div id="quiz-result" class="hidden mt-4"></div>
                     </div>
-                    <div class="flex flex-col sm:flex-row justify-between gap-3 mt-6">
-                        <button onclick="previousLesson()" 
-                                class="btn btn-secondary flex-1 sm:flex-none"
-                                ${currentLesson === 0 ? 'disabled' : ''}>
-                            ← السابق
-                        </button>
-                        <button onclick="nextLesson()" 
-                                class="btn btn-primary flex-1 sm:flex-none">
-                            ${currentLesson === lessons.length - 1 ? 'إنهاء الدورة 🎉' : 'التالي →'}
-                        </button>
-                    </div>
+                    <div id="quiz-result" class="hidden"></div>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row justify-between gap-4 mt-6 sm:mt-8">
+                    <button onclick="showLesson(lessons[currentLesson])" 
+                            class="bg-gradient-to-r from-gray-600 to-gray-700 text-white px-6 sm:px-8 py-3 rounded-xl font-semibold text-sm sm:text-base hover:shadow-lg hover:shadow-gray-500/25 transition-all order-2 sm:order-1">
+                        ← العودة للدرس
+                    </button>
+                    <button onclick="nextLesson()" 
+                            class="bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 text-white px-6 sm:px-8 py-3 rounded-xl font-semibold text-sm sm:text-base hover:shadow-lg hover:shadow-blue-500/25 transition-all order-1 sm:order-2">
+                        ${currentLesson === lessons.length - 1 ? 'إنهاء الدورة وعرض التقييم 🎉' : 'الدرس التالي →'}
+                    </button>
                 </div>
             `;
         }
@@ -913,29 +1431,45 @@
             const resultDiv = document.getElementById('quiz-result');
             
             options.forEach((option, index) => {
-                option.disabled = true;
+                option.onclick = null;
                 if (index === correctIndex) {
                     option.classList.add('correct');
-                } else if (index === selectedIndex) {
+                } else if (index === selectedIndex && index !== correctIndex) {
                     option.classList.add('incorrect');
-                } else {
-                    option.classList.add('selected');
                 }
             });
 
             const isCorrect = selectedIndex === correctIndex;
-            if (isCorrect && !completedLessons.has(lessonId)) {
+            const points = isCorrect ? 10 : 0;
+            
+            if (!completedLessons.has(lessonId)) {
                 completedLessons.add(lessonId);
-                totalScore += 10;
+                quizScores[lessonId] = points;
+                totalScore += points;
                 updateProgress();
                 renderLessonsSidebar();
             }
 
+            const lesson = lessons.find(l => l.id === lessonId);
             resultDiv.innerHTML = `
-                <div class="p-4 rounded-lg ${isCorrect ? 'bg-green-500/30 border border-green-400/40' : 'bg-red-500/30 border border-red-400/40'}">
-                    <p class="text-white font-bold">
-                        ${isCorrect ? '🎉 إجابة صحيحة! +10 نقاط' : '❌ إجابة خاطئة. حاول مرة أخرى!'}
-                    </p>
+                <div class="content-frame p-4 sm:p-6 ${isCorrect ? 'bg-green-500/10' : 'bg-red-500/10'}">
+                    <div class="flex items-start">
+                        <div class="text-2xl sm:text-3xl ml-3 sm:ml-4 flex-shrink-0">${isCorrect ? '🎉' : '❌'}</div>
+                        <div class="flex-1">
+                            <p class="text-white font-bold text-base sm:text-lg mb-2">
+                                ${isCorrect ? 'إجابة ممتازة!' : 'إجابة خاطئة'}
+                            </p>
+                            <p class="text-white/80 text-sm sm:text-base mb-3">
+                                ${isCorrect ? `لقد حصلت على ${points} نقاط!` : 'لا تقلق، يمكنك المراجعة والمحاولة مرة أخرى'}
+                            </p>
+                            ${lesson.quiz.explanation ? `
+                                <div class="bg-white/10 rounded-lg p-3 sm:p-4">
+                                    <h5 class="font-semibold text-white mb-2 text-sm sm:text-base">💡 التفسير:</h5>
+                                    <p class="text-white/90 text-xs sm:text-sm">${lesson.quiz.explanation}</p>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
                 </div>
             `;
             resultDiv.classList.remove('hidden');
@@ -945,7 +1479,7 @@
             if (currentLesson < lessons.length - 1) {
                 selectLesson(currentLesson + 1);
             } else {
-                showCongratulations();
+                showFinalEvaluation();
             }
         }
 
@@ -955,43 +1489,217 @@
             }
         }
 
-        function showCongratulations() {
+        function updateProgress() {
+            const progress = (completedLessons.size / lessons.length) * 100;
+            
+            // Update small circle (mobile)
+            const circumferenceSmall = 2 * Math.PI * 40;
+            const offsetSmall = circumferenceSmall - (progress / 100) * circumferenceSmall;
+            document.getElementById('progress-circle').style.strokeDashoffset = offsetSmall;
+            
+            // Update large circle (desktop)
+            const circumferenceLarge = 2 * Math.PI * 56;
+            const offsetLarge = circumferenceLarge - (progress / 100) * circumferenceLarge;
+            document.getElementById('progress-circle-lg').style.strokeDashoffset = offsetLarge;
+            
+            document.getElementById('progress-percentage').textContent = Math.round(progress) + '%';
+            document.getElementById('circle-progress').textContent = Math.round(progress) + '%';
+            document.getElementById('completed-count').textContent = completedLessons.size;
+            document.getElementById('total-score').textContent = totalScore;
+        }
+
+        function calculateGrade() {
+            const percentage = (totalScore / (lessons.length * 10)) * 100;
+            
+            if (percentage >= 90) return { grade: 'ممتاز', color: 'from-green-500 to-emerald-500', emoji: '🏆' };
+            if (percentage >= 80) return { grade: 'جيد جداً', color: 'from-blue-500 to-cyan-500', emoji: '🥇' };
+            if (percentage >= 70) return { grade: 'جيد', color: 'from-yellow-500 to-orange-500', emoji: '🥈' };
+            if (percentage >= 60) return { grade: 'مقبول', color: 'from-orange-500 to-red-500', emoji: '🥉' };
+            return { grade: 'يحتاج تحسين', color: 'from-red-500 to-pink-500', emoji: '📚' };
+        }
+
+        function showFinalEvaluation() {
+            const gradeInfo = calculateGrade();
+            const percentage = Math.round((totalScore / (lessons.length * 10)) * 100);
+            
             const content = document.getElementById('main-content');
             content.innerHTML = `
-                <div class="text-center">
-                    <div class="text-5xl sm:text-6xl mb-6">🎉</div>
-                    <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">تهانينا!</h2>
-                    <p class="text-white/80 text-lg mb-8">لقد أكملت دورة تصميم الإشارات واللوغوهات بنجاح!</p>
-                    <div class="bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-xl p-6 sm:p-8 mb-8 border border-white/20">
-                        <h3 class="text-xl sm:text-2xl font-bold text-white mb-6">إنجازاتك</h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <div class="text-center p-4 bg-white/10 rounded-xl">
-                                <div class="text-2xl sm:text-3xl font-bold text-green-400">${completedLessons.size}</div>
-                                <div class="text-white/70 mt-2">دروس مكتملة</div>
+                <div class="text-center py-8 sm:py-16">
+                    <div class="w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-br ${gradeInfo.color} rounded-full flex items-center justify-center text-4xl sm:text-5xl mx-auto mb-6 sm:mb-8 animate-pulse">
+                        ${gradeInfo.emoji}
+                    </div>
+                    <h2 class="text-3xl sm:text-5xl font-bold text-white mb-4 sm:mb-6">تهانينا على الإنجاز!</h2>
+                    <p class="text-white/80 text-lg sm:text-xl mb-8 sm:mb-12 max-w-2xl mx-auto">
+                        لقد أكملت دورة التصميم الجرافيكي الشاملة بنجاح
+                    </p>
+                    
+                    <!-- التقييم النهائي -->
+                    <div class="evaluation-badge rounded-3xl p-6 sm:p-8 mb-8 sm:mb-12 max-w-md mx-auto">
+                        <h3 class="text-2xl sm:text-3xl font-bold text-white mb-4">التقييم النهائي</h3>
+                        <div class="text-4xl sm:text-6xl font-bold text-white mb-2">${percentage}%</div>
+                        <div class="text-xl sm:text-2xl font-semibold text-white/90">${gradeInfo.grade}</div>
+                    </div>
+                    
+                    <!-- إحصائيات مفصلة -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12 max-w-4xl mx-auto">
+                        <div class="content-frame p-4 sm:p-6 text-center">
+                            <div class="text-2xl sm:text-3xl mb-2 sm:mb-3">📊</div>
+                            <div class="text-xl sm:text-2xl font-bold text-green-400 mb-1">${completedLessons.size}/15</div>
+                            <div class="text-white/70 text-xs sm:text-sm">دروس مكتملة</div>
+                        </div>
+                        <div class="content-frame p-4 sm:p-6 text-center">
+                            <div class="text-2xl sm:text-3xl mb-2 sm:mb-3">⭐</div>
+                            <div class="text-xl sm:text-2xl font-bold text-yellow-400 mb-1">${totalScore}/150</div>
+                            <div class="text-white/70 text-xs sm:text-sm">النقاط المكتسبة</div>
+                        </div>
+                        <div class="content-frame p-4 sm:p-6 text-center">
+                            <div class="text-2xl sm:text-3xl mb-2 sm:mb-3">🎯</div>
+                            <div class="text-xl sm:text-2xl font-bold text-purple-400 mb-1">${percentage}%</div>
+                            <div class="text-white/70 text-xs sm:text-sm">نسبة النجاح</div>
+                        </div>
+                        <div class="content-frame p-4 sm:p-6 text-center">
+                            <div class="text-2xl sm:text-3xl mb-2 sm:mb-3">🏆</div>
+                            <div class="text-xl sm:text-2xl font-bold text-blue-400 mb-1">${gradeInfo.grade}</div>
+                            <div class="text-white/70 text-xs sm:text-sm">التقدير النهائي</div>
+                        </div>
+                    </div>
+                    
+                    <!-- المهارات المكتسبة -->
+                    <div class="content-frame p-6 sm:p-8 mb-8 sm:mb-12 max-w-4xl mx-auto">
+                        <h4 class="font-bold text-white text-xl sm:text-2xl mb-4 sm:mb-6">🎨 المهارات التي اكتسبتها</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                            <div class="text-center">
+                                <div class="text-2xl sm:text-3xl mb-2">🌈</div>
+                                <h5 class="font-semibold text-white mb-1 text-sm sm:text-base">نظرية الألوان</h5>
+                                <p class="text-white/70 text-xs sm:text-sm">فهم تأثير الألوان النفسي</p>
                             </div>
-                            <div class="text-center p-4 bg-white/10 rounded-xl">
-                                <div class="text-2xl sm:text-3xl font-bold text-blue-400">${totalScore}</div>
-                                <div class="text-white/70 mt-2">النقاط المكتسبة</div>
+                            <div class="text-center">
+                                <div class="text-2xl sm:text-3xl mb-2">📝</div>
+                                <h5 class="font-semibold text-white mb-1 text-sm sm:text-base">التايبوجرافي</h5>
+                                <p class="text-white/70 text-xs sm:text-sm">اختيار وتنسيق الخطوط</p>
                             </div>
-                            <div class="text-center p-4 bg-white/10 rounded-xl">
-                                <div class="text-2xl sm:text-3xl font-bold text-purple-400">${Math.round((completedLessons.size / lessons.length) * 100)}%</div>
-                                <div class="text-white/70 mt-2">نسبة الإكمال</div>
+                            <div class="text-center">
+                                <div class="text-2xl sm:text-3xl mb-2">🏷️</div>
+                                <h5 class="font-semibold text-white mb-1 text-sm sm:text-base">تصميم الشعارات</h5>
+                                <p class="text-white/70 text-xs sm:text-sm">إنشاء هوية بصرية قوية</p>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl sm:text-3xl mb-2">📐</div>
+                                <h5 class="font-semibold text-white mb-1 text-sm sm:text-base">التخطيط والتكوين</h5>
+                                <p class="text-white/70 text-xs sm:text-sm">تنظيم العناصر بصرياً</p>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl sm:text-3xl mb-2">📱</div>
+                                <h5 class="font-semibold text-white mb-1 text-sm sm:text-base">التصميم التفاعلي</h5>
+                                <p class="text-white/70 text-xs sm:text-sm">تصميم للشاشات المختلفة</p>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl sm:text-3xl mb-2">🧠</div>
+                                <h5 class="font-semibold text-white mb-1 text-sm sm:text-base">علم النفس البصري</h5>
+                                <p class="text-white/70 text-xs sm:text-sm">تأثير التصميم على السلوك</p>
                             </div>
                         </div>
                     </div>
-                    <div class="bg-yellow-500/20 rounded-xl p-5 sm:p-6 mb-8 border border-yellow-400/30">
-                        <h4 class="font-bold text-white mb-3">🚀 الخطوات التالية</h4>
-                        <ul class="text-white/90 space-y-2 text-right">
-                            <li>• ابدأ بتصميم مشاريع حقيقية</li>
-                            <li>• انضم لمجتمعات المصممين</li>
-                            <li>• تابع تعلم برامج التصميم المتقدمة</li>
-                            <li>• اطلب آراء الآخرين في تصاميمك</li>
-                        </ul>
+                    
+                    <!-- الخطوات التالية -->
+                    <div class="content-frame p-6 sm:p-8 mb-8 sm:mb-12 max-w-4xl mx-auto">
+                        <h4 class="font-bold text-white text-xl sm:text-2xl mb-4 sm:mb-6">🚀 الخطوات التالية في رحلتك</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                            <div class="text-right">
+                                <h5 class="font-semibold text-white mb-2 text-sm sm:text-base">💼 ابدأ مشاريع حقيقية</h5>
+                                <p class="text-white/70 text-xs sm:text-sm">طبق ما تعلمته في مشاريع عملية للأصدقاء والعائلة</p>
+                            </div>
+                            <div class="text-right">
+                                <h5 class="font-semibold text-white mb-2 text-sm sm:text-base">👥 انضم للمجتمعات</h5>
+                                <p class="text-white/70 text-xs sm:text-sm">تفاعل مع مصممين آخرين واطلب آراءهم في أعمالك</p>
+                            </div>
+                            <div class="text-right">
+                                <h5 class="font-semibold text-white mb-2 text-sm sm:text-base">📚 تعلم أدوات متقدمة</h5>
+                                <p class="text-white/70 text-xs sm:text-sm">احترف Adobe Creative Suite أو البدائل المجانية</p>
+                            </div>
+                            <div class="text-right">
+                                <h5 class="font-semibold text-white mb-2 text-sm sm:text-base">🎨 طور أسلوبك الخاص</h5>
+                                <p class="text-white/70 text-xs sm:text-sm">اكتشف هويتك البصرية الفريدة وطورها</p>
+                            </div>
+                        </div>
                     </div>
-                    <button onclick="restartCourse()" 
-                            class="btn btn-primary text-lg px-6 py-3">
-                        ابدأ الدورة من جديد 🔄
-                    </button>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <button onclick="restartCourse()" 
+                                class="bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white px-8 sm:px-12 py-3 sm:py-4 rounded-2xl font-bold text-base sm:text-xl hover:shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 transform hover:scale-105">
+                            ابدأ الدورة من جديد 🔄
+                        </button>
+                        <button onclick="showCertificate()" 
+                                class="bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-8 sm:px-12 py-3 sm:py-4 rounded-2xl font-bold text-base sm:text-xl hover:shadow-2xl hover:shadow-yellow-500/25 transition-all duration-300 transform hover:scale-105">
+                            عرض الشهادة 📜
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showCertificate() {
+            const gradeInfo = calculateGrade();
+            const percentage = Math.round((totalScore / (lessons.length * 10)) * 100);
+            const today = new Date().toLocaleDateString('ar-SA');
+            
+            const content = document.getElementById('main-content');
+            content.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="content-frame p-8 sm:p-12 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 border-4 border-gradient-to-r from-yellow-400 to-orange-500">
+                        <div class="text-center mb-8">
+                            <div class="text-6xl sm:text-8xl mb-4">🏆</div>
+                            <h1 class="text-3xl sm:text-5xl font-bold text-white mb-4">شهادة إتمام</h1>
+                            <div class="w-32 h-1 bg-gradient-to-r from-yellow-400 to-orange-500 mx-auto rounded-full"></div>
+                        </div>
+                        
+                        <div class="text-center mb-8">
+                            <p class="text-white/80 text-lg sm:text-xl mb-6">نشهد بأن</p>
+                            <div class="bg-white/10 rounded-2xl p-6 mb-6 inline-block">
+                                <h2 class="text-2xl sm:text-4xl font-bold text-white">الطالب المتميز</h2>
+                            </div>
+                            <p class="text-white/80 text-lg sm:text-xl mb-4">قد أكمل بنجاح</p>
+                            <h3 class="text-xl sm:text-3xl font-bold text-white mb-6">دورة التصميم الجرافيكي الشاملة</h3>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+                            <div class="text-center">
+                                <div class="text-2xl sm:text-3xl font-bold text-yellow-400">${percentage}%</div>
+                                <div class="text-white/70 text-sm">النتيجة النهائية</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl sm:text-3xl font-bold text-green-400">${gradeInfo.grade}</div>
+                                <div class="text-white/70 text-sm">التقدير</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl sm:text-3xl font-bold text-blue-400">${today}</div>
+                                <div class="text-white/70 text-sm">تاريخ الإنجاز</div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center">
+                            <div class="flex justify-center items-center space-x-reverse space-x-8 mb-6">
+                                <div class="text-center">
+                                    <div class="w-16 h-1 bg-white/50 mb-2"></div>
+                                    <p class="text-white/70 text-sm">أكاديمية التصميم</p>
+                                </div>
+                                <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-2xl">
+                                    🎨
+                                </div>
+                                <div class="text-center">
+                                    <div class="w-16 h-1 bg-white/50 mb-2"></div>
+                                    <p class="text-white/70 text-sm">شهادة معتمدة</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-8">
+                        <button onclick="showFinalEvaluation()" 
+                                class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-8 py-3 rounded-xl font-semibold hover:shadow-lg transition-all">
+                            العودة للتقييم النهائي
+                        </button>
+                    </div>
                 </div>
             `;
         }
@@ -1000,22 +1708,30 @@
             currentLesson = 0;
             completedLessons.clear();
             totalScore = 0;
+            quizScores = {};
             updateProgress();
             renderLessonsSidebar();
-            startCourse();
+            
+            const content = document.getElementById('main-content');
+            content.innerHTML = `
+                <div class="text-center py-8 sm:py-16">
+                    <div class="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-3xl flex items-center justify-center text-3xl sm:text-4xl mx-auto mb-6 sm:mb-8">
+                        🎨
+                    </div>
+                    <h2 class="text-2xl sm:text-4xl font-bold text-white mb-4 sm:mb-6">مرحباً بك مرة أخرى!</h2>
+                    <p class="text-white/80 text-lg sm:text-xl mb-6 sm:mb-8 max-w-2xl mx-auto leading-relaxed">
+                        استعد لبدء رحلة تعلم جديدة في عالم التصميم الجرافيكي
+                    </p>
+                    <button onclick="selectLesson(0)" 
+                            class="bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 text-white px-8 sm:px-12 py-3 sm:py-4 rounded-2xl font-bold text-lg sm:text-xl hover:shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 transform hover:scale-105">
+                        ابدأ الدرس الأول 🚀
+                    </button>
+                </div>
+            `;
         }
 
-        function updateProgress() {
-            const progress = (completedLessons.size / lessons.length) * 100;
-            document.getElementById('progress-bar').style.width = `${progress}%`;
-            document.getElementById('progress-text').textContent = `${Math.round(progress)}%`;
-            document.getElementById('completed-lessons').textContent = completedLessons.size;
-            document.getElementById('total-points').textContent = totalScore;
-        }
-
-        // Initialize
+        // Initialize the course
         initializeCourse();
     </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99561bdb8647282a',t:'MTc2MTYwOTE2NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
-
