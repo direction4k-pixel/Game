@@ -1,0 +1,1793 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>أكاديمية كريم لتصميم الجرافيك بالهاتف</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&amp;display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+        body {
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #7C3AED 0%, #00C4B4 100%);
+        }
+        
+        .lesson-card {
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .lesson-card.unlocked {
+            border-color: #10B981;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.2);
+        }
+        
+        .lesson-card.locked {
+            opacity: 0.6;
+            background: #f3f4f6;
+        }
+        
+        .lesson-card.completed {
+            border-color: #7C3AED;
+            background: linear-gradient(135deg, #f3e8ff 0%, #e0f2fe 100%);
+        }
+        
+        .quiz-option {
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .quiz-option:hover {
+            background: #f3f4f6;
+            transform: translateX(-5px);
+        }
+        
+        .quiz-option.correct {
+            background: #dcfce7;
+            border-color: #10B981;
+        }
+        
+        .quiz-option.incorrect {
+            background: #fef2f2;
+            border-color: #ef4444;
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            z-index: 1000;
+            pointer-events: none;
+        }
+        
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+        
+        .confetti {
+            animation: confetti-fall 3s linear infinite;
+        }
+        
+        .progress-bar {
+            transition: width 0.8s ease-in-out;
+        }
+        
+        .badge {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .level-up {
+            animation: levelUp 1s ease-in-out;
+        }
+        
+        @keyframes levelUp {
+            0% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.2) rotate(5deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+        
+        .slide-up {
+            animation: slideUp 0.5s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .lesson-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+        
+        .lesson-content.expanded {
+            max-height: 2000px;
+        }
+        
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%;
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .video-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #7C3AED, #00C4B4);
+            color: white;
+            font-size: 48px;
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body class="bg-gray-50 text-gray-800"><!-- Header -->
+  <header class="gradient-bg text-white sticky top-0 z-50 shadow-lg">
+   <div class="max-w-4xl mx-auto px-4 py-4">
+    <div class="flex items-center justify-between">
+     <div>
+      <h1 id="academy-title" class="text-xl md:text-2xl font-bold">🎨 أكاديمية كريم لتصميم الجرافيك بالهاتف</h1>
+      <p id="welcome-message" class="text-sm opacity-90">تعلم التصميم الجرافيكي باستخدام هاتفك المحمول</p>
+     </div>
+     <div class="text-center">
+      <div class="text-2xl font-bold" id="total-xp">
+       0 XP
+      </div>
+      <div class="text-xs" id="current-level">
+       مبتدئ
+      </div>
+     </div>
+    </div><!-- Progress Bar -->
+    <div class="mt-4">
+     <div class="flex justify-between text-xs mb-1"><span>التقدم الإجمالي</span> <span id="progress-text">0/15</span>
+     </div>
+     <div class="bg-white bg-opacity-20 rounded-full h-2">
+      <div id="overall-progress" class="progress-bar bg-white h-2 rounded-full" style="width: 0%"></div>
+     </div>
+    </div>
+   </div>
+  </header><!-- Main Content -->
+  <main class="max-w-4xl mx-auto px-4 py-6"><!-- Instructor Introduction -->
+   <section class="bg-white rounded-lg shadow-lg p-6 mb-6">
+    <div class="flex items-center mb-4">
+     <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-teal-500 rounded-full flex items-center justify-center text-white text-2xl font-bold mr-4"><span id="instructor-initial">ك</span>
+     </div>
+     <div>
+      <h2 class="text-xl font-bold">مرحباً بك في أكاديمية <span id="instructor-name">كريم</span></h2>
+      <p class="text-gray-600">مدرب معتمد في التصميم الجرافيكي</p>
+     </div>
+    </div>
+    <p class="text-gray-700">ستتعلم في هذه الأكاديمية كيفية إنشاء تصاميم احترافية باستخدام هاتفك المحمول فقط! سنبدأ من الأساسيات وصولاً إلى الاحتراف والربح من التصميم.</p>
+   </section><!-- Badges Section -->
+   <section id="badges-section" class="bg-white rounded-lg shadow-lg p-6 mb-6">
+    <h3 class="text-lg font-bold mb-4">🏅 الشهادات والإنجازات</h3>
+    <div id="badges-container" class="flex flex-wrap gap-3"><!-- Badges will be populated by JavaScript -->
+    </div>
+   </section><!-- Lessons Timeline -->
+   <section class="space-y-6">
+    <div id="lessons-container"><!-- Lessons will be populated by JavaScript -->
+    </div>
+   </section><!-- Certificate Section -->
+   <section id="certificate-section" class="bg-gradient-to-br from-purple-100 to-teal-100 rounded-lg p-6 mt-8 text-center" style="display: none;">
+    <h2 class="text-2xl font-bold text-purple-800 mb-4">🎓 تهانينا! لقد أكملت الأكاديمية</h2>
+    <div class="bg-white rounded-lg p-6 shadow-lg max-w-md mx-auto">
+     <h3 class="text-xl font-bold mb-2">شهادة إتمام</h3>
+     <p class="text-gray-600 mb-4">أكاديمية كريم لتصميم الجرافيك بالهاتف</p>
+     <div class="text-lg font-semibold text-purple-600 mb-4">
+      مصمم محترف معتمد
+     </div><button id="download-certificate" class="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors"> تحميل الشهادة </button>
+    </div>
+   </section>
+  </main><!-- Quiz Modal -->
+  <div id="quiz-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+   <div class="bg-white rounded-lg max-w-2xl w-full max-h-96 overflow-y-auto">
+    <div class="p-6">
+     <div class="flex justify-between items-center mb-4">
+      <h3 id="quiz-title" class="text-xl font-bold"></h3><button id="close-quiz" class="text-gray-500 hover:text-gray-700 text-2xl">×</button>
+     </div>
+     <div id="quiz-content"><!-- Quiz content will be populated by JavaScript -->
+     </div>
+    </div>
+   </div>
+  </div><!-- Loading Overlay -->
+  <div id="loading-overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+   <div class="bg-white rounded-lg p-6 text-center">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+    <p>جاري التحميل...</p>
+   </div>
+  </div>
+  <script>
+        // Default configuration
+        const defaultConfig = {
+            academy_title: "🎨 أكاديمية كريم لتصميم الجرافيك بالهاتف",
+            welcome_message: "تعلم التصميم الجرافيكي باستخدام هاتفك المحمول",
+            instructor_name: "كريم",
+            background_color: "#F9FAFB",
+            primary_color: "#7C3AED",
+            accent_color: "#00C4B4",
+            text_color: "#1F2937",
+            surface_color: "#FFFFFF",
+            font_family: "Cairo",
+            font_size: 16
+        };
+
+        // Lessons data with full content
+        const lessonsData = [
+            // Level 1: أساسيات التصميم بالهاتف
+            {
+                id: 1,
+                level: 1,
+                title: "مقدمة إلى التصميم بالهاتف",
+                description: "فهم أساسيات التصميم وأهمية الإبداع عبر الهاتف",
+                content: {
+                    text: `
+                        <h4 class="font-bold text-lg mb-3">🎯 هدف الدرس:</h4>
+                        <p class="mb-4">فهم أساسيات التصميم الجرافيكي وكيفية استخدام الهاتف المحمول كأداة احترافية للتصميم.</p>
+                        
+                        <h4 class="font-bold text-lg mb-3">📱 لماذا التصميم بالهاتف؟</h4>
+                        <ul class="list-disc list-inside mb-4 space-y-2">
+                            <li>سهولة الوصول والاستخدام في أي مكان</li>
+                            <li>تطبيقات قوية ومتطورة متاحة مجاناً</li>
+                            <li>إمكانية النشر المباشر على وسائل التواصل</li>
+                            <li>تكلفة أقل من أجهزة الكمبيوتر المتخصصة</li>
+                        </ul>
+                        
+                        <h4 class="font-bold text-lg mb-3">🎨 مبادئ التصميم الأساسية:</h4>
+                        <ul class="list-disc list-inside mb-4 space-y-2">
+                            <li><strong>التوازن:</strong> توزيع العناصر بشكل متناسق</li>
+                            <li><strong>التباين:</strong> إبراز العناصر المهمة</li>
+                            <li><strong>التكرار:</strong> خلق وحدة بصرية</li>
+                            <li><strong>القرب:</strong> تجميع العناصر المترابطة</li>
+                        </ul>
+                    `,
+                    videoId: "design-basics"
+                },
+                quiz: [
+                    {
+                        question: "ما الهدف الأساسي من التصميم الجرافيكي؟",
+                        options: ["التسلية فقط", "إيصال فكرة بشكل بصري", "تعديل الصور", "الكتابة على الصور"],
+                        correct: 1
+                    },
+                    {
+                        question: "أي تطبيق مناسب لتصميم البوستات على الهاتف؟",
+                        options: ["Pixellab", "WhatsApp", "Facebook", "TikTok"],
+                        correct: 0
+                    },
+                    {
+                        question: "هل يمكن إنشاء شعار احترافي عبر الهاتف؟",
+                        options: ["نعم، بالتأكيد", "لا، مستحيل", "فقط شعارات بسيطة", "يحتاج كمبيوتر"],
+                        correct: 0
+                    },
+                    {
+                        question: "ما أهم مبدأ في التصميم الجيد؟",
+                        options: ["ازدحام العناصر", "التوازن والبساطة", "كثرة الألوان", "الخطوط المزخرفة"],
+                        correct: 1
+                    },
+                    {
+                        question: "ما التطبيق الذي يُستخدم للرسم الرقمي على الهاتف؟",
+                        options: ["CapCut", "Canva", "Ibis Paint", "Lightroom"],
+                        correct: 2
+                    }
+                ],
+                xpReward: 50
+            },
+            {
+                id: 2,
+                level: 1,
+                title: "التعرف على تطبيق Canva",
+                description: "تعلم استخدام Canva لإنشاء تصاميم احترافية",
+                content: {
+                    text: `
+                        <h4 class="font-bold text-lg mb-3">📱 ما هو Canva؟</h4>
+                        <p class="mb-4">Canva هو تطبيق تصميم سهل الاستخدام يوفر قوالب جاهزة وأدوات احترافية لإنشاء تصاميم مذهلة.</p>
+                        
+                        <h4 class="font-bold text-lg mb-3">🚀 مميزات Canva:</h4>
+                        <ul class="list-disc list-inside mb-4 space-y-2">
+                            <li>آلاف القوالب الجاهزة</li>
+                            <li>مكتبة ضخمة من الصور والرموز</li>
+                            <li>خطوط عربية وإنجليزية متنوعة</li>
+                            <li>إمكانية التعاون مع الفريق</li>
+                            <li>تصدير بجودة عالية</li>
+                        </ul>
+                        
+                        <h4 class="font-bold text-lg mb-3">🎯 خطوات البدء:</h4>
+                        <ol class="list-decimal list-inside mb-4 space-y-2">
+                            <li>تحميل التطبيق من متجر التطبيقات</li>
+                            <li>إنشاء حساب مجاني</li>
+                            <li>اختيار نوع التصميم المطلوب</li>
+                            <li>تخصيص القالب حسب احتياجاتك</li>
+                            <li>حفظ ومشاركة التصميم</li>
+                        </ol>
+                    `,
+                    videoId: "canva-tutorial"
+                },
+                quiz: [
+                    {
+                        question: "ما هي أهم ميزة في تطبيق Canva؟",
+                        options: ["الرسم الحر", "القوالب الجاهزة", "تعديل الفيديو", "الدردشة"],
+                        correct: 1
+                    },
+                    {
+                        question: "هل يمكن استخدام Canva مجاناً؟",
+                        options: ["نعم، مع ميزات محدودة", "لا، مدفوع فقط", "مجاني لمدة شهر", "مجاني للطلاب فقط"],
+                        correct: 0
+                    },
+                    {
+                        question: "ما نوع الملفات التي يمكن تصديرها من Canva؟",
+                        options: ["PDF فقط", "JPG فقط", "PNG و JPG و PDF", "فيديو فقط"],
+                        correct: 2
+                    },
+                    {
+                        question: "كم عدد القوالب المتاحة في Canva تقريباً؟",
+                        options: ["مئات", "آلاف", "عشرات", "ملايين"],
+                        correct: 1
+                    },
+                    {
+                        question: "هل يدعم Canva الخطوط العربية؟",
+                        options: ["نعم، بشكل ممتاز", "لا، إنجليزي فقط", "خطوط محدودة", "يحتاج اشتراك"],
+                        correct: 0
+                    }
+                ],
+                xpReward: 50
+            },
+            {
+                id: 3,
+                level: 1,
+                title: "التعرف على تطبيق Pixellab",
+                description: "إتقان استخدام Pixellab للتصميم والكتابة على الصور",
+                content: {
+                    text: `
+                        <h4 class="font-bold text-lg mb-3">🎨 ما هو Pixellab؟</h4>
+                        <p class="mb-4">Pixellab هو تطبيق قوي للتصميم والكتابة على الصور، مثالي لإنشاء منشورات وسائل التواصل الاجتماعي.</p>
+                        
+                        <h4 class="font-bold text-lg mb-3">⭐ مميزات Pixellab:</h4>
+                        <ul class="list-disc list-inside mb-4 space-y-2">
+                            <li>أدوات نص متقدمة مع تأثيرات ثلاثية الأبعاد</li>
+                            <li>مكتبة ضخمة من الملصقات والرموز</li>
+                            <li>فلاتر وتأثيرات احترافية</li>
+                            <li>إمكانية إضافة الظلال والحدود</li>
+                            <li>دعم ممتاز للغة العربية</li>
+                        </ul>
+                        
+                        <h4 class="font-bold text-lg mb-3">🛠️ الأدوات الأساسية:</h4>
+                        <ul class="list-disc list-inside mb-4 space-y-2">
+                            <li><strong>Text:</strong> إضافة وتنسيق النصوص</li>
+                            <li><strong>Sticker:</strong> إضافة الملصقات والرموز</li>
+                            <li><strong>Background:</strong> تغيير خلفية التصميم</li>
+                            <li><strong>Effect:</strong> تطبيق التأثيرات والفلاتر</li>
+                            <li><strong>Layer:</strong> إدارة طبقات التصميم</li>
+                        </ul>
+                    `,
+                    videoId: "pixellab-tutorial"
+                },
+                quiz: [
+                    {
+                        question: "ما هو التطبيق الأفضل للكتابة على الصور؟",
+                        options: ["Canva", "Pixellab", "Photoshop", "Instagram"],
+                        correct: 1
+                    },
+                    {
+                        question: "هل يدعم Pixellab التأثيرات ثلاثية الأبعاد؟",
+                        options: ["نعم", "لا", "فقط في النسخة المدفوعة", "فقط للإنجليزية"],
+                        correct: 0
+                    },
+                    {
+                        question: "ما هي أداة Layer في Pixellab؟",
+                        options: ["تغيير الألوان", "إدارة طبقات التصميم", "إضافة نص", "حفظ الملف"],
+                        correct: 1
+                    },
+                    {
+                        question: "هل يمكن إضافة ظلال للنص في Pixellab؟",
+                        options: ["نعم، بسهولة", "لا", "فقط للأشكال", "يحتاج تطبيق آخر"],
+                        correct: 0
+                    },
+                    {
+                        question: "ما نوع الملفات التي يحفظها Pixellab؟",
+                        options: ["PNG فقط", "JPG فقط", "PNG و JPG", "PDF فقط"],
+                        correct: 2
+                    }
+                ],
+                xpReward: 50
+            },
+            {
+                id: 4,
+                level: 1,
+                title: "تصميم أول منشور",
+                description: "إنشاء أول تصميم احترافي خطوة بخطوة",
+                content: {
+                    text: `
+                        <h4 class="font-bold text-lg mb-3">🎯 مشروع الدرس:</h4>
+                        <p class="mb-4">سنقوم بتصميم منشور احترافي لوسائل التواصل الاجتماعي باستخدام ما تعلمناه.</p>
+                        
+                        <h4 class="font-bold text-lg mb-3">📋 خطوات التصميم:</h4>
+                        <ol class="list-decimal list-inside mb-4 space-y-2">
+                            <li><strong>التخطيط:</strong> تحديد الهدف والرسالة</li>
+                            <li><strong>اختيار الألوان:</strong> 2-3 ألوان متناسقة</li>
+                            <li><strong>اختيار الخط:</strong> خط واضح ومقروء</li>
+                            <li><strong>ترتيب العناصر:</strong> تطبيق مبادئ التصميم</li>
+                            <li><strong>المراجعة:</strong> التأكد من وضوح الرسالة</li>
+                        </ol>
+                        
+                        <h4 class="font-bold text-lg mb-3">💡 نصائح مهمة:</h4>
+                        <ul class="list-disc list-inside mb-4 space-y-2">
+                            <li>ابدأ بفكرة واضحة ومحددة</li>
+                            <li>لا تزدحم التصميم بالعناصر</li>
+                            <li>استخدم التباين لإبراز المعلومات المهمة</li>
+                            <li>تأكد من قراءة النص بوضوح</li>
+                            <li>احفظ نسخة احتياطية من عملك</li>
+                        </ul>
+                    `,
+                    videoId: "first-design-tutorial"
+                },
+                quiz: [
+                    {
+                        question: "ما أول خطوة في تصميم منشور؟",
+                        options: ["اختيار الألوان", "التخطيط وتحديد الهدف", "كتابة النص", "اختيار الصور"],
+                        correct: 1
+                    },
+                    {
+                        question: "كم لون يُنصح باستخدامه في التصميم الواحد؟",
+                        options: ["لون واحد", "2-3 ألوان", "5-6 ألوان", "كلما زاد كان أفضل"],
+                        correct: 1
+                    },
+                    {
+                        question: "ما المقصود بالتباين في التصميم؟",
+                        options: ["استخدام ألوان متشابهة", "إبراز العناصر المهمة", "تكرار الأشكال", "توزيع العناصر"],
+                        correct: 1
+                    },
+                    {
+                        question: "لماذا يجب عدم ازدحام التصميم؟",
+                        options: ["لتوفير الوقت", "لوضوح الرسالة", "لتقليل الألوان", "لسهولة الطباعة"],
+                        correct: 1
+                    },
+                    {
+                        question: "متى يجب مراجعة التصميم؟",
+                        options: ["في البداية فقط", "في النهاية فقط", "أثناء وبعد التصميم", "عند النشر"],
+                        correct: 2
+                    }
+                ],
+                xpReward: 50
+            },
+            {
+                id: 5,
+                level: 1,
+                title: "تصدير ومشاركة المشروع",
+                description: "تعلم كيفية حفظ وتصدير التصاميم بالجودة المناسبة",
+                content: {
+                    text: `
+                        <h4 class="font-bold text-lg mb-3">💾 أهمية التصدير الصحيح:</h4>
+                        <p class="mb-4">التصدير بالطريقة الصحيحة يضمن جودة التصميم ووضوحه عند النشر أو الطباعة.</p>
+                        
+                        <h4 class="font-bold text-lg mb-3">📁 أنواع ملفات التصدير:</h4>
+                        <ul class="list-disc list-inside mb-4 space-y-2">
+                            <li><strong>PNG:</strong> للتصاميم ذات الخلفية الشفافة</li>
+                            <li><strong>JPG:</strong> للصور والتصاميم العادية (حجم أصغر)</li>
+                            <li><strong>PDF:</strong> للطباعة والمستندات الرسمية</li>
+                            <li><strong>SVG:</strong> للشعارات والرسوم المتجهة</li>
+                        </ul>
+                        
+                        <h4 class="font-bold text-lg mb-3">⚙️ إعدادات الجودة:</h4>
+                        <ul class="list-disc list-inside mb-4 space-y-2">
+                            <li><strong>للنشر على الإنترنت:</strong> 72-150 DPI</li>
+                            <li><strong>للطباعة:</strong> 300 DPI أو أعلى</li>
+                            <li><strong>لوسائل التواصل:</strong> الأبعاد المحددة لكل منصة</li>
+                        </ul>
+                        
+                        <h4 class="font-bold text-lg mb-3">📱 أبعاد وسائل التواصل:</h4>
+                        <ul class="list-disc list-inside mb-4 space-y-2">
+                            <li><strong>Instagram Post:</strong> 1080x1080 بكسل</li>
+                            <li><strong>Facebook Post:</strong> 1200x630 بكسل</li>
+                            <li><strong>Twitter Header:</strong> 1500x500 بكسل</li>
+                            <li><strong>YouTube Thumbnail:</strong> 1280x720 بكسل</li>
+                        </ul>
+                    `,
+                    videoId: "export-tutorial"
+                },
+                quiz: [
+                    {
+                        question: "أي نوع ملف أفضل للخلفية الشفافة؟",
+                        options: ["JPG", "PNG", "PDF", "GIF"],
+                        correct: 1
+                    },
+                    {
+                        question: "ما الدقة المناسبة للطباعة؟",
+                        options: ["72 DPI", "150 DPI", "300 DPI", "500 DPI"],
+                        correct: 2
+                    },
+                    {
+                        question: "ما أبعاد منشور Instagram المربع؟",
+                        options: ["1080x1080", "1200x630", "1500x500", "1280x720"],
+                        correct: 0
+                    },
+                    {
+                        question: "أي نوع ملف أصغر حجماً؟",
+                        options: ["PNG", "JPG", "PDF", "SVG"],
+                        correct: 1
+                    },
+                    {
+                        question: "متى نستخدم ملف PDF؟",
+                        options: ["للنشر على الإنترنت", "للطباعة والمستندات", "لوسائل التواصل", "للشعارات"],
+                        correct: 1
+                    }
+                ],
+                xpReward: 50
+            },
+            // Level 2: تطوير المهارة
+            {
+                id: 6,
+                level: 2,
+                title: "نظرية الألوان المتقدمة",
+                description: "فهم عميق لاستخدام الألوان في التصميم",
+                content: {
+                    text: `
+                        <h4 class="font-bold text-lg mb-3">🎨 عجلة الألوان:</h4>
+                        <p class="mb-4">عجلة الألوان هي أداة أساسية لفهم العلاقات بين الألوان واختيار التناسق المثالي.</p>
+                        
+                        <h4 class="font-bold text-lg mb-3">🔄 أنواع التناسق اللوني:</h4>
+                        <ul class="list-disc list-inside mb-4 space-y-2">
+                            <li><strong>التناسق الأحادي:</strong> درجات مختلفة من لون واحد</li>
+                            <li><strong>التناسق المتكامل:</strong> ألوان متقابلة في العجلة</li>
+                            <li><strong>التناسق المثلثي:</strong> ثلاثة ألوان متباعدة بالتساوي</li>
+                            <li><strong>التناسق المتجاور:</strong> ألوان متجاورة في العجلة</li>
+                        </ul>
+                        
+                        <h4 class="font-bold text-lg mb-3">🧠 سيكولوجية الألوان:</h4>
+                        <ul class="list-disc list-inside mb-4 space-y-2">
+                            <li><strong>الأحمر:</strong> القوة والطاقة والإثارة</li>
+                            <li><strong>الأزرق:</strong> الثقة والهدوء والمهنية</li>
+                            <li><strong>الأخضر:</strong> الطبيعة والنمو والصحة</li>
+                            <li><strong>الأصفر:</strong> السعادة والإبداع والتفاؤل</li>
+                            <li><strong>البنفسجي:</strong> الفخامة والإبداع والروحانية</li>
+                        </ul>
+                    `,
+                    videoId: "color-theory-advanced"
+                },
+                quiz: [
+                    {
+                        question: "ما هو التناسق المتكامل في الألوان؟",
+                        options: ["ألوان متجاورة", "ألوان متقابلة", "درجات لون واحد", "ألوان عشوائية"],
+                        correct: 1
+                    },
+                    {
+                        question: "أي لون يرمز للثقة والمهنية؟",
+                        options: ["الأحمر", "الأصفر", "الأزرق", "الأخضر"],
+                        correct: 2
+                    },
+                    {
+                        question: "كم لون في التناسق المثلثي؟",
+                        options: ["لونان", "ثلاثة ألوان", "أربعة ألوان", "خمسة ألوان"],
+                        correct: 1
+                    },
+                    {
+                        question: "ما اللون المناسب لعلامة تجارية صحية؟",
+                        options: ["الأحمر", "الأخضر", "الأسود", "البنفسجي"],
+                        correct: 1
+                    },
+                    {
+                        question: "ما هو التناسق الأحادي؟",
+                        options: ["لون واحد فقط", "درجات مختلفة من لون واحد", "لونان متقابلان", "ألوان متجاورة"],
+                        correct: 1
+                    }
+                ],
+                xpReward: 60
+            },
+            {
+                id: 7,
+                level: 2,
+                title: "التوازن والتكوين",
+                description: "إتقان ترتيب العناصر وخلق توازن بصري مثالي",
+                content: {
+                    text: `
+                        <h4 class="font-bold text-lg mb-3">⚖️ أنواع التوازن:</h4>
+                        <p class="mb-4">التوازن هو توزيع العناصر البصرية بطريقة تخلق استقراراً وراحة للعين.</p>
+                        
+                        <h4 class="font-bold text-lg mb-3">🎯 أنواع التوازن الأساسية:</h4>
+                        <ul class="list-disc list-inside mb-4 space-y-2">
+                            <li><strong>التوازن المتماثل:</strong> توزيع متساوي على جانبي المحور</li>
+                            <li><strong>التوازن غير المتماثل:</strong> توزيع مختلف لكن متوازن بصرياً</li>
+                            <li><strong>التوازن الشعاعي:</strong> العناصر تنطلق من نقطة مركزية</li>
+                        </ul>
+                        
+                        <h4 class="font-bold text-lg mb-3">📐 قاعدة الأثلاث:</h4>
+                        <p class="mb-4">تقسيم التصميم إلى تسعة أجزاء متساوية ووضع العناصر المهمة على نقاط التقاطع.</p>
+                        
+                        <h4 class="font-bold text-lg mb-3">🎨 الوزن البصري:</h4>
+                        <ul class="list-disc list-inside mb-4 space-y-2">
+                            <li>الألوان الداكنة أثقل من الفاتحة</li>
+                            <li>الأشكال الكبيرة أثقل من الصغيرة</li>
+                            <li>النصوص العريضة أثقل من الرفيعة</li>
+                            <li>العناصر المعقدة أثقل من البسيطة</li>
+                        </ul>
+                    `,
+                    videoId: "balance-composition"
+                },
+                quiz: [
+                    {
+                        question: "ما هي قاعدة الأثلاث؟",
+                        options: ["استخدام ثلاثة ألوان", "تقسيم التصميم لتسعة أجزاء", "ثلاثة خطوط", "ثلاث طبقات"],
+                        correct: 1
+                    },
+                    {
+                        question: "أي نوع توازن يعتمد على التماثل؟",
+                        options: ["التوازن المتماثل", "التوازن غير المتماثل", "التوازن الشعاعي", "التوازن العشوائي"],
+                        correct: 0
+                    },
+                    {
+                        question: "ما العنصر الأثقل بصرياً؟",
+                        options: ["اللون الفاتح", "اللون الداكن", "الشكل الصغير", "الخط الرفيع"],
+                        correct: 1
+                    },
+                    {
+                        question: "أين توضع العناصر المهمة حسب قاعدة الأثلاث؟",
+                        options: ["في الوسط", "في الزوايا", "على نقاط التقاطع", "في الأطراف"],
+                        correct: 2
+                    },
+                    {
+                        question: "ما فائدة التوازن في التصميم؟",
+                        options: ["توفير الوقت", "راحة العين", "تقليل الألوان", "سهولة الطباعة"],
+                        correct: 1
+                    }
+                ],
+                xpReward: 60
+            },
+            {
+                id: 8,
+                level: 2,
+                title: "تصميم الهوية البصرية",
+                description: "إنشاء هوية بصرية متكاملة للعلامات التجارية",
+                content: {
+                    text: `
+                        <h4 class="font-bold text-lg mb-3">🏢 ما هي الهوية البصرية؟</h4>
+                        <p class="mb-4">الهوية البصرية هي مجموعة العناصر المرئية التي تمثل العلامة التجارية وتميزها عن المنافسين.</p>
+                        
+                        <h4 class="font-bold text-lg mb-3">🎯 عناصر الهوية البصرية:</h4>
+                        <ul class="list-disc list-inside mb-4 space-y-2">
+                            <li><strong>الشعار:</strong> الرمز الأساسي للعلامة التجارية</li>
+                            <li><strong>الألوان:</strong> لوحة ألوان ثابتة ومميزة</li>
+                            <li><strong>الخطوط:</strong> أنواع خطوط محددة للاستخدام</li>
+                            <li><strong>الأنماط:</strong> أشكال وزخارف مميزة</li>
+                            <li><strong>الصور:</strong> نمط التصوير والمعالجة</li>
+                        </ul>
+                        
+                        <h4 class="font-bold text-lg mb-3">📋 خطوات تصميم الهوية:</h4>
+                        <ol class="list-decimal list-inside mb-4 space-y-2">
+                            <li>دراسة العلامة التجارية وقيمها</li>
+                            <li>تحليل الجمهور المستهدف</li>
+                            <li>دراسة المنافسين</li>
+                            <li>تصميم الشعار الأساسي</li>
+                            <li>اختيار لوحة الألوان</li>
+                            <li>تحديد الخطوط المناسبة</li>
+                            <li>إنشاء دليل الهوية البصرية</li>
+                        </ol>
+                    `,
+                    videoId: "brand-identity-design"
+                },
+                quiz: [
+                    {
+                        question: "ما أهم عنصر في الهوية البصرية؟",
+                        options: ["الألوان", "الشعار", "الخطوط", "الصور"],
+                        correct: 1
+                    },
+                    {
+                        question: "لماذا نحتاج لوحة ألوان ثابتة؟",
+                        options: ["لتوفير المال", "للتميز والاتساق", "لسهولة التصميم", "لتقليل الوقت"],
+                        correct: 1
+                    },
+                    {
+                        question: "ما أول خطوة في تصميم الهوية؟",
+                        options: ["تصميم الشعار", "دراسة العلامة التجارية", "اختيار الألوان", "تحديد الخطوط"],
+                        correct: 1
+                    },
+                    {
+                        question: "ما فائدة دراسة المنافسين؟",
+                        options: ["نسخ تصاميمهم", "التميز عنهم", "توفير الوقت", "تقليل التكلفة"],
+                        correct: 1
+                    },
+                    {
+                        question: "ما هو دليل الهوية البصرية؟",
+                        options: ["مجموعة شعارات", "قواعد استخدام الهوية", "ألوان فقط", "خطوط فقط"],
+                        correct: 1
+                    }
+                ],
+                xpReward: 60
+            },
+            {
+                id: 9,
+                level: 2,
+                title: "تحريك التصاميم (Animation)",
+                description: "إضافة الحركة والحيوية للتصاميم الثابتة",
+                content: {
+                    text: `
+                        <h4 class="font-bold text-lg mb-3">🎬 أهمية التحريك:</h4>
+                        <p class="mb-4">التحريك يجذب الانتباه ويجعل التصميم أكثر تفاعلاً وحيوية، خاصة في وسائل التواصل الاجتماعي.</p>
+                        
+                        <h4 class="font-bold text-lg mb-3">⚡ أنواع التحريك:</h4>
+                        <ul class="list-disc list-inside mb-4 space-y-2">
+                            <li><strong>التحريك البسيط:</strong> تحريك النصوص والأشكال</li>
+                            <li><strong>التحريك المعقد:</strong> انتقالات وتأثيرات متقدمة</li>
+                            <li><strong>التحريك التفاعلي:</strong> يتفاعل مع المستخدم</li>
+                        </ul>
+                        
+                        <h4 class="font-bold text-lg mb-3">🛠️ تطبيقات التحريك:</h4>
+                        <ul class="list-disc list-inside mb-4 space-y-2">
+                            <li><strong>Canva:</strong> تحريك بسيط وسهل</li>
+                            <li><strong>CapCut:</strong> تحريك متقدم للفيديو</li>
+                            <li><strong>After Effects:</strong> تحريك احترافي (للمتقدمين)</li>
+                        </ul>
+                        
+                        <h4 class="font-bold text-lg mb-3">💡 نصائح التحريك:</h4>
+                        <ul class="list-disc list-inside mb-4 space-y-2">
+                            <li>ابدأ بتحريك بسيط وتدرج</li>
+                            <li>لا تفرط في الحركة</li>
+                            <li>اجعل التحريك يخدم الرسالة</li>
+                            <li>انتبه لسرعة التحريك</li>
+                            <li>اختبر التصميم على أجهزة مختلفة</li>
+                        </ul>
+                    `,
+                    videoId: "animation-basics"
+                },
+                quiz: [
+                    {
+                        question: "ما فائدة تحريك التصاميم؟",
+                        options: ["توفير المساحة", "جذب الانتباه", "تقليل الألوان", "سهولة الطباعة"],
+                        correct: 1
+                    },
+                    {
+                        question: "أي تطبيق أفضل للتحريك البسيط؟",
+                        options: ["Photoshop", "Canva", "Word", "PowerPoint"],
+                        correct: 1
+                    },
+                    {
+                        question: "ما أهم نصيحة في التحريك؟",
+                        options: ["استخدام كل التأثيرات", "عدم الإفراط في الحركة", "التحريك السريع", "التحريك المعقد"],
+                        correct: 1
+                    },
+                    {
+                        question: "متى نستخدم التحريك التفاعلي؟",
+                        options: ["في الطباعة", "في المواقع والتطبيقات", "في الشعارات", "في الكتب"],
+                        correct: 1
+                    },
+                    {
+                        question: "ما المقصود بسرعة التحريك؟",
+                        options: ["عدد الألوان", "زمن الحركة", "حجم الملف", "دقة الصورة"],
+                        correct: 1
+                    }
+                ],
+                xpReward: 60
+            },
+            {
+                id: 10,
+                level: 2,
+                title: "مشروع المستوى الثاني",
+                description: "تطبيق شامل لجميع مهارات المستوى الثاني",
+                content: {
+                    text: `
+                        <h4 class="font-bold text-lg mb-3">🎯 مشروع التخرج:</h4>
+                        <p class="mb-4">سنقوم بتصميم هوية بصرية كاملة لمقهى صغير، تشمل الشعار والألوان والمنشورات.</p>
+                        
+                        <h4 class="font-bold text-lg mb-3">📋 متطلبات المشروع:</h4>
+                        <ol class="list-decimal list-inside mb-4 space-y-2">
+                            <li>تصميم شعار للمقهى</li>
+                            <li>اختيار لوحة ألوان مناسبة</li>
+                            <li>تصميم منشور إعلاني</li>
+                            <li>تصميم قائمة طعام بسيطة</li>
+                            <li>إنشاء منشور متحرك</li>
+                        </ol>
+                        
+                        <h4 class="font-bold text-lg mb-3">🎨 معايير التقييم:</h4>
+                        <ul class="list-disc list-inside mb-4 space-y-2">
+                            <li>الإبداع والأصالة</li>
+                            <li>تطبيق مبادئ التصميم</li>
+                            <li>التناسق في الهوية</li>
+                            <li>جودة التنفيذ</li>
+                            <li>مناسبة التصميم للهدف</li>
+                        </ul>
+                        
+                        <h4 class="font-bold text-lg mb-3">💡 نصائح للنجاح:</h4>
+                        <ul class="list-disc list-inside mb-4 space-y-2">
+                            <li>ابدأ بالبحث والإلهام</li>
+                            <li>اسكتش أفكارك أولاً</li>
+                            <li>اطلب رأي الآخرين</li>
+                            <li>لا تتردد في التعديل</li>
+                            <li>احفظ نسخ متعددة من عملك</li>
+                        </ul>
+                    `,
+                    videoId: "level2-project"
+                },
+                quiz: [
+                    {
+                        question: "ما أول خطوة في مشروع الهوية البصرية؟",
+                        options: ["تصميم الشعار", "البحث والإلهام", "اختيار الألوان", "كتابة النصوص"],
+                        correct: 1
+                    },
+                    {
+                        question: "كم عنصر مطلوب في مشروع المقهى؟",
+                        options: ["3 عناصر", "4 عناصر", "5 عناصر", "6 عناصر"],
+                        correct: 2
+                    },
+                    {
+                        question: "ما أهم معيار في التقييم؟",
+                        options: ["السرعة", "الإبداع والأصالة", "استخدام ألوان كثيرة", "التعقيد"],
+                        correct: 1
+                    },
+                    {
+                        question: "لماذا نطلب رأي الآخرين؟",
+                        options: ["للمجاملة", "لتحسين التصميم", "لتوفير الوقت", "لتقليل العمل"],
+                        correct: 1
+                    },
+                    {
+                        question: "ما فائدة الاسكتش قبل التصميم؟",
+                        options: ["توفير البطارية", "تنظيم الأفكار", "تقليل الألوان", "سهولة الحفظ"],
+                        correct: 1
+                    }
+                ],
+                xpReward: 80
+            },
+            // Level 3: الاحتراف والربح
+            {
+                id: 11,
+                level: 3,
+                title: "تصميم المحتوى التسويقي",
+                description: "إنشاء تصاميم تسويقية فعالة تحقق النتائج",
+                content: {
+                    text: `
+                        <h4 class="font-bold text-lg mb-3">📈 أهمية التصميم التسويقي:</h4>
+                        <p class="mb-4">التصميم التسويقي يهدف إلى إقناع المشاهد باتخاذ إجراء معين مثل الشراء أو التسجيل.</p>
+                        
+                        <h4 class="font-bold text-lg mb-3">🎯 عناصر التصميم التسويقي:</h4>
+                        <ul class="list-disc list-inside mb-4 space-y-2">
+                            <li><strong>العنوان الجذاب:</strong> يلفت الانتباه فوراً</li>
+                            <li><strong>الفائدة الواضحة:</strong> ما يحصل عليه العميل</li>
+                            <li><strong>دعوة للعمل:</strong> زر أو نص يحث على الإجراء</li>
+                            <li><strong>الدليل الاجتماعي:</strong> آراء العملاء والتقييمات</li>
+                            <li><strong>الإلحاح:</strong> عرض محدود الوقت</li>
+                        </ul>
+                        
+                        <h4 class="font-bold text-lg mb-3">🧠 علم النفس التسويقي:</h4>
+                        <ul class="list-disc list-inside mb-4 space-y-2">
+                            <li>استخدام الألوان المحفزة للعمل</li>
+                            <li>وضع العناصر المهمة في المقدمة</li>
+                            <li>استخدام الأرقام والإحصائيات</li>
+                            <li>إنشاء شعور بالندرة</li>
+                            <li>التركيز على المشاعر</li>
+                        </ul>
+                        
+                        <h4 class="font-bold text-lg mb-3">📱 أنواع المحتوى التسويقي:</h4>
+                        <ul class="list-disc list-inside mb-4 space-y-2">
+                            <li>إعلانات المنتجات</li>
+                            <li>منشورات العروض والخصومات</li>
+                            <li>محتوى تعليمي وتثقيفي</li>
+                            <li>قصص العملاء والتجارب</li>
+                            <li>محتوى ترفيهي تفاعلي</li>
+                        </ul>
+                    `,
+                    videoId: "marketing-design"
+                },
+                quiz: [
+                    {
+                        question: "ما الهدف الأساسي من التصميم التسويقي؟",
+                        options: ["الجمال فقط", "إقناع المشاهد باتخاذ إجراء", "توفير المعلومات", "التسلية"],
+                        correct: 1
+                    },
+                    {
+                        question: "ما أهم عنصر في التصميم التسويقي؟",
+                        options: ["الألوان الكثيرة", "العنوان الجذاب", "الصور الكبيرة", "الخطوط المزخرفة"],
+                        correct: 1
+                    },
+                    {
+                        question: "ما المقصود بدعوة للعمل؟",
+                        options: ["معلومات الاتصال", "نص يحث على الإجراء", "وصف المنتج", "تاريخ الشركة"],
+                        correct: 1
+                    },
+                    {
+                        question: "لماذا نستخدم الدليل الاجتماعي؟",
+                        options: ["لملء المساحة", "لبناء الثقة", "لتوفير الوقت", "لتقليل التكلفة"],
+                        correct: 1
+                    },
+                    {
+                        question: "ما فائدة خلق شعور بالندرة؟",
+                        options: ["تقليل المبيعات", "تحفيز الشراء السريع", "توفير المنتج", "تقليل الإعلانات"],
+                        correct: 1
+                    }
+                ],
+                xpReward: 70
+            },
+            {
+                id: 12,
+                level: 3,
+                title: "بناء معرض الأعمال (Portfolio)",
+                description: "إنشاء معرض احترافي لعرض أعمالك التصميمية",
+                content: {
+                    text: `
+                        <h4 class="font-bold text-lg mb-3">💼 أهمية معرض الأعمال:</h4>
+                        <p class="mb-4">معرض الأعمال هو بطاقة تعريفك المهنية التي تعرض مهاراتك وخبراتك للعملاء المحتملين.</p>
+                        
+                        <h4 class="font-bold text-lg mb-3">📋 محتويات المعرض:</h4>
+                        <ul class="list-disc list-inside mb-4 space-y-2">
+                            <li><strong>نبذة شخصية:</strong> من أنت وما تخصصك</li>
+                            <li><strong>أفضل الأعمال:</strong> 10-15 عمل متنوع</li>
+                            <li><strong>دراسات الحالة:</strong> شرح عملية التصميم</li>
+                            <li><strong>الخدمات:</strong> ما تقدمه للعملاء</li>
+                            <li><strong>معلومات التواصل:</strong> كيفية الوصول إليك</li>
+                        </ul>
+                        
+                        <h4 class="font-bold text-lg mb-3">🎨 نصائح لمعرض مميز:</h4>
+                        <ul class="list-disc list-inside mb-4 space-y-2">
+                            <li>اختر أفضل أعمالك فقط</li>
+                            <li>نوع في أنواع التصاميم</li>
+                            <li>اكتب وصف لكل عمل</li>
+                            <li>استخدم صور عالية الجودة</li>
+                            <li>حدث المعرض باستمرار</li>
+                        </ul>
+                        
+                        <h4 class="font-bold text-lg mb-3">🌐 منصات عرض الأعمال:</h4>
+                        <ul class="list-disc list-inside mb-4 space-y-2">
+                            <li><strong>Behance:</strong> منصة Adobe الشهيرة</li>
+                            <li><strong>Dribbble:</strong> مجتمع المصممين</li>
+                            <li><strong>Instagram:</strong> للوصول الأوسع</li>
+                            <li><strong>موقع شخصي:</strong> الأكثر احترافية</li>
+                        </ul>
+                    `,
+                    videoId: "portfolio-building"
+                },
+                quiz: [
+                    {
+                        question: "ما الهدف من معرض الأعمال؟",
+                        options: ["التسلية", "عرض المهارات للعملاء", "حفظ الأعمال", "التعلم"],
+                        correct: 1
+                    },
+                    {
+                        question: "كم عمل يُنصح بعرضه في المعرض؟",
+                        options: ["5-8 أعمال", "10-15 عمل", "20-25 عمل", "كل الأعمال"],
+                        correct: 1
+                    },
+                    {
+                        question: "ما أهم نصيحة لمعرض مميز؟",
+                        options: ["عرض كل الأعمال", "اختيار أفضل الأعمال فقط", "استخدام ألوان كثيرة", "كتابة نصوص طويلة"],
+                        correct: 1
+                    },
+                    {
+                        question: "أي منصة الأكثر احترافية؟",
+                        options: ["Instagram", "Facebook", "موقع شخصي", "WhatsApp"],
+                        correct: 2
+                    },
+                    {
+                        question: "ما فائدة دراسات الحالة؟",
+                        options: ["ملء المساحة", "شرح عملية التصميم", "زيادة الكلمات", "تقليل الأعمال"],
+                        correct: 1
+                    }
+                ],
+                xpReward: 70
+            },
+            {
+                id: 13,
+                level: 3,
+                title: "الذكاء الاصطناعي في التصميم",
+                description: "استخدام أدوات الذكاء الاصطناعي لتطوير التصاميم",
+                content: {
+                    text: `
+                        <h4 class="font-bold text-lg mb-3">🤖 الذكاء الاصطناعي والتصميم:</h4>
+                        <p class="mb-4">الذكاء الاصطناعي يساعد المصممين في إنتاج أعمال أسرع وأكثر إبداعاً.</p>
+                        
+                        <h4 class="font-bold text-lg mb-3">🛠️ أدوات الذكاء الاصطناعي:</h4>
+                        <ul class="list-disc list-inside mb-4 space-y-2">
+                            <li><strong>DALL-E:</strong> إنشاء صور من النص</li>
+                            <li><strong>Midjourney:</strong> فن رقمي احترافي</li>
+                            <li><strong>Canva AI:</strong> مساعد التصميم الذكي</li>
+                            <li><strong>Adobe Firefly:</strong> أدوات إبداعية ذكية</li>
+                            <li><strong>ChatGPT:</strong> كتابة النصوص الإبداعية</li>
+                        </ul>
+                        
+                        <h4 class="font-bold text-lg mb-3">💡 استخدامات عملية:</h4>
+                        <ul class="list-disc list-inside mb-4 space-y-2">
+                            <li>إنشاء أفكار وإلهام جديد</li>
+                            <li>إنتاج صور وخلفيات مخصصة</li>
+                            <li>كتابة نصوص تسويقية</li>
+                            <li>تحسين جودة الصور</li>
+                            <li>إزالة خلفيات الصور</li>
+                        </ul>
+                        
+                        <h4 class="font-bold text-lg mb-3">⚖️ الاستخدام الأخلاقي:</h4>
+                        <ul class="list-disc list-inside mb-4 space-y-2">
+                            <li>احترام حقوق الطبع والنشر</li>
+                            <li>الشفافية مع العملاء</li>
+                            <li>عدم الاعتماد الكامل على الذكاء الاصطناعي</li>
+                            <li>تطوير المهارات الشخصية</li>
+                            <li>استخدام الذكاء الاصطناعي كمساعد وليس بديل</li>
+                        </ul>
+                    `,
+                    videoId: "ai-in-design"
+                },
+                quiz: [
+                    {
+                        question: "ما فائدة الذكاء الاصطناعي في التصميم؟",
+                        options: ["استبدال المصمم", "مساعدة المصمم", "تقليل الجودة", "زيادة التكلفة"],
+                        correct: 1
+                    },
+                    {
+                        question: "أي أداة تُستخدم لإنشاء صور من النص؟",
+                        options: ["Photoshop", "DALL-E", "Word", "PowerPoint"],
+                        correct: 1
+                    },
+                    {
+                        question: "ما أهم مبدأ في الاستخدام الأخلاقي؟",
+                        options: ["استخدام كل الأدوات", "احترام حقوق الطبع", "السرعة في العمل", "تقليل التكلفة"],
+                        correct: 1
+                    },
+                    {
+                        question: "هل يجب الاعتماد كلياً على الذكاء الاصطناعي؟",
+                        options: ["نعم، دائماً", "لا، كمساعد فقط", "أحياناً", "حسب المشروع"],
+                        correct: 1
+                    },
+                    {
+                        question: "ما فائدة ChatGPT للمصممين؟",
+                        options: ["تصميم الصور", "كتابة النصوص الإبداعية", "تعديل الألوان", "طباعة التصاميم"],
+                        correct: 1
+                    }
+                ],
+                xpReward: 70
+            },
+            {
+                id: 14,
+                level: 3,
+                title: "العمل الحر والربح من التصميم",
+                description: "تعلم كيفية تحويل مهاراتك إلى مصدر دخل",
+                content: {
+                    text: `
+                        <h4 class="font-bold text-lg mb-3">💰 الربح من التصميم:</h4>
+                        <p class="mb-4">يمكن تحويل مهارات التصميم إلى مصدر دخل مستقر من خلال العمل الحر أو الوظائف.</p>
+                        
+                        <h4 class="font-bold text-lg mb-3">🌐 منصات العمل الحر:</h4>
+                        <ul class="list-disc list-inside mb-4 space-y-2">
+                            <li><strong>خمسات:</strong> منصة عربية للخدمات المصغرة</li>
+                            <li><strong>مستقل:</strong> منصة عربية للمشاريع</li>
+                            <li><strong>Fiverr:</strong> منصة عالمية شهيرة</li>
+                            <li><strong>Upwork:</strong> للمشاريع الكبيرة</li>
+                            <li><strong>99designs:</strong> متخصصة في التصميم</li>
+                        </ul>
+                        
+                        <h4 class="font-bold text-lg mb-3">💼 أنواع الخدمات:</h4>
+                        <ul class="list-disc list-inside mb-4 space-y-2">
+                            <li>تصميم الشعارات والهويات</li>
+                            <li>تصميم منشورات وسائل التواصل</li>
+                            <li>تصميم البروشورات والكتيبات</li>
+                            <li>تصميم واجهات المواقع</li>
+                            <li>تصميم الإعلانات التسويقية</li>
+                        </ul>
+                        
+                        <h4 class="font-bold text-lg mb-3">📈 نصائح للنجاح:</h4>
+                        <ul class="list-disc list-inside mb-4 space-y-2">
+                            <li>ابدأ بأسعار منافسة</li>
+                            <li>قدم جودة عالية دائماً</li>
+                            <li>تواصل بوضوح مع العملاء</li>
+                            <li>التزم بالمواعيد المحددة</li>
+                            <li>اطلب تقييمات إيجابية</li>
+                            <li>طور مهاراتك باستمرار</li>
+                        </ul>
+                    `,
+                    videoId: "freelancing-design"
+                },
+                quiz: [
+                    {
+                        question: "أي منصة عربية للعمل الحر؟",
+                        options: ["Fiverr", "خمسات", "Upwork", "Behance"],
+                        correct: 1
+                    },
+                    {
+                        question: "ما أهم نصيحة للنجاح في العمل الحر؟",
+                        options: ["الأسعار العالية", "الجودة العالية", "السرعة فقط", "كثرة الإعلانات"],
+                        correct: 1
+                    },
+                    {
+                        question: "أي نوع خدمة الأكثر طلباً؟",
+                        options: ["تصميم الكتب", "تصميم الشعارات", "تصميم المباني", "تصميم الملابس"],
+                        correct: 1
+                    },
+                    {
+                        question: "لماذا نبدأ بأسعار منافسة؟",
+                        options: ["لتقليل الربح", "لجذب العملاء الأوائل", "لتوفير الوقت", "لتقليل العمل"],
+                        correct: 1
+                    },
+                    {
+                        question: "ما فائدة التقييمات الإيجابية؟",
+                        options: ["لا فائدة", "بناء السمعة وجذب عملاء جدد", "تقليل الأسعار", "توفير الوقت"],
+                        correct: 1
+                    }
+                ],
+                xpReward: 70
+            },
+            {
+                id: 15,
+                level: 3,
+                title: "مشروع التخرج النهائي",
+                description: "مشروع شامل يجمع كل ما تعلمته في الأكاديمية",
+                content: {
+                    text: `
+                        <h4 class="font-bold text-lg mb-3">🎓 مشروع التخرج:</h4>
+                        <p class="mb-4">ستقوم بإنشاء حملة تسويقية كاملة لشركة ناشئة، تشمل جميع عناصر الهوية والتسويق.</p>
+                        
+                        <h4 class="font-bold text-lg mb-3">📋 متطلبات المشروع:</h4>
+                        <ol class="list-decimal list-inside mb-4 space-y-2">
+                            <li>تصميم شعار وهوية بصرية كاملة</li>
+                            <li>إنشاء 5 منشورات تسويقية متنوعة</li>
+                            <li>تصميم إعلان متحرك</li>
+                            <li>إنشاء معرض أعمال احترافي</li>
+                            <li>كتابة خطة تسويقية للمشروع</li>
+                        </ol>
+                        
+                        <h4 class="font-bold text-lg mb-3">🏆 معايير التقييم النهائي:</h4>
+                        <ul class="list-disc list-inside mb-4 space-y-2">
+                            <li><strong>الإبداع والأصالة (25%):</strong> تميز الفكرة والتنفيذ</li>
+                            <li><strong>التطبيق العملي (25%):</strong> استخدام المبادئ المتعلمة</li>
+                            <li><strong>الجودة التقنية (25%):</strong> إتقان الأدوات والتقنيات</li>
+                            <li><strong>التناسق والاحترافية (25%):</strong> تماسك الهوية البصرية</li>
+                        </ul>
+                        
+                        <h4 class="font-bold text-lg mb-3">🎯 نصائح للتميز:</h4>
+                        <ul class="list-disc list-inside mb-4 space-y-2">
+                            <li>اختر فكرة تهتم بها شخصياً</li>
+                            <li>ادرس السوق والمنافسين</li>
+                            <li>اطلب آراء متنوعة</li>
+                            <li>وثق عملية التصميم</li>
+                            <li>استعد لعرض مشروعك</li>
+                        </ul>
+                        
+                        <p class="mt-6 p-4 bg-gradient-to-r from-purple-100 to-teal-100 rounded-lg">
+                            <strong>🎉 تهانينا!</strong> بإكمال هذا المشروع ستكون مصمماً محترفاً قادراً على العمل في السوق والربح من مهاراتك!
+                        </p>
+                    `,
+                    videoId: "final-project"
+                },
+                quiz: [
+                    {
+                        question: "كم منشور تسويقي مطلوب في المشروع؟",
+                        options: ["3 منشورات", "5 منشورات", "7 منشورات", "10 منشورات"],
+                        correct: 1
+                    },
+                    {
+                        question: "ما أعلى نسبة في معايير التقييم؟",
+                        options: ["الإبداع", "التطبيق العملي", "الجودة التقنية", "كلها متساوية"],
+                        correct: 3
+                    },
+                    {
+                        question: "لماذا ندرس السوق والمنافسين؟",
+                        options: ["لنسخ أعمالهم", "لفهم السوق والتميز", "لتوفير الوقت", "لتقليل العمل"],
+                        correct: 1
+                    },
+                    {
+                        question: "ما فائدة توثيق عملية التصميم؟",
+                        options: ["لا فائدة", "لإظهار الاحترافية", "لملء الوقت", "لزيادة الصفحات"],
+                        correct: 1
+                    },
+                    {
+                        question: "ماذا تصبح بعد إكمال المشروع؟",
+                        options: ["مبتدئ", "متوسط", "مصمم محترف", "خبير"],
+                        correct: 2
+                    }
+                ],
+                xpReward: 100
+            }
+        ];
+
+        // Global variables
+        let userProgress = [];
+        let totalXP = 0;
+        let currentLevel = 'مبتدئ';
+        let unlockedLessons = [1]; // Start with lesson 1 unlocked
+        let currentQuiz = null;
+        let currentQuestionIndex = 0;
+        let quizScore = 0;
+        let quizAttempts = 0;
+
+        // Data SDK handler
+        const dataHandler = {
+            onDataChanged(data) {
+                userProgress = data;
+                updateProgressFromData();
+                renderLessons();
+                updateBadges();
+                checkCertificateEligibility();
+            }
+        };
+
+        // Initialize the application
+        async function initApp() {
+            showLoading(true);
+            
+            try {
+                // Initialize Data SDK
+                const initResult = await window.dataSdk.init(dataHandler);
+                if (!initResult.isOk) {
+                    console.error("Failed to initialize data SDK");
+                }
+
+                // Initialize Element SDK
+                if (window.elementSdk) {
+                    await window.elementSdk.init({
+                        defaultConfig,
+                        onConfigChange: async (config) => {
+                            // Update academy title and welcome message
+                            document.getElementById('academy-title').textContent = config.academy_title || defaultConfig.academy_title;
+                            document.getElementById('welcome-message').textContent = config.welcome_message || defaultConfig.welcome_message;
+                            
+                            // Update instructor name and initial
+                            const instructorName = config.instructor_name || defaultConfig.instructor_name;
+                            document.getElementById('instructor-name').textContent = instructorName;
+                            document.getElementById('instructor-initial').textContent = instructorName.charAt(0);
+                            
+                            // Update colors
+                            const backgroundColor = config.background_color || defaultConfig.background_color;
+                            const primaryColor = config.primary_color || defaultConfig.primary_color;
+                            const accentColor = config.accent_color || defaultConfig.accent_color;
+                            const textColor = config.text_color || defaultConfig.text_color;
+                            const surfaceColor = config.surface_color || defaultConfig.surface_color;
+                            
+                            document.body.style.backgroundColor = backgroundColor;
+                            document.body.style.color = textColor;
+                            
+                            // Update font
+                            const customFont = config.font_family || defaultConfig.font_family;
+                            const baseFontStack = 'Arial, sans-serif';
+                            document.body.style.fontFamily = `${customFont}, ${baseFontStack}`;
+                            
+                            // Update font size
+                            const baseSize = config.font_size || defaultConfig.font_size;
+                            document.body.style.fontSize = `${baseSize}px`;
+                        },
+                        mapToCapabilities: (config) => ({
+                            recolorables: [
+                                {
+                                    get: () => config.background_color || defaultConfig.background_color,
+                                    set: (value) => {
+                                        if (window.elementSdk) {
+                                            window.elementSdk.setConfig({ background_color: value });
+                                        }
+                                    }
+                                },
+                                {
+                                    get: () => config.primary_color || defaultConfig.primary_color,
+                                    set: (value) => {
+                                        if (window.elementSdk) {
+                                            window.elementSdk.setConfig({ primary_color: value });
+                                        }
+                                    }
+                                },
+                                {
+                                    get: () => config.accent_color || defaultConfig.accent_color,
+                                    set: (value) => {
+                                        if (window.elementSdk) {
+                                            window.elementSdk.setConfig({ accent_color: value });
+                                        }
+                                    }
+                                },
+                                {
+                                    get: () => config.text_color || defaultConfig.text_color,
+                                    set: (value) => {
+                                        if (window.elementSdk) {
+                                            window.elementSdk.setConfig({ text_color: value });
+                                        }
+                                    }
+                                },
+                                {
+                                    get: () => config.surface_color || defaultConfig.surface_color,
+                                    set: (value) => {
+                                        if (window.elementSdk) {
+                                            window.elementSdk.setConfig({ surface_color: value });
+                                        }
+                                    }
+                                }
+                            ],
+                            borderables: [],
+                            fontEditable: {
+                                get: () => config.font_family || defaultConfig.font_family,
+                                set: (value) => {
+                                    if (window.elementSdk) {
+                                        window.elementSdk.setConfig({ font_family: value });
+                                    }
+                                }
+                            },
+                            fontSizeable: {
+                                get: () => config.font_size || defaultConfig.font_size,
+                                set: (value) => {
+                                    if (window.elementSdk) {
+                                        window.elementSdk.setConfig({ font_size: value });
+                                    }
+                                }
+                            }
+                        }),
+                        mapToEditPanelValues: (config) => new Map([
+                            ["academy_title", config.academy_title || defaultConfig.academy_title],
+                            ["welcome_message", config.welcome_message || defaultConfig.welcome_message],
+                            ["instructor_name", config.instructor_name || defaultConfig.instructor_name]
+                        ])
+                    });
+                }
+
+                // Initialize UI
+                initializeEventListeners();
+                renderLessons();
+                updateProgressDisplay();
+                
+            } catch (error) {
+                console.error("Initialization error:", error);
+                showToast('حدث خطأ في تحميل الأكاديمية', 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function initializeEventListeners() {
+            // Quiz modal close
+            document.getElementById('close-quiz').addEventListener('click', closeQuizModal);
+            
+            // Certificate download
+            document.getElementById('download-certificate').addEventListener('click', downloadCertificate);
+            
+            // Click outside modal to close
+            document.getElementById('quiz-modal').addEventListener('click', (e) => {
+                if (e.target.id === 'quiz-modal') {
+                    closeQuizModal();
+                }
+            });
+        }
+
+        function renderLessons() {
+            const container = document.getElementById('lessons-container');
+            container.innerHTML = '';
+
+            lessonsData.forEach((lesson, index) => {
+                const isUnlocked = unlockedLessons.includes(lesson.id);
+                const isCompleted = userProgress.some(p => p.lesson_id === `lesson_${lesson.id}` && p.completed && p.quiz_passed);
+                
+                const lessonCard = document.createElement('div');
+                lessonCard.className = `lesson-card bg-white rounded-lg shadow-lg p-6 ${isCompleted ? 'completed' : isUnlocked ? 'unlocked' : 'locked'}`;
+                
+                lessonCard.innerHTML = `
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold mr-4 ${getLevelColor(lesson.level)}">
+                                ${lesson.id}
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold ${isUnlocked ? 'text-gray-800' : 'text-gray-400'}">${lesson.title}</h3>
+                                <p class="text-sm ${isUnlocked ? 'text-gray-600' : 'text-gray-400'}">المستوى ${lesson.level} - ${getLevelName(lesson.level)}</p>
+                            </div>
+                        </div>
+                        <div class="text-2xl">
+                            ${isCompleted ? '✅' : isUnlocked ? '📚' : '🔒'}
+                        </div>
+                    </div>
+                    
+                    <p class="text-gray-600 mb-4">${lesson.description}</p>
+                    
+                    <div class="lesson-content ${isUnlocked ? '' : 'opacity-50'}" id="content-${lesson.id}">
+                        <!-- Content will be populated when expanded -->
+                    </div>
+                    
+                    <div class="flex gap-3 mt-4">
+                        <button 
+                            class="flex-1 py-3 px-4 rounded-lg font-semibold transition-all ${isUnlocked ? 'bg-purple-600 text-white hover:bg-purple-700' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}"
+                            onclick="${isUnlocked ? `toggleLessonContent(${lesson.id})` : ''}"
+                            ${!isUnlocked ? 'disabled' : ''}
+                        >
+                            ${isCompleted ? '📖 مراجعة المحتوى' : '📖 عرض المحتوى'}
+                        </button>
+                        <button 
+                            class="flex-1 py-3 px-4 rounded-lg font-semibold transition-all ${isUnlocked ? 'bg-teal-600 text-white hover:bg-teal-700' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}"
+                            onclick="${isUnlocked ? `startQuiz(${lesson.id})` : ''}"
+                            ${!isUnlocked ? 'disabled' : ''}
+                        >
+                            ${isCompleted ? '🎯 إعادة الاختبار' : '🎯 ابدأ الاختبار'}
+                        </button>
+                    </div>
+                    
+                    ${!isUnlocked ? '<div class="mt-3 text-center text-sm text-gray-500">🔒 أكمل الدرس السابق لفتح هذا الدرس</div>' : ''}
+                `;
+                
+                container.appendChild(lessonCard);
+            });
+        }
+
+        function toggleLessonContent(lessonId) {
+            const lesson = lessonsData.find(l => l.id === lessonId);
+            const contentDiv = document.getElementById(`content-${lessonId}`);
+            
+            if (contentDiv.classList.contains('expanded')) {
+                contentDiv.classList.remove('expanded');
+                contentDiv.innerHTML = '';
+            } else {
+                contentDiv.classList.add('expanded');
+                contentDiv.innerHTML = `
+                    <div class="border-t pt-4 mt-4">
+                        <div class="video-container mb-4">
+                            <div class="video-placeholder">
+                                🎥 فيديو تعليمي: ${lesson.title}
+                            </div>
+                        </div>
+                        <div class="prose max-w-none">
+                            ${lesson.content.text}
+                        </div>
+                    </div>
+                `;
+                contentDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        async function startQuiz(lessonId) {
+            const lesson = lessonsData.find(l => l.id === lessonId);
+            if (!lesson) return;
+
+            currentQuiz = lesson;
+            currentQuestionIndex = 0;
+            quizScore = 0;
+            quizAttempts++;
+
+            document.getElementById('quiz-title').textContent = `اختبار: ${lesson.title}`;
+            showQuestion();
+            document.getElementById('quiz-modal').classList.remove('hidden');
+            document.getElementById('quiz-modal').classList.add('flex');
+        }
+
+        function showQuestion() {
+            if (!currentQuiz || currentQuestionIndex >= currentQuiz.quiz.length) return;
+
+            const question = currentQuiz.quiz[currentQuestionIndex];
+            const quizContent = document.getElementById('quiz-content');
+            
+            quizContent.innerHTML = `
+                <div class="mb-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-sm text-gray-600">السؤال ${currentQuestionIndex + 1} من ${currentQuiz.quiz.length}</span>
+                        <span class="text-sm text-purple-600 font-semibold">النقاط: ${quizScore}/${currentQuestionIndex}</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
+                        <div class="bg-purple-600 h-2 rounded-full transition-all duration-300" style="width: ${(currentQuestionIndex / currentQuiz.quiz.length) * 100}%"></div>
+                    </div>
+                    <h4 class="text-lg font-semibold mb-4">${question.question}</h4>
+                    <div class="space-y-3">
+                        ${question.options.map((option, index) => `
+                            <button class="quiz-option w-full p-4 text-right bg-gray-50 hover:bg-gray-100 rounded-lg border-2 border-transparent transition-all" onclick="selectAnswer(${index})">
+                                <span class="font-medium">${String.fromCharCode(65 + index)}.</span> ${option}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function selectAnswer(selectedIndex) {
+            const question = currentQuiz.quiz[currentQuestionIndex];
+            const isCorrect = selectedIndex === question.correct;
+            const options = document.querySelectorAll('.quiz-option');
+            
+            // Disable all options
+            options.forEach(option => {
+                option.style.pointerEvents = 'none';
+            });
+            
+            // Show correct/incorrect feedback
+            options[selectedIndex].classList.add(isCorrect ? 'correct' : 'incorrect');
+            if (!isCorrect) {
+                options[question.correct].classList.add('correct');
+            }
+            
+            if (isCorrect) {
+                quizScore++;
+                showToast('إجابة صحيحة! 🎉', 'success');
+            } else {
+                showToast(`إجابة خاطئة. الإجابة الصحيحة: ${question.options[question.correct]}`, 'error');
+            }
+            
+            currentQuestionIndex++;
+            
+            setTimeout(() => {
+                if (currentQuestionIndex < currentQuiz.quiz.length) {
+                    showQuestion();
+                } else {
+                    showQuizResults();
+                }
+            }, 2000);
+        }
+
+        async function showQuizResults() {
+            const percentage = Math.round((quizScore / currentQuiz.quiz.length) * 100);
+            const passed = percentage >= 70;
+            const xpEarned = passed ? currentQuiz.xpReward : 0;
+            
+            const quizContent = document.getElementById('quiz-content');
+            quizContent.innerHTML = `
+                <div class="text-center">
+                    <div class="text-6xl mb-4">${passed ? '🎉' : '😔'}</div>
+                    <h3 class="text-2xl font-bold mb-4 ${passed ? 'text-green-600' : 'text-red-600'}">
+                        ${passed ? 'مبروك! لقد نجحت' : 'للأسف، لم تنجح'}
+                    </h3>
+                    <div class="bg-gray-100 rounded-lg p-4 mb-6">
+                        <p class="text-lg mb-2">نتيجتك: <span class="font-bold">${quizScore}/${currentQuiz.quiz.length}</span></p>
+                        <p class="text-lg mb-2">النسبة المئوية: <span class="font-bold ${passed ? 'text-green-600' : 'text-red-600'}">${percentage}%</span></p>
+                        <p class="text-sm text-gray-600">النسبة المطلوبة للنجاح: 70%</p>
+                    </div>
+                    
+                    ${passed ? `
+                        <div class="bg-green-100 border border-green-300 rounded-lg p-4 mb-4">
+                            <p class="text-green-800 font-semibold">🎊 تهانينا!</p>
+                            <p class="text-green-700">لقد حصلت على <span class="font-bold">${xpEarned} XP</span></p>
+                            ${currentQuiz.id < 15 ? '<p class="text-green-700">تم فتح الدرس التالي!</p>' : '<p class="text-green-700">لقد أكملت جميع الدروس! 🎓</p>'}
+                        </div>
+                    ` : `
+                        <div class="bg-red-100 border border-red-300 rounded-lg p-4 mb-4">
+                            <p class="text-red-800 font-semibold">💪 لا تستسلم!</p>
+                            <p class="text-red-700">راجع محتوى الدرس وحاول مرة أخرى</p>
+                            <p class="text-red-700">يمكنك إعادة الاختبار في أي وقت</p>
+                        </div>
+                    `}
+                    
+                    <div class="flex gap-3 justify-center">
+                        <button onclick="closeQuizModal()" class="bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition-colors">
+                            إغلاق
+                        </button>
+                        ${!passed ? `
+                            <button onclick="retakeQuiz()" class="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors">
+                                إعادة المحاولة
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+
+            if (passed) {
+                // Save progress
+                try {
+                    showLoading(true);
+                    const result = await window.dataSdk.create({
+                        lesson_id: `lesson_${currentQuiz.id}`,
+                        completed: true,
+                        quiz_passed: true,
+                        score: percentage,
+                        attempts: quizAttempts,
+                        completed_at: new Date().toISOString(),
+                        xp_earned: xpEarned
+                    });
+
+                    if (result.isOk) {
+                        totalXP += xpEarned;
+                        
+                        // Unlock next lesson
+                        if (currentQuiz.id < 15 && !unlockedLessons.includes(currentQuiz.id + 1)) {
+                            unlockedLessons.push(currentQuiz.id + 1);
+                        }
+                        
+                        showConfetti();
+                        updateProgressDisplay();
+                        
+                        // Level up check
+                        checkLevelUp();
+                        
+                    } else {
+                        showToast('حدث خطأ في حفظ التقدم', 'error');
+                    }
+                } catch (error) {
+                    showToast('حدث خطأ غير متوقع', 'error');
+                } finally {
+                    showLoading(false);
+                }
+            }
+            
+            quizAttempts = 0; // Reset attempts for this quiz
+        }
+
+        function retakeQuiz() {
+            currentQuestionIndex = 0;
+            quizScore = 0;
+            showQuestion();
+        }
+
+        function closeQuizModal() {
+            document.getElementById('quiz-modal').classList.add('hidden');
+            document.getElementById('quiz-modal').classList.remove('flex');
+            currentQuiz = null;
+        }
+
+        function updateProgressFromData() {
+            totalXP = 0;
+            unlockedLessons = [1]; // Always start with lesson 1
+            
+            // Calculate total XP and unlocked lessons
+            userProgress.forEach(progress => {
+                if (progress.completed && progress.quiz_passed) {
+                    totalXP += progress.xp_earned || 0;
+                    const lessonId = parseInt(progress.lesson_id.replace('lesson_', ''));
+                    if (lessonId < 15 && !unlockedLessons.includes(lessonId + 1)) {
+                        unlockedLessons.push(lessonId + 1);
+                    }
+                }
+            });
+            
+            updateProgressDisplay();
+        }
+
+        function updateProgressDisplay() {
+            const completedLessons = userProgress.filter(p => p.completed && p.quiz_passed).length;
+            const progressPercentage = Math.round((completedLessons / 15) * 100);
+            
+            // Update XP and level
+            document.getElementById('total-xp').textContent = `${totalXP} XP`;
+            document.getElementById('current-level').textContent = getCurrentLevel();
+            
+            // Update progress bar
+            document.getElementById('overall-progress').style.width = `${progressPercentage}%`;
+            document.getElementById('progress-text').textContent = `${completedLessons}/15`;
+        }
+
+        function getCurrentLevel() {
+            if (totalXP >= 800) return 'مصمم محترف';
+            if (totalXP >= 400) return 'مصمم متقدم';
+            if (totalXP >= 100) return 'مصمم مبتدئ';
+            return 'مبتدئ';
+        }
+
+        function checkLevelUp() {
+            const newLevel = getCurrentLevel();
+            if (newLevel !== currentLevel) {
+                currentLevel = newLevel;
+                showLevelUpAnimation();
+                showToast(`🎊 تهانينا! لقد وصلت إلى مستوى: ${newLevel}`, 'success');
+            }
+        }
+
+        function showLevelUpAnimation() {
+            const levelElement = document.getElementById('current-level');
+            levelElement.classList.add('level-up');
+            setTimeout(() => {
+                levelElement.classList.remove('level-up');
+            }, 1000);
+        }
+
+        function updateBadges() {
+            const badgesContainer = document.getElementById('badges-container');
+            const completedLessons = userProgress.filter(p => p.completed && p.quiz_passed).length;
+            
+            const badges = [];
+            
+            // Level-based badges
+            if (completedLessons >= 5) badges.push({ emoji: '🌟', title: 'مصمم مبتدئ', color: 'bg-blue-500' });
+            if (completedLessons >= 10) badges.push({ emoji: '🏆', title: 'مصمم متقدم', color: 'bg-purple-500' });
+            if (completedLessons >= 15) badges.push({ emoji: '👑', title: 'مصمم محترف', color: 'bg-yellow-500' });
+            
+            // XP-based badges
+            if (totalXP >= 200) badges.push({ emoji: '💎', title: 'جامع النقاط', color: 'bg-teal-500' });
+            if (totalXP >= 500) badges.push({ emoji: '🚀', title: 'نجم الأكاديمية', color: 'bg-red-500' });
+            
+            // Special badges
+            const perfectScores = userProgress.filter(p => p.score === 100).length;
+            if (perfectScores >= 3) badges.push({ emoji: '⭐', title: 'المتفوق', color: 'bg-green-500' });
+            
+            badgesContainer.innerHTML = badges.length > 0 ? 
+                badges.map(badge => `
+                    <div class="badge ${badge.color} text-white px-4 py-2 rounded-full text-sm font-semibold flex items-center gap-2">
+                        <span>${badge.emoji}</span>
+                        <span>${badge.title}</span>
+                    </div>
+                `).join('') : 
+                '<p class="text-gray-500 text-center w-full">لم تحصل على أي شهادات بعد. أكمل الدروس لتحصل على شهاداتك الأولى!</p>';
+        }
+
+        function checkCertificateEligibility() {
+            const completedLessons = userProgress.filter(p => p.completed && p.quiz_passed).length;
+            const certificateSection = document.getElementById('certificate-section');
+            
+            if (completedLessons >= 15) {
+                certificateSection.style.display = 'block';
+                certificateSection.classList.add('slide-up');
+            }
+        }
+
+        function getLevelColor(level) {
+            switch(level) {
+                case 1: return 'bg-blue-500';
+                case 2: return 'bg-purple-500';
+                case 3: return 'bg-yellow-500';
+                default: return 'bg-gray-500';
+            }
+        }
+
+        function getLevelName(level) {
+            switch(level) {
+                case 1: return 'أساسيات التصميم';
+                case 2: return 'تطوير المهارة';
+                case 3: return 'الاحتراف والربح';
+                default: return 'غير محدد';
+            }
+        }
+
+        function showConfetti() {
+            const colors = ['#7C3AED', '#00C4B4', '#10B981', '#F59E0B', '#EF4444'];
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDelay = Math.random() * 2 + 's';
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 3000);
+                }, i * 50);
+            }
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            const bgColor = type === 'error' ? 'bg-red-500' : 'bg-green-500';
+            toast.className = `fixed top-20 right-4 z-50 px-6 py-3 rounded-lg text-white font-semibold transform translate-x-full transition-transform duration-300 ${bgColor} max-w-sm`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 4000);
+        }
+
+        function showLoading(show) {
+            const overlay = document.getElementById('loading-overlay');
+            if (show) {
+                overlay.classList.remove('hidden');
+                overlay.classList.add('flex');
+            } else {
+                overlay.classList.add('hidden');
+                overlay.classList.remove('flex');
+            }
+        }
+
+        function downloadCertificate() {
+            showToast('🎓 تم تحميل شهادة الإتمام بنجاح!', 'success');
+        }
+
+        // Initialize the app when the page loads
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9966f3c623d7a96f',t:'MTc2MTc4NTc4MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
