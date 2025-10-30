@@ -208,7 +208,6 @@
             element.textContent = message;
             element.style.display = 'block';
             
-            // إخفاء الرسائل الأخرى
             if (element === successMessage) {
                 errorMessage.style.display = 'none';
             } else {
@@ -216,24 +215,44 @@
             }
         }
 
-        // دالة لإخفاء كل الرسائل
         function hideAllMessages() {
             successMessage.style.display = 'none';
             errorMessage.style.display = 'none';
         }
 
+        // دالة الإرسال باستخدام XMLHttpRequest بدلاً من fetch
+        function submitForm(formData) {
+            return new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+                const url = scriptUrl;
+                
+                xhr.open('POST', url);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        resolve(xhr.responseText);
+                    } else {
+                        reject(new Error(`خطأ في السيرفر: ${xhr.status}`));
+                    }
+                };
+                
+                xhr.onerror = function() {
+                    reject(new Error('خطأ في الشبكة'));
+                };
+                
+                xhr.send(JSON.stringify(formData));
+            });
+        }
+
         // معالج إرسال النموذج
         form.addEventListener('submit', async function(e) {
-            e.preventDefault(); // منع إرسال النموذج بالطريقة العادية
+            e.preventDefault();
             
-            // إخفاء الرسائل السابقة
             hideAllMessages();
-            
-            // إظهار تحميل
             loading.style.display = 'block';
             submitBtn.disabled = true;
             
-            // جمع البيانات من النموذج
             const formData = {
                 name: document.getElementById('name').value.trim(),
                 lastname: document.getElementById('lastname').value.trim(),
@@ -241,26 +260,17 @@
             };
             
             try {
-                // إرسال البيانات إلى Google Apps Script
-                const response = await fetch(scriptUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formData)
-                });
-                
-                const result = await response.text();
+                // استخدام XMLHttpRequest بدلاً من fetch
+                const result = await submitForm(formData);
                 console.log('استجابة السيرفر:', result);
                 
-                // التحقق من النتيجة
-                if (result.includes('✅') || result.includes('success')) {
+                if (result.includes('✅') || result.includes('تم حفظ البيانات')) {
                     showMessage(successMessage, '🎉 تم التسجيل بنجاح! سيتم توجيهك قريباً.');
                     
-                    // إعادة تعيين النموذج بعد ثانيتين
                     setTimeout(() => {
                         form.reset();
-                    }, 2000);
+                        successMessage.style.display = 'none';
+                    }, 3000);
                 } else {
                     throw new Error(result || 'حدث خطأ غير معروف');
                 }
@@ -269,11 +279,9 @@
                 console.error('خطأ:', error);
                 showMessage(errorMessage, '❌ حدث خطأ في الإرسال: ' + error.message);
             } finally {
-                // إخفاء التحميل
                 loading.style.display = 'none';
                 submitBtn.disabled = false;
                 
-                // إخفاء رسالة الخطأ بعد 5 ثواني
                 if (errorMessage.style.display === 'block') {
                     setTimeout(() => {
                         errorMessage.style.display = 'none';
@@ -282,16 +290,23 @@
             }
         });
 
-        // إضافة تحقق فوري من صحة البريد الإلكتروني
+        // تحقق من صحة البريد الإلكتروني
         document.getElementById('email').addEventListener('blur', function() {
             const email = this.value.trim();
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             
             if (email && !emailRegex.test(email)) {
                 this.style.borderColor = '#dc3545';
+                showMessage(errorMessage, '❌ صيغة البريد الإلكتروني غير صحيحة');
             } else {
                 this.style.borderColor = '#e1e5e9';
+                hideAllMessages();
             }
+        });
+
+        // إخفاء الرسائل عند البدء بالكتابة
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', hideAllMessages);
         });
     </script>
 </body>
