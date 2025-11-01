@@ -6,7 +6,7 @@
   <title>نموذج التسجيل</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gradient-to-br from-blue-50 to-blue-100 min-h-screen flex items-center justify-center p-4">
+<body class="bg-gradient-to-br from-indigo-50 to-blue-100 min-h-screen flex items-center justify-center p-4">
 
   <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 space-y-6">
     <h2 class="text-2xl font-bold text-center text-blue-700 mb-4">📋 نموذج التسجيل</h2>
@@ -40,7 +40,8 @@
   </div>
 
   <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbyPQMaN8uDIofYivrfxf1hAWmEVpr6SxL-aBDnWTULTZkGcaKSNSc1a2Ddl8cpSn3lXcw/exec';
+    // ✅ رابط Google Script عبر proxy لتجاوز CORS
+    const scriptURL = 'https://cors-anywhere.herokuapp.com/https://script.google.com/macros/s/AKfycbyPQMaN8uDIofYivrfxf1hAWmEVpr6SxL-aBDnWTULTZkGcaKSNSc1a2Ddl8cpSn3lXcw/exec';
 
     document.getElementById('myForm').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -55,17 +56,22 @@
       };
 
       try {
-        await fetch(scriptURL, {
+        const response = await fetch(scriptURL, {
           method: 'POST',
-          mode: 'no-cors',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data)
         });
-        msg.textContent = "✅ تم الإرسال بنجاح!";
-        msg.className = "text-center text-green-600 font-semibold";
-        e.target.reset();
+
+        if (response.ok) {
+          msg.textContent = "✅ تم الإرسال بنجاح!";
+          msg.className = "text-center text-green-600 font-semibold";
+          e.target.reset();
+        } else {
+          msg.textContent = "⚠️ حدث خطأ أثناء الإرسال. رمز: " + response.status;
+          msg.className = "text-center text-red-600 font-semibold";
+        }
       } catch (err) {
-        msg.textContent = "⚠️ حدث خطأ أثناء الإرسال.";
+        msg.textContent = "⚠️ فشل الاتصال بالخادم. تحقق من الإنترنت أو الرابط.";
         msg.className = "text-center text-red-600 font-semibold";
       }
     });
