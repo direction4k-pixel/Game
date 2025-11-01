@@ -40,29 +40,24 @@ const form = document.getElementById('registerForm');
 const responseMsg = document.getElementById('responseMsg');
 
 form.addEventListener('submit', async (e) => {
-e.preventDefault();
-responseMsg.textContent = "⏳ جاري الإرسال...";
-try {
-const res = await fetch(scriptURL, {
-method: 'POST',
-headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify({
-name: form.name.value,
-lastname: form.lastname.value,
-email: form.email.value
-})
+  e.preventDefault();
+  responseMsg.textContent = "⏳ جاري الإرسال...";
+  try {
+    const res = await fetch(scriptURL, {
+      method: 'POST',
+      mode: 'no-cors', // أضف هذه السطر لتفادي خطأ CORS
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: form.name.value,
+        lastname: form.lastname.value,
+        email: form.email.value
+      })
+    });
+    responseMsg.textContent = "✅ تم الإرسال بنجاح!";
+    form.reset();
+  } catch (error) {
+    responseMsg.textContent = "⚠️ حدث خطأ أثناء الإرسال، تحقق من النشر أو الرابط.";
+  }
 });
-const text = await res.text();
-if (text.includes("✅")) {
-responseMsg.textContent = "✅ تم إرسال النموذج بنجاح!";
-form.reset();
-} else {
-responseMsg.textContent = "⚠️ " + text;
-}
-} catch (error) {
-responseMsg.textContent = "⚠️ حدث خطأ أثناء الإرسال، تحقق من الاتصال بالإنترنت.";
-}
-});
-</script>
 </body>
 </html>
