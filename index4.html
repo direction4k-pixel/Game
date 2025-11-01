@@ -43,7 +43,7 @@ form.addEventListener('submit', async (e) => {
   e.preventDefault();
   responseMsg.textContent = "⏳ جاري الإرسال...";
   try {
-    const res = await fetch(scriptURL, {
+    const res = await fetch(const scriptURL = 'https://script.google.com/macros/s/AKfycbxsAFlTWw31OFFLIS3xUgVf_PTA6TkyMdiKyPtzZsBBYCFL8wMhzFAbN2KwFFBkHAv3/exec';, {
       method: 'POST',
       mode: 'no-cors', // أضف هذه السطر لتفادي خطأ CORS
       headers: { 'Content-Type': 'application/json' },
