@@ -36,16 +36,19 @@
 
 <script>
 const scriptURL = 'https://script.google.com/macros/s/AKfycbxsAFlTWw31OFFLIS3xUgVf_PTA6TkyMdiKyPtzZsBBYCFL8wMhzFAbN2KwFFBkHAv3/exec';
+<script>
+const scriptURL = 'https://script.google.com/macros/s/AKfycbxsAFlTWw31OFFLIS3xUgVf_PTA6TkyMdiKyPtzZsBBYCFL8wMhzFAbN2KwFFBkHAv3/exec';
 const form = document.getElementById('registerForm');
 const responseMsg = document.getElementById('responseMsg');
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
   responseMsg.textContent = "⏳ جاري الإرسال...";
+
   try {
-    const res = await fetch(const scriptURL = 'https://script.google.com/macros/s/AKfycbxsAFlTWw31OFFLIS3xUgVf_PTA6TkyMdiKyPtzZsBBYCFL8wMhzFAbN2KwFFBkHAv3/exec';, {
+    await fetch(scriptURL, {
       method: 'POST',
-      mode: 'no-cors', // أضف هذه السطر لتفادي خطأ CORS
+      mode: 'no-cors', // ✅ أضف هذا السطر لحل المشكلة
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         name: form.name.value,
@@ -53,10 +56,14 @@ form.addEventListener('submit', async (e) => {
         email: form.email.value
       })
     });
-    responseMsg.textContent = "✅ تم الإرسال بنجاح!";
+
+    responseMsg.textContent = "✅ تم إرسال النموذج بنجاح!";
     form.reset();
   } catch (error) {
-    responseMsg.textContent = "⚠️ حدث خطأ أثناء الإرسال، تحقق من النشر أو الرابط.";
+    responseMsg.textContent = "⚠️ حدث خطأ أثناء الإرسال، حاول مجددًا.";
+  }
+});
+</script>
   }
 });
 </body>
