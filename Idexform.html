@@ -1,109 +1,259 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>تسجيل الدخول</title>
-  <style>
-    body {
-      font-family: "Cairo", sans-serif;
-      background: linear-gradient(135deg, #4e54c8, #8f94fb);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-      color: #333;
-    }
-    .login-box {
-      background: #fff;
-      padding: 30px 25px;
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-      width: 90%;
-      max-width: 380px;
-      text-align: center;
-      transition: transform 0.3s ease;
-    }
-    .login-box:hover { transform: translateY(-5px); }
-    h2 {
-      margin-bottom: 20px;
-      color: #4e54c8;
-    }
-    input {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      font-size: 16px;
-      text-align: right;
-    }
-    button {
-      width: 100%;
-      padding: 12px;
-      background: #4e54c8;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-size: 17px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-    button:hover { background: #383fc1; }
-    .message {
-      margin-top: 15px;
-      font-size: 14px;
-      color: #666;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>نظام إدارة المستخدمين - الإصدار النهائي</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f0f2f5; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .tabs { display: flex; margin-bottom: 20px; border-bottom: 2px solid #ddd; }
+        .tab { padding: 10px 20px; cursor: pointer; border: 1px solid #ddd; margin-left: -1px; background: #f8f9fa; }
+        .tab.active { background: #007bff; color: white; border-color: #007bff; }
+        .tab-content { display: none; padding: 20px 0; }
+        .tab-content.active { display: block; }
+        input, button { width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px; }
+        button { background: #007bff; color: white; border: none; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .message { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        .loading { background: #fff3cd; color: #856404; text-align: center; }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <h1>🚀 نظام إدارة المستخدمين</h1>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="openTab('test')">اختبار</div>
+            <div class="tab" onclick="openTab('login')">تسجيل الدخول</div>
+            <div class="tab" onclick="openTab('signup')">تسجيل جديد</div>
+            <div class="tab" onclick="openTab('users')">المستخدمين</div>
+        </div>
 
-  <div class="login-box">
-    <h2>تسجيل الدخول</h2>
+        <!-- تبويب الاختبار -->
+        <div id="test" class="tab-content active">
+            <h2>اختبار النظام</h2>
+            <button onclick="testConnection()">اختبار الاتصال</button>
+            <button onclick="createTestData()">إنشاء بيانات اختبار</button>
+            <div id="testResult"></div>
+        </div>
 
-    <form id="loginForm">
-      <input type="email" id="email" name="email" placeholder="البريد الإلكتروني" required>
-      <input type="password" id="password" name="password" placeholder="كلمة السر" required>
-      <button type="submit">دخول</button>
-    </form>
+        <!-- تبويب تسجيل الدخول -->
+        <div id="login" class="tab-content">
+            <h2>تسجيل الدخول</h2>
+            <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" value="ahmed@example.com">
+            <input type="password" id="loginPassword" placeholder="كلمة السر" value="123456">
+            <button onclick="login()">تسجيل الدخول</button>
+            <div id="loginResult"></div>
+        </div>
 
-    <div class="message" id="msg"></div>
-  </div>
+        <!-- تبويب التسجيل -->
+        <div id="signup" class="tab-content">
+            <h2>تسجيل مستخدم جديد</h2>
+            <input type="text" id="firstName" placeholder="الإسم">
+            <input type="text" id="lastName" placeholder="اللقب">
+            <input type="email" id="email" placeholder="البريد الإلكتروني">
+            <input type="password" id="password" placeholder="كلمة السر">
+            <button onclick="signUp()">تسجيل</button>
+            <div id="signupResult"></div>
+        </div>
 
-  <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz7zH_dhv40MtA5hIFvzzO2qebRY47C63Huh5WD5gn1UDzz7HGm891UObgwmTQi804XDg/exec";
-    const form = document.getElementById("loginForm");
-    const msg = document.getElementById("msg");
+        <!-- تبويب المستخدمين -->
+        <div id="users" class="tab-content">
+            <h2>إدارة المستخدمين</h2>
+            <button onclick="loadUsers()">تحميل المستخدمين</button>
+            <div id="usersResult"></div>
+        </div>
+    </div>
 
-    form.addEventListener("submit", e => {
-      e.preventDefault();
-      msg.textContent = "جاري التحقق...";
-      fetch(SCRIPT_URL, {
-        method: "POST",
-        body: new FormData(form)
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (data.ok) {
-          msg.style.color = "green";
-          msg.textContent = "تم تسجيل الدخول بنجاح ✅";
-          // يمكن تحويل المستخدم لصفحة سرية مثلاً:
-          setTimeout(() => {
-            window.location.href = "secret.html";
-          }, 1200);
-        } else {
-          msg.style.color = "red";
-          msg.textContent = data.error || "بيانات غير صحيحة ❌";
+    <script>
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxqOe7C64BpIiaTGKG2aEUDCJJzx7yrJGsYhvepTkwbjUTOfEb1WlUgWiFUJ0CrA5-zAQ/exec';
+        
+        // إدارة التبويبات
+        function openTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabName).style.display = 'block';
+            event.currentTarget.classList.add('active');
         }
-      })
-      .catch(err => {
-        msg.style.color = "red";
-        msg.textContent = "حدث خطأ في الاتصال بالخادم ⚠️";
-        console.error(err);
-      });
-    });
-  </script>
+
+        // دالة JSONP عامة
+        function jsonpRequest(params, resultElementId, successCallback) {
+            showMessage(resultElementId, '⏳ جاري المعالجة...', 'loading');
+            
+            const callbackName = 'jsonpCallback_' + Date.now();
+            
+            window[callbackName] = function(data) {
+                if (data && data.status) {
+                    showMessage(resultElementId, 
+                        data.status === 'success' ? '✅ ' + data.data : '❌ ' + data.data, 
+                        data.status
+                    );
+                    
+                    if (data.status === 'success' && successCallback) {
+                        successCallback(data);
+                    }
+                } else {
+                    showMessage(resultElementId, '❌ استجابة غير متوقعة', 'error');
+                }
+                
+                delete window[callbackName];
+            };
+            
+            // بناء رابط مع جميع المعاملات
+            let url = SCRIPT_URL + '?callback=' + callbackName;
+            Object.keys(params).forEach(key => {
+                if (params[key] !== undefined && params[key] !== null) {
+                    url += '&' + encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
+                }
+            });
+            
+            const script = document.createElement('script');
+            script.src = url;
+            document.head.appendChild(script);
+            
+            // تنظيف بعد 10 ثواني
+            setTimeout(() => {
+                if (window[callbackName]) {
+                    showMessage(resultElementId, '❌ انتهت مهلة الانتظار', 'error');
+                    delete window[callbackName];
+                }
+            }, 10000);
+        }
+
+        // اختبار الاتصال
+        function testConnection() {
+            jsonpRequest({ action: 'test' }, 'testResult');
+        }
+
+        // إنشاء بيانات اختبار
+        function createTestData() {
+            jsonpRequest({ action: 'createTestData' }, 'testResult');
+        }
+
+        // تسجيل مستخدم جديد
+        function signUp() {
+            const userData = {
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value
+            };
+
+            if (!userData.firstName || !userData.lastName || !userData.email || !userData.password) {
+                showMessage('signupResult', '❌ جميع الحقول مطلوبة', 'error');
+                return;
+            }
+
+            jsonpRequest({
+                action: 'signup',
+                firstName: userData.firstName,
+                lastName: userData.lastName,
+                email: userData.email,
+                password: userData.password
+            }, 'signupResult', function(response) {
+                if (response.status === 'success') {
+                    document.getElementById('firstName').value = '';
+                    document.getElementById('lastName').value = '';
+                    document.getElementById('email').value = '';
+                    document.getElementById('password').value = '';
+                }
+            });
+        }
+
+        // تسجيل الدخول
+        function login() {
+            const loginData = {
+                email: document.getElementById('loginEmail').value,
+                password: document.getElementById('loginPassword').value
+            };
+
+            if (!loginData.email || !loginData.password) {
+                showMessage('loginResult', '❌ البريد الإلكتروني وكلمة السر مطلوبان', 'error');
+                return;
+            }
+
+            jsonpRequest({
+                action: 'login',
+                email: loginData.email,
+                password: loginData.password
+            }, 'loginResult', function(response) {
+                if (response.status === 'success' && response.data.redirectUrl) {
+                    showMessage('loginResult', '✅ ' + response.data.message + '<br>🚀 جاري التوجيه إلى الرابط السري...', 'success');
+                    setTimeout(() => {
+                        window.open(response.data.redirectUrl, '_blank');
+                    }, 2000);
+                }
+            });
+        }
+
+        // تحميل المستخدمين
+        function loadUsers() {
+            jsonpRequest({ action: 'getUsers' }, 'usersResult', function(response) {
+                if (response.status === 'success') {
+                    displayUsers(response.data);
+                }
+            });
+        }
+
+        // عرض المستخدمين
+        function displayUsers(users) {
+            const usersResult = document.getElementById('usersResult');
+            
+            if (!users || users.length === 0) {
+                usersResult.innerHTML = '<div class="message info">لا يوجد مستخدمين</div>';
+                return;
+            }
+
+            let html = '<div class="message success">تم تحميل ' + users.length + ' مستخدم</div>';
+            html += '<table style="width:100%; border-collapse:collapse; margin-top:10px;">';
+            html += '<tr><th>#</th><th>الاسم</th><th>البريد</th><th>الحالة</th><th>الإجراءات</th></tr>';
+            
+            users.forEach((user, index) => {
+                html += '<tr>';
+                html += '<td>' + (index + 1) + '</td>';
+                html += '<td>' + (user.firstName || '') + ' ' + (user.lastName || '') + '</td>';
+                html += '<td>' + (user.email || '') + '</td>';
+                html += '<td>' + (user.status || '') + '</td>';
+                html += '<td>';
+                html += '<button onclick="updateStatus(' + user.row + ', \'مقبول\')">موافقة</button>';
+                html += '<button onclick="updateStatus(' + user.row + ', \'مرفوض\')">رفض</button>';
+                html += '</td>';
+                html += '</tr>';
+            });
+            
+            html += '</table>';
+            usersResult.innerHTML = html;
+        }
+
+        // تحديث حالة المستخدم
+        function updateStatus(row, status) {
+            const notes = prompt('الملاحظات:');
+            
+            jsonpRequest({
+                action: 'updateStatus',
+                row: row,
+                status: status,
+                notes: notes || ''
+            }, '', function() {
+                loadUsers(); // إعادة تحميل القائمة بعد التحديث
+            });
+        }
+
+        // وظيفة مساعدة لعرض الرسائل
+        function showMessage(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = '<div class="message ' + type + '">' + message + '</div>';
+            }
+        }
+
+        // اختبار تلقائي عند التحميل
+        window.onload = function() {
+            testConnection();
+        };
+    </script>
 </body>
 </html>
