@@ -1,112 +1,108 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>تسجيل جديد</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تسجيل الدخول</title>
+  <style>
+    body {
+      font-family: "Cairo", sans-serif;
+      background: linear-gradient(135deg, #4e54c8, #8f94fb);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      color: #333;
+    }
+    .login-box {
+      background: #fff;
+      padding: 30px 25px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 380px;
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+    .login-box:hover { transform: translateY(-5px); }
+    h2 {
+      margin-bottom: 20px;
+      color: #4e54c8;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 16px;
+      text-align: right;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #4e54c8;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 17px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover { background: #383fc1; }
+    .message {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #666;
+    }
+  </style>
 </head>
-<body class="bg-gradient-to-br from-sky-100 to-indigo-200 min-h-screen flex items-center justify-center p-6 font-sans">
-  <div class="w-full max-w-md bg-white rounded-3xl shadow-xl p-6">
-    <h1 class="text-2xl font-bold text-center text-indigo-700 mb-4">📝 استمارة تسجيل</h1>
+<body>
 
-    <form id="signupForm" class="space-y-3">
-      <div>
-        <label class="block text-right text-sm font-medium mb-1">الاسم</label>
-        <input id="name" type="text" required class="w-full p-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-300" placeholder="أدخل اسمك">
-      </div>
+  <div class="login-box">
+    <h2>تسجيل الدخول</h2>
 
-      <div>
-        <label class="block text-right text-sm font-medium mb-1">اللقب</label>
-        <input id="lastname" type="text" required class="w-full p-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-300" placeholder="أدخل لقبك">
-      </div>
-
-      <div>
-        <label class="block text-right text-sm font-medium mb-1">البريد الإلكتروني</label>
-        <input id="email" type="email" required class="w-full p-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-300" placeholder="you@example.com">
-      </div>
-
-      <div>
-        <label class="block text-right text-sm font-medium mb-1">كلمة السر</label>
-        <input id="password" type="password" required minlength="4" class="w-full p-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-300" placeholder="اختر كلمة سر">
-      </div>
-
-      <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-xl transition">إرسال الطلب</button>
+    <form id="loginForm">
+      <input type="email" id="email" name="email" placeholder="البريد الإلكتروني" required>
+      <input type="password" id="password" name="password" placeholder="كلمة السر" required>
+      <button type="submit">دخول</button>
     </form>
 
-    <p id="msg" class="mt-4 text-center text-sm"></p>
+    <div class="message" id="msg"></div>
   </div>
 
   <script>
-    // ضع هنا رابط السكربت الذي نشرته (ينتهي بـ /exec)
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyoaiP1WzV_wH_vOh611Hqbl2GEtAPIQ3FcJEABj2Qkknc8v4FuhhatVIjvQm-5hlG7zg/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz7zH_dhv40MtA5hIFvzzO2qebRY47C63Huh5WD5gn1UDzz7HGm891UObgwmTQi804XDg/exec";
+    const form = document.getElementById("loginForm");
+    const msg = document.getElementById("msg");
 
-    // إذا واجهت مشاكل CORS أثناء تجربة محلية، ضع رابط بروكسي مؤقت هنا (اختياري)
-    // const PROXY = "https://cors-anywhere.herokuapp.com/"; // مؤقت فقط
-    const PROXY = "";
-
-    const form = document.getElementById('signupForm');
-    const msg = document.getElementById('msg');
-
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener("submit", e => {
       e.preventDefault();
-      msg.className = 'mt-4 text-center text-gray-700';
-      msg.textContent = '⏳ جاري إرسال الطلب...';
-
-      const payload = {
-        "الاسم": document.getElementById('name').value.trim(),
-        "اللقب": document.getElementById('lastname').value.trim(),
-        "البريد الإلكتروني": document.getElementById('email').value.trim(),
-        "كلمة السر": document.getElementById('password').value
-      };
-
-      // تحقق سريع على الجانب العميل
-      if (!payload["الاسم"] || !payload["اللقب"] || !payload["البريد الإلكتروني"] || !payload["كلمة السر"]) {
-        msg.className = 'mt-4 text-center text-red-600';
-        msg.textContent = '❌ يرجى ملء جميع الحقول.';
-        return;
-      }
-
-      try {
-        const res = await fetch((PROXY || '') + SCRIPT_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
-
-        // حاول تحويل الرد إلى JSON إن أمكن
-        let json;
-        try {
-          json = await res.json();
-        } catch (err) {
-          json = null;
-        }
-
-        if (json) {
-          if (json.ok) {
-            msg.className = 'mt-4 text-center text-green-600';
-            msg.textContent = json.message || '✅ تم إرسال طلبك، بانتظار المراجعة.';
-            form.reset();
-          } else {
-            msg.className = 'mt-4 text-center text-red-600';
-            msg.textContent = json.message || json.error || '❌ فشل الإرسال.';
-          }
+      msg.textContent = "جاري التحقق...";
+      fetch(SCRIPT_URL, {
+        method: "POST",
+        body: new FormData(form)
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.ok) {
+          msg.style.color = "green";
+          msg.textContent = "تم تسجيل الدخول بنجاح ✅";
+          // يمكن تحويل المستخدم لصفحة سرية مثلاً:
+          setTimeout(() => {
+            window.location.href = "secret.html";
+          }, 1200);
         } else {
-          // إذا الرد ليس JSON ولكن الحالة 200 فإنه غالبًا تم الإرسال
-          if (res.ok) {
-            msg.className = 'mt-4 text-center text-green-600';
-            msg.textContent = '✅ تم إرسال الطلب (الاستجابة غير قابلة للقراءة). تحقق من Google Sheet.';
-            form.reset();
-          } else {
-            msg.className = 'mt-4 text-center text-red-600';
-            msg.textContent = '❌ فشل الإرسال. رمز الحالة: ' + res.status;
-          }
+          msg.style.color = "red";
+          msg.textContent = data.error || "بيانات غير صحيحة ❌";
         }
-      } catch (err) {
+      })
+      .catch(err => {
+        msg.style.color = "red";
+        msg.textContent = "حدث خطأ في الاتصال بالخادم ⚠️";
         console.error(err);
-        msg.className = 'mt-4 text-center text-red-600';
-        msg.textContent = '⚠️ حدث خطأ في الاتصال بالخادم. تأكد من نشر السكربت واستخدام رابط /exec الصحيح.';
-      }
+      });
     });
   </script>
 </body>
